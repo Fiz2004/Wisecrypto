@@ -2,19 +2,53 @@ package com.fiz.wisecrypto.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import com.fiz.wisecrypto.R
 
 // Set of Material typography styles to start with
+
+val Mulish = FontFamily(
+    Font(R.font.mulish_semibold),
+    Font(R.font.mulish_bold),
+)
+
+val Montserrat = FontFamily(
+    Font(R.font.montserrat_medium),
+)
+
 val Typography = Typography(
-    bodyLarge = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Normal,
+    displayLarge = TextStyle(
+        fontFamily = Mulish,
+        fontWeight = FontWeight.Bold,
+        fontSize = 32.sp,
+    ),
+    displayMedium = TextStyle(
+        fontFamily = Mulish,
+        fontWeight = FontWeight.SemiBold,
         fontSize = 16.sp,
-        lineHeight = 24.sp,
-        letterSpacing = 0.5.sp
-    )
+    ),
+    displaySmall = TextStyle(
+        fontFamily = Mulish,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 14.sp,
+    ),
+
+    titleLarge = TextStyle(
+        fontFamily = Montserrat,
+        fontWeight = FontWeight.Medium,
+        fontSize = 14.sp,
+    ),
+
+    bodyMedium = TextStyle(
+        fontFamily = Mulish,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 12.sp,
+    ),
+
+
     /* Other default text styles to override
     titleLarge = TextStyle(
         fontFamily = FontFamily.Default,

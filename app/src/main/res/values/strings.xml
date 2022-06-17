@@ -1,4 +1,13 @@
 <resources>
     <string name="app_name">Wisecrypto</string>
     <string name="splash_title">Доверяют миллионы пользователей по всему миру</string>
+    <string name="login_welcome">Добро пожаловать</string>
+    <string name="login_email">Электронная почта</string>
+    <string name="login_password">Пароль</string>
+    <string name="login_password_hint">Введите пароль</string>
+    <string name="login_email_hint">botpablo@gmail.com</string>
+    <string name="login_forgot_password">Забыли пароль?</string>
+    <string name="login_signin">Зарегистрироваться</string>
+    <string name="login_signup">Создать учетную запись</string>
+    <string name="login_noaccount">У вас еще нет учетной записи?</string>
 </resources>

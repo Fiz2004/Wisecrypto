@@ -4,6 +4,7 @@ import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -13,12 +14,8 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fiz.wisecrypto.R
 import com.fiz.wisecrypto.ui.components.Progress
@@ -62,10 +59,7 @@ fun SplashScreen(
         Text(
             text = stringResource(R.string.splash_title),
             color = White,
-            style = TextStyle(
-                fontFamily = FontFamily(Font(R.font.mulish_semibold)),
-                fontSize = 16.sp
-            )
+            style = MaterialTheme.typography.displayMedium
         )
 
         Spacer(modifier = Modifier.weight(0.5f))
@@ -84,7 +78,7 @@ fun SplashScreen(
     heightDp = 812
 )
 @Composable
-fun DefaultPreview() {
+private fun DefaultPreview() {
     WisecryptoTheme {
         SplashScreen()
     }
