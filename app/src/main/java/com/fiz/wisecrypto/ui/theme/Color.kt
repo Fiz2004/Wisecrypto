@@ -14,6 +14,9 @@ val Gray = Color(0xFF_5D_5C_5D)
 val Gray2 = Color(0xFF_BE_BE_BE)
 val White = Color(0xFF_FF_FF_FF)
 
+val GreenForGradient = Color(0xFF_18_9B_54)
+val BlueForGradient = Color(0xFF_00_A1_E5)
+
 val Purple80 = Color(0xFFD0BCFF)
 val PurpleGrey80 = Color(0xFFCCC2DC)
 val Pink80 = Color(0xFFEFB8C8)
