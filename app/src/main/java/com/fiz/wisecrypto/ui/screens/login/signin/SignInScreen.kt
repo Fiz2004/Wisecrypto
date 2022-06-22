@@ -52,8 +52,7 @@ fun SignInScreen(
             text = viewState.email,
             onValueChange = { viewModel.onEvent(SignInEvent.EmailChanged(it)) },
             textHeader = stringResource(R.string.signin_email),
-            textHint = stringResource(R.string.signin_email_hint),
-            isEmail = true
+            textHint = stringResource(R.string.signin_email_hint)
         )
 
         TextFieldWithHeader(

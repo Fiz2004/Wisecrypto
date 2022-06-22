@@ -11,6 +11,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.fiz.wisecrypto.ui.theme.hint
 import com.fiz.wisecrypto.ui.theme.veryLightPrimary
 
 @Composable
@@ -18,13 +19,8 @@ fun TextFieldWithHeader(
     textHeader: String,
     text: String,
     onValueChange: (String) -> Unit,
-    textHint: String,
-    isEmail: Boolean = false
+    textHint: String
 ) {
-    val colorsBorders = if (isEmail)
-        MaterialTheme.colorScheme.primary
-    else
-        MaterialTheme.colorScheme.veryLightPrimary
 
 
     Spacer(modifier = Modifier.height(16.dp))
@@ -41,14 +37,14 @@ fun TextFieldWithHeader(
         placeholder = {
             Text(
                 text = textHint,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.hint
             )
         },
         singleLine = true,
         shape = RoundedCornerShape(8.dp),
         colors = TextFieldDefaults.outlinedTextFieldColors(
-            focusedBorderColor = colorsBorders,
-            unfocusedBorderColor = colorsBorders
+            focusedBorderColor = MaterialTheme.colorScheme.primary,
+            unfocusedBorderColor = MaterialTheme.colorScheme.veryLightPrimary
         )
     )
 }

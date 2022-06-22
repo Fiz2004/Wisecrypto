@@ -49,7 +49,7 @@ val ColorScheme.veryLightPrimary: Color
     get() = if (isLight) VeryLightGreen else VeryLightGreen
 
 @get:Composable
-val ColorScheme.skip: Color
+val ColorScheme.hint: Color
     get() = if (isLight) Gray2 else Gray2
 
 @Composable
