@@ -57,7 +57,7 @@ fun SplashScreen(
         )
 
         Text(
-            text = stringResource(R.string.splash_title),
+            text = stringResource(R.string.slogan),
             color = White,
             style = MaterialTheme.typography.displayMedium
         )

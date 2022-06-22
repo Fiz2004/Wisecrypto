@@ -2,11 +2,14 @@ package com.fiz.wisecrypto.ui.theme
 
 import android.app.Activity
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.ViewCompat
@@ -41,6 +44,19 @@ private val LightColorScheme = lightColorScheme(
     */
 )
 
+@get:Composable
+val ColorScheme.veryLightPrimary: Color
+    get() = if (isLight) VeryLightGreen else VeryLightGreen
+
+@get:Composable
+val ColorScheme.skip: Color
+    get() = if (isLight) Gray2 else Gray2
+
+@Composable
+fun ColorScheme.isLight() = this.background.luminance() > 0.5
+
+var isLight: Boolean = false
+
 @Composable
 fun WisecryptoTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
@@ -48,6 +64,9 @@ fun WisecryptoTheme(
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
+
+    isLight = MaterialTheme.colorScheme.isLight()
+
     val colorScheme = when {
 //        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
 //            val context = LocalContext.current

@@ -1,13 +1,27 @@
 <resources>
     <string name="app_name">Wisecrypto</string>
-    <string name="splash_title">Доверяют миллионы пользователей по всему миру</string>
-    <string name="login_welcome">Добро пожаловать</string>
-    <string name="login_email">Электронная почта</string>
-    <string name="login_password">Пароль</string>
-    <string name="login_password_hint">Введите пароль</string>
-    <string name="login_email_hint">botpablo@gmail.com</string>
-    <string name="login_forgot_password">Забыли пароль?</string>
-    <string name="login_signin">Зарегистрироваться</string>
-    <string name="login_signup">Создать учетную запись</string>
-    <string name="login_noaccount">У вас еще нет учетной записи?</string>
+
+    <string name="slogan">Доверяют миллионы пользователей по всему миру</string>
+    <!--    Sign In-->
+    <string name="signin_welcome">Добро пожаловать</string>
+    <string name="signin_email">Электронная почта</string>
+    <string name="signin_password">Пароль</string>
+    <string name="signin_password_hint">Введите пароль</string>
+    <string name="signin_email_hint">botpablo@gmail.com</string>
+    <string name="signin_forgot_password">Забыли пароль?</string>
+    <string name="signin_signin">Зарегистрироваться</string>
+    <string name="signin_signup">Создать учетную запись</string>
+    <string name="signin_noaccount">У вас еще нет учетной записи?</string>
+    <!--    Sign Un-->
+    <string name="signup_title">Зарегистрируйтесь Сейчас</string>
+    <string name="signup_fullname_title">Полное имя</string>
+    <string name="signup_fullname_hint">Полное имя пользователя</string>
+    <string name="signup_number_phone_title">Номер телефона</string>
+    <string name="signup_number_phone_hint">Контактный номер телефона</string>
+    <string name="signup_username_title">Имя пользователя</string>
+    <string name="signup_username_hint">Ваше зарегестрированное имя</string>
+    <string name="signup_next">Дальше</string>
+    <string name="signup_already_register">У Вас Уже Есть Учетная Запись?</string>
+    <string name="signup_signin">Войдите здесь</string>
+    <string name="signup_skip">Пропустить этот шаг</string>
 </resources>

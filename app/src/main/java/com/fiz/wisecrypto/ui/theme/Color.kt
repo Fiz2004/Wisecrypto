@@ -3,6 +3,7 @@ package com.fiz.wisecrypto.ui.theme
 import androidx.compose.ui.graphics.Color
 
 val LightGreen = Color(0xFF_5E_DE_99)
+val VeryLightGreen = Color(0xFF_E9_FC_E9)
 val Pink = Color(0xFF_F2_88_F4)
 val DarkGreen = Color(0xFF_00_CB_6A)
 val Warning = Color(0xFF_EF_BE_24)
