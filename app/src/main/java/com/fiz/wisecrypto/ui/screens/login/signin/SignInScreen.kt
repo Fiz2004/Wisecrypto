@@ -51,15 +51,15 @@ fun SignInScreen(
         TextFieldWithHeader(
             text = viewState.email,
             onValueChange = { viewModel.onEvent(SignInEvent.EmailChanged(it)) },
-            textHeader = stringResource(R.string.signin_email),
-            textHint = stringResource(R.string.signin_email_hint)
+            textHeader = stringResource(R.string.login_email_title),
+            textHint = stringResource(R.string.login_email_hint)
         )
 
         TextFieldWithHeader(
             text = viewState.password,
             onValueChange = { viewModel.onEvent(SignInEvent.PasswordChanged(it)) },
-            textHeader = stringResource(R.string.signin_password),
-            textHint = stringResource(R.string.signin_password_hint)
+            textHeader = stringResource(R.string.login_password_title),
+            textHint = stringResource(R.string.login_password_hint)
         )
 
         Spacer(modifier = Modifier.height(32.dp))

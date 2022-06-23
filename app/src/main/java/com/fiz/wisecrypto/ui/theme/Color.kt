@@ -14,6 +14,7 @@ val Black = Color(0xFF_15_2C_07)
 val Gray = Color(0xFF_5D_5C_5D)
 val Gray2 = Color(0xFF_BE_BE_BE)
 val White = Color(0xFF_FF_FF_FF)
+val Blue = Color(0xFF_1E_82_C5)
 
 val GreenForGradient = Color(0xFF_18_9B_54)
 val BlueForGradient = Color(0xFF_00_A1_E5)

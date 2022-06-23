@@ -2,17 +2,20 @@
     <string name="app_name">Wisecrypto</string>
 
     <string name="slogan">Доверяют миллионы пользователей по всему миру</string>
+    <!--    Log In-->
+    <string name="login_email_title">Электронная почта</string>
+    <string name="login_email_hint">botpablo@gmail.com</string>
+    <string name="login_password_title">Пароль</string>
+    <string name="login_password_hint">Введите пароль</string>
+
+
     <!--    Sign In-->
     <string name="signin_welcome">Добро пожаловать</string>
-    <string name="signin_email">Электронная почта</string>
-    <string name="signin_password">Пароль</string>
-    <string name="signin_password_hint">Введите пароль</string>
-    <string name="signin_email_hint">botpablo@gmail.com</string>
     <string name="signin_forgot_password">Забыли пароль?</string>
     <string name="signin_signin">Зарегистрироваться</string>
     <string name="signin_signup">Создать учетную запись</string>
     <string name="signin_noaccount">У вас еще нет учетной записи?</string>
-    <!--    Sign Un-->
+    <!--    Sign Up-->
     <string name="signup_title">Зарегистрируйтесь Сейчас</string>
     <string name="signup_fullname_title">Полное имя</string>
     <string name="signup_fullname_hint">Полное имя пользователя</string>
@@ -24,4 +27,15 @@
     <string name="signup_already_register">У Вас Уже Есть Учетная Запись?</string>
     <string name="signup_signin">Войдите здесь</string>
     <string name="signup_skip">Пропустить этот шаг</string>
+    <!--    Sign Up2-->
+    <string name="signup2_confirm_password_title">Подтвердите пароль</string>
+    <string name="signup2_confirm_password_hint">Подтвердите пароль</string>
+    <string name="signup2_privacy1">Я согласен с </string>
+    <string name="signup2_privacy2">, </string>
+    <string name="signup2_privacy3"> и </string>
+    <string name="signup2_terms_conditions">условиями и положениями</string>
+    <string name="signup2_privacy_policy">политикой конфиденциальности </string>
+    <string name="signup2_content_policy">политикой содержания</string>
+    <string name="signup2_signup">Зарегестрироваться</string>
+
 </resources>

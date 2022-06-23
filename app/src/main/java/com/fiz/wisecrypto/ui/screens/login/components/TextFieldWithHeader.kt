@@ -3,14 +3,16 @@ package com.fiz.wisecrypto.ui.screens.login.components
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import com.fiz.wisecrypto.R
 import com.fiz.wisecrypto.ui.theme.hint
 import com.fiz.wisecrypto.ui.theme.veryLightPrimary
 
@@ -19,9 +21,10 @@ fun TextFieldWithHeader(
     textHeader: String,
     text: String,
     onValueChange: (String) -> Unit,
-    textHint: String
+    textHint: String,
+    password: Boolean = false,
 ) {
-
+    var transform by remember { mutableStateOf(true) }
 
     Spacer(modifier = Modifier.height(16.dp))
 
@@ -40,6 +43,25 @@ fun TextFieldWithHeader(
                 color = MaterialTheme.colorScheme.hint
             )
         },
+        trailingIcon = {
+            if (password)
+                IconButton(onClick = { transform = !transform }) {
+                    Icon(
+                        modifier = Modifier
+                            .size(16.dp),
+                        painter = painterResource(id = R.drawable.components_password_show),
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+        },
+        visualTransformation = if (password)
+            if (transform)
+                PasswordVisualTransformation()
+            else
+                VisualTransformation.None
+        else
+            VisualTransformation.None,
         singleLine = true,
         shape = RoundedCornerShape(8.dp),
         colors = TextFieldDefaults.outlinedTextFieldColors(

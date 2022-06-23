@@ -52,6 +52,10 @@ val ColorScheme.veryLightPrimary: Color
 val ColorScheme.hint: Color
     get() = if (isLight) Gray2 else Gray2
 
+@get:Composable
+val ColorScheme.borderCheckedBox: Color
+    get() = if (isLight) Blue else Blue
+
 @Composable
 fun ColorScheme.isLight() = this.background.luminance() > 0.5
 
