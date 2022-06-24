@@ -5,4 +5,5 @@ sealed class SignUp2ViewEffect {
     object ShowTermsAndConditions : SignUp2ViewEffect()
     object ShowPrivacyPolicy : SignUp2ViewEffect()
     object ShowContentPolicy : SignUp2ViewEffect()
+    data class ShowError(val textMessage: Int) : SignUp2ViewEffect()
 }

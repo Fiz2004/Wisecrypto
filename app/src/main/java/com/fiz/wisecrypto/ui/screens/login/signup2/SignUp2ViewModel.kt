@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fiz.wisecrypto.R
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 
@@ -70,8 +71,18 @@ class SignUp2ViewModel : ViewModel() {
 
     private fun signUpClicked() {
         viewModelScope.launch {
+            if (!checkPasswordWithConfirmPassword(viewState.password, viewState.confirmPassword)) {
+                viewEffect.emit(SignUp2ViewEffect.ShowError(R.string.signup2_error_noconfirm_password))
+            }
             viewEffect.emit(SignUp2ViewEffect.MoveSignInScreen)
         }
+    }
+
+    private fun checkPasswordWithConfirmPassword(
+        password: String,
+        confirmPassword: String
+    ): Boolean {
+        return password == confirmPassword
     }
 
     private fun confirmPasswordChanged(value: String) {

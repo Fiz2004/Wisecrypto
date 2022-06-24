@@ -2,13 +2,14 @@ package com.fiz.wisecrypto.ui.screens.main.components
 
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
-import com.fiz.wisecrypto.R
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.fiz.wisecrypto.ui.screens.main.NamesMainScreen
 import com.fiz.wisecrypto.ui.theme.hint
 
@@ -17,15 +18,13 @@ fun MainBottomBar(
     navController: NavHostController
 ) {
 
-    var selectedItem by remember { mutableStateOf(0) }
+    val backstackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = backstackEntry?.destination
+
     val items =
-        listOf(NamesMainScreen.Home.name, NamesMainScreen.Market.name, NamesMainScreen.Profile.name)
-    val icons =
-        listOf(
-            R.drawable.bottom_nav_ic_home,
-            R.drawable.bottom_nav_ic_market,
-            R.drawable.bottom_nav_ic_profile
-        )
+        listOf(NamesMainScreen.Home, NamesMainScreen.Market, NamesMainScreen.Profile)
+
+    val selectedItem = items.indexOfFirst { currentDestination?.route?.contains(it.name) ?: false }
 
     NavigationBar(
         modifier = Modifier,
@@ -37,24 +36,20 @@ fun MainBottomBar(
                 icon = {
                     Icon(
                         modifier = Modifier.size(24.dp),
-                        painter = painterResource(id = icons[index]),
+                        painter = painterResource(id = items[index].iconId),
                         contentDescription = null
                     )
                 },
                 label = {
                     Text(
-                        text = item,
+                        text = stringResource(id = item.textId),
                         style = MaterialTheme.typography.bodyMedium
                     )
                 },
-                selected = selectedItem == index,
+                selected = currentDestination?.route?.contains(item.name) ?: false,
                 onClick = {
                     if (selectedItem != index) {
-                        selectedItem = index
-                        navController.navigate(item) {
-                            popUpTo(navController.graph.findStartDestination().id) {
-                                saveState = true
-                            }
+                        navController.navigate(item.name) {
                             launchSingleTop = true
                             restoreState = true
                         }

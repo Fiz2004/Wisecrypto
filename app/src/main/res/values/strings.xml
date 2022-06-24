@@ -37,5 +37,9 @@
     <string name="signup2_privacy_policy">политикой конфиденциальности </string>
     <string name="signup2_content_policy">политикой содержания</string>
     <string name="signup2_signup">Зарегестрироваться</string>
+    <string name="signup2_error_noconfirm_password">Не совпадают пароль и подтверждение пароля</string>
+    <string name="screen_home">Дом</string>
+    <string name="screen_market">Магазин</string>
+    <string name="screen_profile">Профиль</string>
 
 </resources>

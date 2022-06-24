@@ -1,5 +1,6 @@
 package com.fiz.wisecrypto.ui.screens.login.signup2
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
@@ -9,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -26,6 +28,8 @@ fun SignUp2Screen(
     showPrivacyPolicy: () -> Unit = { },
     showContentPolicy: () -> Unit = { },
 ) {
+    val context = LocalContext.current
+
     val viewState = viewModel.viewState
     val viewEffect = viewModel.viewEffect
 
@@ -43,6 +47,10 @@ fun SignUp2Screen(
                 }
                 SignUp2ViewEffect.ShowTermsAndConditions -> {
                     showContentPolicy()
+                }
+                is SignUp2ViewEffect.ShowError -> {
+                    val errorText = context.getString(effect.textMessage)
+                    Toast.makeText(context, errorText, Toast.LENGTH_SHORT).show()
                 }
             }
         }
