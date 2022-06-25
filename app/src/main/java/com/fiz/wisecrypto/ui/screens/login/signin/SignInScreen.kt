@@ -1,5 +1,6 @@
 package com.fiz.wisecrypto.ui.screens.login.signin
 
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -9,12 +10,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fiz.wisecrypto.R
 import com.fiz.wisecrypto.ui.screens.login.components.*
+import com.fiz.wisecrypto.ui.screens.login.signup2.SignUp2ViewEffect
 
 @Composable
 fun SignInScreen(
@@ -23,6 +26,8 @@ fun SignInScreen(
     moveSignUpScreen: () -> Unit = {},
     moveMainContentScreen: () -> Unit = {},
 ) {
+    val context = LocalContext.current
+
     val viewState = viewModel.viewState
     val viewEffect = viewModel.viewEffect
 
@@ -37,6 +42,10 @@ fun SignInScreen(
                 }
                 SignInViewEffect.MoveMainContentScreen -> {
                     moveMainContentScreen()
+                }
+                is SignInViewEffect.ShowError -> {
+                    val errorText = context.getString(effect.textMessage)
+                    Toast.makeText(context, errorText, Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -59,7 +68,8 @@ fun SignInScreen(
             text = viewState.password,
             onValueChange = { viewModel.onEvent(SignInEvent.PasswordChanged(it)) },
             textHeader = stringResource(R.string.login_password_title),
-            textHint = stringResource(R.string.login_password_hint)
+            textHint = stringResource(R.string.login_password_hint),
+            password = true
         )
 
         Spacer(modifier = Modifier.height(32.dp))

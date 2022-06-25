@@ -5,6 +5,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -59,7 +60,7 @@ fun MainBottomBar(
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = MaterialTheme.colorScheme.primary,
                     selectedTextColor = MaterialTheme.colorScheme.primary,
-//                    indicatorColor = MaterialTheme.colorScheme.primary.copy(alpha = 1f),
+                    indicatorColor = MaterialTheme.colorScheme.surface,
                     unselectedIconColor = MaterialTheme.colorScheme.hint,
                     unselectedTextColor = MaterialTheme.colorScheme.hint,
                 )

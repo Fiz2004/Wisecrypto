@@ -1,11 +1,19 @@
 package com.fiz.wisecrypto.data.repositories
 
+import com.fiz.wisecrypto.data.data_source.UserLocalDataSourceImpl
+import com.fiz.wisecrypto.data.entity.UserEntity
 import com.fiz.wisecrypto.domain.models.User
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class UserRepositoryImpl(val dispatcher: CoroutineDispatcher = Dispatchers.Default) {
+@Singleton
+class UserRepositoryImpl @Inject constructor(
+    private val userLocalDataSource: UserLocalDataSourceImpl,
+    private val dispatcher: CoroutineDispatcher = Dispatchers.Default
+) {
     suspend fun saveUser(
         fullName: String,
         numberPhone: String,
@@ -14,8 +22,19 @@ class UserRepositoryImpl(val dispatcher: CoroutineDispatcher = Dispatchers.Defau
         password: String
     ): Boolean {
         return withContext(dispatcher) {
-
-            true
+            try {
+                val userEntity = UserEntity(
+                    fullName = fullName.trim(),
+                    numberPhone = numberPhone.trim().filter { it.isDigit() },
+                    userName = userName.trim(),
+                    email = email.trim().lowercase(),
+                    password = password.trim().lowercase()
+                )
+                userLocalDataSource.saveUser(userEntity)
+                true
+            } catch (e: Exception) {
+                false
+            }
         }
     }
 
@@ -24,8 +43,14 @@ class UserRepositoryImpl(val dispatcher: CoroutineDispatcher = Dispatchers.Defau
         password: String
     ): User? {
         return withContext(dispatcher) {
-
-            User(email = email, fullName = "Test Test", numberPhone = "128923", userName = "Test")
+            val checkEmail = email.trim().lowercase()
+            val checkPassword = password.trim().lowercase()
+            if (userLocalDataSource.checkUser(checkEmail, checkPassword)) {
+                val user = userLocalDataSource.loadUser(checkEmail)?.toUser()
+                user
+            } else {
+                null
+            }
         }
     }
 }

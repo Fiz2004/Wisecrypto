@@ -54,9 +54,11 @@ fun AppNavHost(
         }
         composable(NamesScreen.SignUp2.name) {
             val viewModel = hiltViewModel<SignUp2ViewModel>()
+            val viewModelSignUp = hiltViewModel<SignUpViewModel>()
 
             SignUp2Screen(
                 viewModel = viewModel,
+                signUpViewState = viewModelSignUp.viewState,
                 moveSignInScreen = { navController.navigate(NamesScreen.SignIn.name) },
                 showTermsAndConditions = { },
                 showPrivacyPolicy = { },

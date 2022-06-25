@@ -62,7 +62,7 @@ sealed class NamesMainScreen(
     object Home : NamesMainScreen("Home", R.string.screen_home, R.drawable.bottom_nav_ic_home)
 
     object Market :
-        NamesMainScreen("Market", R.string.screen_market, R.drawable.bottom_nav_ic_home)
+        NamesMainScreen("Market", R.string.screen_market, R.drawable.bottom_nav_ic_market)
 
     object Profile :
         NamesMainScreen("Profile", R.string.screen_profile, R.drawable.bottom_nav_ic_profile)

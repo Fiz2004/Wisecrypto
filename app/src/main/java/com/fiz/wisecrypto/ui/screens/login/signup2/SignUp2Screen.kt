@@ -16,6 +16,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fiz.wisecrypto.R
 import com.fiz.wisecrypto.ui.screens.login.components.*
+import com.fiz.wisecrypto.ui.screens.login.signup.SignUpViewModel
+import com.fiz.wisecrypto.ui.screens.login.signup.SignUpViewState
 import com.fiz.wisecrypto.ui.screens.login.signup2.components.TextPrivacy
 import com.fiz.wisecrypto.ui.theme.borderCheckedBox
 
@@ -23,6 +25,7 @@ import com.fiz.wisecrypto.ui.theme.borderCheckedBox
 @Composable
 fun SignUp2Screen(
     viewModel: SignUp2ViewModel = viewModel(),
+    signUpViewState: SignUpViewState = SignUpViewState(),
     moveSignInScreen: () -> Unit = {},
     showTermsAndConditions: () -> Unit = { },
     showPrivacyPolicy: () -> Unit = { },
@@ -110,7 +113,7 @@ fun SignUp2Screen(
 
         PrimaryButton(
             text = R.string.signup2_signup,
-            onClick = { viewModel.onEvent(SignUp2Event.SignUpClicked) })
+            onClick = { viewModel.onEvent(SignUp2Event.SignUpClicked(signUpViewState)) })
 
         TextExtraAction(
             infoText = R.string.signup_already_register,

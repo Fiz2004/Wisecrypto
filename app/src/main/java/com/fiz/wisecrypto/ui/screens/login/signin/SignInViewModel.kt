@@ -5,11 +5,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fiz.wisecrypto.R
+import com.fiz.wisecrypto.data.repositories.UserRepositoryImpl
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class SignInViewModel : ViewModel() {
+@HiltViewModel
+class SignInViewModel @Inject constructor(private val userRepository: UserRepositoryImpl) : ViewModel() {
 
     var viewState by mutableStateOf(SignInViewState())
         private set
@@ -36,7 +41,11 @@ class SignInViewModel : ViewModel() {
 
     private fun signInClicked() {
         viewModelScope.launch {
-            viewEffect.emit(SignInViewEffect.MoveMainContentScreen)
+            if (userRepository.checkUser(viewState.email,viewState.password)!=null)
+                viewEffect.emit(SignInViewEffect.MoveMainContentScreen)
+            else
+                viewEffect.emit(SignInViewEffect.ShowError(R.string.signin_error_signin))
+
         }
     }
 

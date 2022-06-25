@@ -6,10 +6,17 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fiz.wisecrypto.R
+import com.fiz.wisecrypto.data.repositories.UserRepositoryImpl
+import com.fiz.wisecrypto.ui.screens.login.signup.SignUpViewModel
+import com.fiz.wisecrypto.ui.screens.login.signup.SignUpViewState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class SignUp2ViewModel : ViewModel() {
+@HiltViewModel
+class SignUp2ViewModel @Inject constructor(private val userRepository: UserRepositoryImpl) :
+    ViewModel() {
 
     var viewState by mutableStateOf(SignUp2ViewState())
         private set
@@ -24,7 +31,7 @@ class SignUp2ViewModel : ViewModel() {
             is SignUp2Event.EmailChanged -> emailChanged(event.value)
             is SignUp2Event.PasswordChanged -> passwordChanged(event.value)
             SignUp2Event.PrivacyChanged -> privacyChanged()
-            SignUp2Event.SignUpClicked -> signUpClicked()
+            is SignUp2Event.SignUpClicked -> signUpClicked(event.signUpViewState)
             SignUp2Event.ContentPolicyClicked -> contentPolicyClicked()
             SignUp2Event.PrivacyPolicyClicked -> privacyPolicyClicked()
             SignUp2Event.TermsAndConditionsClicked -> termsAndConditionsClicked()
@@ -69,12 +76,29 @@ class SignUp2ViewModel : ViewModel() {
         viewState = viewState.copy(password = value)
     }
 
-    private fun signUpClicked() {
+    private fun signUpClicked(signUpViewState: SignUpViewState) {
         viewModelScope.launch {
-            if (!checkPasswordWithConfirmPassword(viewState.password, viewState.confirmPassword)) {
-                viewEffect.emit(SignUp2ViewEffect.ShowError(R.string.signup2_error_noconfirm_password))
+            if (viewState.privacy) {
+                if (checkPasswordWithConfirmPassword(
+                        viewState.password,
+                        viewState.confirmPassword
+                    )
+                ) {
+                    val fullName = signUpViewState.fullName
+                    val numberPhone = signUpViewState.numberPhone
+                    val userName = signUpViewState.userName
+                    userRepository.saveUser(
+                        fullName = fullName,
+                        numberPhone = numberPhone,
+                        userName = userName,
+                        email = viewState.email,
+                        password = viewState.password,
+                    )
+                }else{
+                    viewEffect.emit(SignUp2ViewEffect.ShowError(R.string.signup2_error_noconfirm_password))
+                }
+                viewEffect.emit(SignUp2ViewEffect.MoveSignInScreen)
             }
-            viewEffect.emit(SignUp2ViewEffect.MoveSignInScreen)
         }
     }
 
