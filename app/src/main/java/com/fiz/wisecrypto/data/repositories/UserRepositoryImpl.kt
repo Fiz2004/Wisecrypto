@@ -53,4 +53,12 @@ class UserRepositoryImpl @Inject constructor(
             }
         }
     }
+
+    suspend fun getUserInfo(email: String): User? {
+        return withContext(dispatcher) {
+            val checkEmail = email.trim().lowercase()
+            val user = userLocalDataSource.loadUser(checkEmail)?.toUser()
+            user
+        }
+    }
 }

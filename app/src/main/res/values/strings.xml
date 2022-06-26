@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Wisecrypto</string>
+    <string name="preferences">com.fiz.wisecrypto</string>
 
     <string name="slogan">Доверяют миллионы пользователей по всему миру</string>
     <!--    Log In-->
@@ -15,6 +16,7 @@
     <string name="signin_signin">Зарегистрироваться</string>
     <string name="signin_signup">Создать учетную запись</string>
     <string name="signin_noaccount">У вас еще нет учетной записи?</string>
+    <string name="signin_error_signin">Не могу войти</string>
     <!--    Sign Up-->
     <string name="signup_title">Зарегистрируйтесь Сейчас</string>
     <string name="signup_fullname_title">Полное имя</string>
@@ -38,10 +40,18 @@
     <string name="signup2_content_policy">политикой содержания</string>
     <string name="signup2_signup">Зарегестрироваться</string>
     <string name="signup2_error_noconfirm_password">Не совпадают пароль и подтверждение пароля</string>
+
+    <!--    Main-->
     <string name="screen_home">Дом</string>
     <string name="screen_market">Магазин</string>
     <string name="screen_profile">Профиль</string>
-    <string name="signin_error_signin">Не могу войти</string>
-    <string name="preferences">com.fiz.wisecrypto</string>
+
+    <!--    Home-->
+    <string name="home_hello">Здравствуйте,</string>
+    <string name="home_see_all">Просмотреть Все</string>
+    <string name="home_your_active">Ваши активы</string>
+    <string name="home_total_portfolio">Общий портфель</string>
+    <string name="home_portfolio">Портфель</string>
+    <string name="home_watchlist">Список наблюдения</string>
 
 </resources>

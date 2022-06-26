@@ -14,6 +14,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fiz.wisecrypto.R
+import com.fiz.wisecrypto.ui.components.MainColumn
 import com.fiz.wisecrypto.ui.screens.login.components.*
 import com.fiz.wisecrypto.ui.theme.hint
 
@@ -47,8 +48,8 @@ fun SignUpScreen(
         TitleAndGreeting(textTitle = R.string.signup_title, textGreeting = R.string.slogan)
 
         TextFieldWithHeader(
-            text = viewState.userName,
-            onValueChange = { viewModel.onEvent(SignUpEvent.UserNameChanged(it)) },
+            text = viewState.fullName,
+            onValueChange = { viewModel.onEvent(SignUpEvent.FullNameChanged(it)) },
             textHeader = stringResource(R.string.signup_fullname_title),
             textHint = stringResource(R.string.signup_fullname_hint)
         )
@@ -61,8 +62,8 @@ fun SignUpScreen(
         )
 
         TextFieldWithHeader(
-            text = viewState.fullName,
-            onValueChange = { viewModel.onEvent(SignUpEvent.FullNameChanged(it)) },
+            text = viewState.userName,
+            onValueChange = { viewModel.onEvent(SignUpEvent.UserNameChanged(it)) },
             textHeader = stringResource(R.string.signup_username_title),
             textHint = stringResource(R.string.signup_username_hint)
         )

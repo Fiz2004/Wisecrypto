@@ -5,17 +5,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fiz.wisecrypto.data.repositories.AuthRepository
-import com.fiz.wisecrypto.ui.screens.login.signin.SignInViewEffect
+import com.fiz.wisecrypto.data.repositories.AuthRepositoryImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SplashViewModel @Inject constructor(
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepositoryImpl
 ) : ViewModel() {
 
     var viewState by mutableStateOf(SplashViewState())

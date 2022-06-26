@@ -16,8 +16,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fiz.wisecrypto.R
+import com.fiz.wisecrypto.ui.components.MainColumn
 import com.fiz.wisecrypto.ui.screens.login.components.*
-import com.fiz.wisecrypto.ui.screens.login.signup2.SignUp2ViewEffect
 
 @Composable
 fun SignInScreen(

@@ -6,7 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fiz.wisecrypto.R
-import com.fiz.wisecrypto.data.repositories.AuthRepository
+import com.fiz.wisecrypto.data.repositories.AuthRepositoryImpl
 import com.fiz.wisecrypto.data.repositories.UserRepositoryImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -16,7 +16,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SignInViewModel @Inject constructor(
     private val userRepository: UserRepositoryImpl,
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepositoryImpl
 ) : ViewModel() {
 
     var viewState by mutableStateOf(SignInViewState())
@@ -44,7 +44,7 @@ class SignInViewModel @Inject constructor(
     private fun signInClicked() {
         viewModelScope.launch {
             if (userRepository.checkUser(viewState.email, viewState.password) != null) {
-                authRepository.authCompleted()
+                authRepository.authCompleted(viewState.email)
                 viewEffect.emit(SignInViewEffect.MoveMainContentScreen)
             } else {
                 viewEffect.emit(SignInViewEffect.ShowError(R.string.signin_error_signin))

@@ -1,4 +1,4 @@
-package com.fiz.wisecrypto.ui.screens.login.components
+package com.fiz.wisecrypto.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column

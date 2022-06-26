@@ -1,17 +1,30 @@
 package com.fiz.wisecrypto.ui.screens.main
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import com.fiz.wisecrypto.domain.models.User
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import javax.inject.Inject
+
+data class MainViewState(
+    val user: User= User()
+)
+
+sealed class MainViewEffect{
+
+}
 
 @HiltViewModel
 class MainViewModel @Inject constructor() : ViewModel() {
-//    var viewState by mutableStateOf(SignInViewState())
-//        private set
-//
-//    var viewEffect = MutableSharedFlow<SignInViewEffect>()
-//        private set
-//
+    var viewState by mutableStateOf(MainViewState())
+        private set
+
+    var viewEffect = MutableSharedFlow<MainViewEffect>()
+        private set
+
 //    fun onEvent(event: SignInEvent) {
 //        when (event) {
 //            is SignInEvent.EmailChanged -> emailChanged(event.value)

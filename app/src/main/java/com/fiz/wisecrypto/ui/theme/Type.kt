@@ -4,14 +4,18 @@ import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.fiz.wisecrypto.R
 
 // Set of Material typography styles to start with
 
-val Mulish = FontFamily(
+val MulishRegular = FontFamily(
+    Font(R.font.mulish_regular),
+)
+val MulishSemiBold = FontFamily(
     Font(R.font.mulish_semibold),
+)
+val MulishBold = FontFamily(
     Font(R.font.mulish_bold),
 )
 
@@ -21,31 +25,41 @@ val Montserrat = FontFamily(
 
 val Typography = Typography(
     displayLarge = TextStyle(
-        fontFamily = Mulish,
-        fontWeight = FontWeight.Bold,
+        fontFamily = MulishBold,
         fontSize = 32.sp,
     ),
     displayMedium = TextStyle(
-        fontFamily = Mulish,
-        fontWeight = FontWeight.SemiBold,
+        fontFamily = MulishSemiBold,
         fontSize = 16.sp,
     ),
     displaySmall = TextStyle(
-        fontFamily = Mulish,
-        fontWeight = FontWeight.SemiBold,
+        fontFamily = MulishSemiBold,
         fontSize = 14.sp,
     ),
 
     titleLarge = TextStyle(
         fontFamily = Montserrat,
-        fontWeight = FontWeight.Medium,
         fontSize = 14.sp,
     ),
 
+    bodyLarge = TextStyle(
+        fontFamily = MulishBold,
+        fontSize = 20.sp,
+    ),
+
     bodyMedium = TextStyle(
-        fontFamily = Mulish,
-        fontWeight = FontWeight.SemiBold,
+        fontFamily = MulishSemiBold,
         fontSize = 12.sp,
+    ),
+
+    bodySmall = TextStyle(
+        fontFamily = MulishSemiBold,
+        fontSize = 10.sp,
+    ),
+
+    labelSmall = TextStyle(
+        fontFamily = MulishBold,
+        fontSize = 10.sp,
     ),
 
 

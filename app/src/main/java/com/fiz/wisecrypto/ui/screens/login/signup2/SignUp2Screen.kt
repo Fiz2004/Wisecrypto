@@ -15,8 +15,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fiz.wisecrypto.R
+import com.fiz.wisecrypto.ui.components.MainColumn
 import com.fiz.wisecrypto.ui.screens.login.components.*
-import com.fiz.wisecrypto.ui.screens.login.signup.SignUpViewModel
 import com.fiz.wisecrypto.ui.screens.login.signup.SignUpViewState
 import com.fiz.wisecrypto.ui.screens.login.signup2.components.TextPrivacy
 import com.fiz.wisecrypto.ui.theme.borderCheckedBox
