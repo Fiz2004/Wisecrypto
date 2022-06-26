@@ -1,7 +1,9 @@
 package com.fiz.wisecrypto.di
 
 import android.content.Context
+import android.content.SharedPreferences
 import androidx.room.Room
+import com.fiz.wisecrypto.R
 import com.fiz.wisecrypto.data.database.Database
 import com.fiz.wisecrypto.data.database.dao.UserDao
 import dagger.Module
@@ -18,6 +20,15 @@ private const val NAME_DATABASE = "database"
 @Module
 @InstallIn(SingletonComponent::class)
 class MainComponent {
+
+    @Provides
+    @Singleton
+    fun provideSharedPreferences(@ApplicationContext context: Context): SharedPreferences {
+        return context.getSharedPreferences(
+            context.getString(R.string.preferences),
+            0x0000
+        )
+    }
 
     @Provides
     @Singleton

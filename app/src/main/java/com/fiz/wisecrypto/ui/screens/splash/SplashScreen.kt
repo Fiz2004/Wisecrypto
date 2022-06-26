@@ -27,23 +27,25 @@ import com.fiz.wisecrypto.ui.theme.WisecryptoTheme
 @Composable
 fun SplashScreen(
     viewModel: SplashViewModel = viewModel(),
-    moveNextScreen: () -> Unit = {}
+    moveSignInScreen: () -> Unit = {},
+    moveMainContentScreen: () -> Unit = {}
 ) {
     val viewState = viewModel.viewState
     val viewEffect = viewModel.viewEffect
 
     LaunchedEffect(Unit) {
+        viewModel.onEvent(SplashEvent.StartScreen)
+
         viewEffect.collect { effect ->
             when (effect) {
-                SplashViewEffect.MoveNextScreen -> {
-                    moveNextScreen()
+                SplashViewEffect.MoveMainContentScreen -> {
+                    moveMainContentScreen()
+                }
+                SplashViewEffect.MoveSignInScreen -> {
+                    moveSignInScreen()
                 }
             }
         }
-    }
-
-    LaunchedEffect(key1 = Unit) {
-        viewModel.onEvent(SplashEvent.StartScreen)
     }
 
     Column(

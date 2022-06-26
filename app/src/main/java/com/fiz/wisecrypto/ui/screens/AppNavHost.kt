@@ -30,7 +30,8 @@ fun AppNavHost(
 
             SplashScreen(
                 viewModel = viewModel,
-                moveNextScreen = { navController.navigate(NamesScreen.SignIn.name) }
+                moveSignInScreen = { navController.navigate(NamesScreen.SignIn.name) },
+                moveMainContentScreen = { navController.navigate(NamesScreen.Main.name) }
             )
         }
         composable(NamesScreen.SignIn.name) {

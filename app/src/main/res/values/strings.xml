@@ -42,5 +42,6 @@
     <string name="screen_market">Магазин</string>
     <string name="screen_profile">Профиль</string>
     <string name="signin_error_signin">Не могу войти</string>
+    <string name="preferences">com.fiz.wisecrypto</string>
 
 </resources>

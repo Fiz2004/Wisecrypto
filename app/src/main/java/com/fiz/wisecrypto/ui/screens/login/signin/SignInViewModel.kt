@@ -6,15 +6,18 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fiz.wisecrypto.R
+import com.fiz.wisecrypto.data.repositories.AuthRepository
 import com.fiz.wisecrypto.data.repositories.UserRepositoryImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SignInViewModel @Inject constructor(private val userRepository: UserRepositoryImpl) : ViewModel() {
+class SignInViewModel @Inject constructor(
+    private val userRepository: UserRepositoryImpl,
+    private val authRepository: AuthRepository
+) : ViewModel() {
 
     var viewState by mutableStateOf(SignInViewState())
         private set
@@ -29,7 +32,6 @@ class SignInViewModel @Inject constructor(private val userRepository: UserReposi
             SignInEvent.ForgotPasswordClicked -> forgotPasswordClicked()
             SignInEvent.SignInClicked -> signInClicked()
             SignInEvent.SignUpClicked -> signUpClicked()
-            SignInEvent.StartScreen -> startScreen()
         }
     }
 
@@ -41,10 +43,12 @@ class SignInViewModel @Inject constructor(private val userRepository: UserReposi
 
     private fun signInClicked() {
         viewModelScope.launch {
-            if (userRepository.checkUser(viewState.email,viewState.password)!=null)
+            if (userRepository.checkUser(viewState.email, viewState.password) != null) {
+                authRepository.authCompleted()
                 viewEffect.emit(SignInViewEffect.MoveMainContentScreen)
-            else
+            } else {
                 viewEffect.emit(SignInViewEffect.ShowError(R.string.signin_error_signin))
+            }
 
         }
     }
@@ -63,11 +67,4 @@ class SignInViewModel @Inject constructor(private val userRepository: UserReposi
         viewState = viewState.copy(email = value)
     }
 
-    private fun startScreen() {
-        viewModelScope.launch {
-            viewState = viewState.copy(isLoading = true)
-            delay(3000)
-            viewState = viewState.copy(isLoading = false)
-        }
-    }
 }
