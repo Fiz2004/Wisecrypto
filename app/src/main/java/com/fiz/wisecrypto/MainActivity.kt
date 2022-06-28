@@ -7,45 +7,69 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.view.WindowCompat
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.fiz.wisecrypto.ui.screens.AppNavHost
+import com.fiz.wisecrypto.ui.screens.NamesScreen
 import com.fiz.wisecrypto.ui.theme.WisecryptoTheme
+import com.fiz.wisecrypto.ui.theme.isLight
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+
         setContent {
             val navController = rememberNavController()
 
+            val backstackEntry by navController.currentBackStackEntryAsState()
+            val currentScreen = backstackEntry?.destination
+
+            val useDarkIcons = isLight
+            val systemUiController = rememberSystemUiController()
+
+            SideEffect {
+
+                when (currentScreen?.route) {
+                    null,
+                    NamesScreen.Splash.name,
+                    NamesScreen.SignIn.name,
+                    NamesScreen.SignUp.name,
+                    NamesScreen.SignUp2.name,
+                    -> {
+                        systemUiController.isStatusBarVisible = false
+                    }
+                    else -> {
+                        systemUiController.isStatusBarVisible = true
+                    }
+                }
+
+                systemUiController.setSystemBarsColor(
+                    color = Color.Transparent,
+                    darkIcons = useDarkIcons
+                )
+            }
+
+
             WisecryptoTheme {
-                // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
                     AppNavHost(
-                        navController = navController
+                        navController = navController,
                     )
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    WisecryptoTheme {
-        Greeting("Android")
     }
 }

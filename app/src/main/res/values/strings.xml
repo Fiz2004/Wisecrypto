@@ -54,4 +54,18 @@
     <string name="home_portfolio">Портфель</string>
     <string name="home_watchlist">Список наблюдения</string>
 
+    <!--    Notifications-->
+    <string name="notification_notifications">Уведомления</string>
+    <string name="notification_title_portfolio_increase">Увеличение активов</string>
+    <string name="notification_title_transaction_success">Успешная Транзакция</string>
+    <string name="notification_title_balance_process">Операция в обработке</string>
+    <string name="notification_title_balance_success">Операция выполнена</string>
+    <string name="notification_title_balance_fail">Операция не удалась</string>
+    <string name="notification_text_portfolio_increase">Увеличение %1$s-активов на %2$s</string>
+    <string name="notification_text_transaction_success">Покупка %1$s биткоина успешно выполнена</string>
+    <string name="notification_text_balance_process">Пополнение баланса на %1$s долларов в процессе выполнения</string>
+    <string name="notification_text_balance_success">Успешное пополнение счета на сумму %1$s долларов</string>
+    <string name="notification_text_balance_fail">Не удалось пополнить баланс на %1$s долларов</string>
+    <string name="notification_date">29 Ноября 2021 (13.00)</string>
+
 </resources>

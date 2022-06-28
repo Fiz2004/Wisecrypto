@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fiz.wisecrypto.R
 import com.fiz.wisecrypto.data.repositories.UserRepositoryImpl
-import com.fiz.wisecrypto.ui.screens.login.signup.SignUpViewModel
 import com.fiz.wisecrypto.ui.screens.login.signup.SignUpViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -94,10 +93,10 @@ class SignUp2ViewModel @Inject constructor(private val userRepository: UserRepos
                         email = viewState.email,
                         password = viewState.password,
                     )
+                    viewEffect.emit(SignUp2ViewEffect.MoveSignInScreen)
                 }else{
                     viewEffect.emit(SignUp2ViewEffect.ShowError(R.string.signup2_error_noconfirm_password))
                 }
-                viewEffect.emit(SignUp2ViewEffect.MoveSignInScreen)
             }
         }
     }

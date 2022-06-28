@@ -1,10 +1,10 @@
 package com.fiz.wisecrypto.ui.screens.login.signin
 
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -16,7 +16,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fiz.wisecrypto.R
-import com.fiz.wisecrypto.ui.components.MainColumn
 import com.fiz.wisecrypto.ui.screens.login.components.*
 
 @Composable
@@ -51,48 +50,68 @@ fun SignInScreen(
         }
     }
 
-    MainColumn {
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = MaterialTheme.colorScheme.surface)
+            .padding(horizontal = 16.dp, vertical = 16.dp)
+    ) {
 
-        LogoItem()
+        item {
+            LogoItem()
+        }
 
-        TitleAndGreeting(textTitle = R.string.signin_welcome, textGreeting = R.string.slogan)
+        item {
+            TitleAndGreeting(textTitle = R.string.signin_welcome, textGreeting = R.string.slogan)
+        }
 
-        TextFieldWithHeader(
-            text = viewState.email,
-            onValueChange = { viewModel.onEvent(SignInEvent.EmailChanged(it)) },
-            textHeader = stringResource(R.string.login_email_title),
-            textHint = stringResource(R.string.login_email_hint)
-        )
+        item {
+            TextFieldWithHeader(
+                text = viewState.email,
+                onValueChange = { viewModel.onEvent(SignInEvent.EmailChanged(it)) },
+                textHeader = stringResource(R.string.login_email_title),
+                textHint = stringResource(R.string.login_email_hint)
+            )
+        }
 
-        TextFieldWithHeader(
-            text = viewState.password,
-            onValueChange = { viewModel.onEvent(SignInEvent.PasswordChanged(it)) },
-            textHeader = stringResource(R.string.login_password_title),
-            textHint = stringResource(R.string.login_password_hint),
-            password = true
-        )
+        item {
+            TextFieldWithHeader(
+                text = viewState.password,
+                onValueChange = { viewModel.onEvent(SignInEvent.PasswordChanged(it)) },
+                textHeader = stringResource(R.string.login_password_title),
+                textHint = stringResource(R.string.login_password_hint),
+                password = true
+            )
+            Spacer(modifier = Modifier.height(32.dp))
+        }
 
-        Spacer(modifier = Modifier.height(32.dp))
+        item {
 
-        Text(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { viewModel.onEvent(SignInEvent.ForgotPasswordClicked) },
-            textAlign = TextAlign.Center,
-            text = stringResource(R.string.signin_forgot_password),
-            color = MaterialTheme.colorScheme.tertiary,
-            style = MaterialTheme.typography.bodyMedium
-        )
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { viewModel.onEvent(SignInEvent.ForgotPasswordClicked) },
+                textAlign = TextAlign.Center,
+                text = stringResource(R.string.signin_forgot_password),
+                color = MaterialTheme.colorScheme.tertiary,
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
 
-        PrimaryButton(
-            text = R.string.signin_signin,
-            onClick = { viewModel.onEvent(SignInEvent.SignInClicked) })
+        item {
+            PrimaryButton(
+                text = R.string.signin_signin,
+                onClick = { viewModel.onEvent(SignInEvent.SignInClicked) })
 
-        TextExtraAction(
-            infoText = R.string.signin_noaccount,
-            textAction = R.string.signin_signup,
-            onClickAction = { viewModel.onEvent(SignInEvent.SignUpClicked) }
-        )
+        }
+
+        item {
+            TextExtraAction(
+                infoText = R.string.signin_noaccount,
+                textAction = R.string.signin_signup,
+                onClickAction = { viewModel.onEvent(SignInEvent.SignUpClicked) }
+            )
+        }
     }
 }
 

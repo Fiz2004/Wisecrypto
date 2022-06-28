@@ -14,6 +14,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.fiz.wisecrypto.R
 import com.fiz.wisecrypto.ui.theme.hint
+import com.fiz.wisecrypto.ui.theme.titleMedium2
 import com.fiz.wisecrypto.ui.theme.veryLightPrimary
 
 @Composable
@@ -81,6 +82,6 @@ fun HeaderTextField(
             .fillMaxWidth(),
         text = text,
         color = MaterialTheme.colorScheme.onSurface,
-        style = MaterialTheme.typography.titleLarge
+        style = MaterialTheme.typography.titleMedium2
     )
 }

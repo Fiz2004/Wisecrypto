@@ -19,6 +19,11 @@ data class HomeViewState(
 
 sealed class HomeViewEffect {
     object MoveSignIn : HomeViewEffect()
+    object MoveNotificationScreen : HomeViewEffect()
+}
+
+sealed class HomeEvent {
+    object NotificationClicked : HomeEvent()
 }
 
 @HiltViewModel
@@ -27,7 +32,6 @@ class HomeViewModel @Inject constructor(
     private val userRepository: UserRepositoryImpl,
 
     ) : ViewModel() {
-
     var viewState by mutableStateOf(HomeViewState())
         private set
 
@@ -46,6 +50,18 @@ class HomeViewModel @Inject constructor(
                 else
                     viewState = viewState.copy(fullName = user.fullName)
             }
+        }
+    }
+
+    fun onEvent(event: HomeEvent) {
+        when (event) {
+            HomeEvent.NotificationClicked -> notificationClicked()
+        }
+    }
+
+    private fun notificationClicked() {
+        viewModelScope.launch {
+            viewEffect.emit(HomeViewEffect.MoveNotificationScreen)
         }
     }
 }

@@ -2,6 +2,7 @@ package com.fiz.wisecrypto.ui.screens.main
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -14,12 +15,11 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.fiz.wisecrypto.R
 import com.fiz.wisecrypto.ui.screens.main.components.MainBottomBar
-import com.fiz.wisecrypto.ui.screens.main.components.MainTopAppBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
-    viewModel: MainViewModel = viewModel()
+    viewModel: MainViewModel = viewModel(),
 ) {
     val navController = rememberNavController()
     val backstackEntry by navController.currentBackStackEntryAsState()
@@ -27,13 +27,9 @@ fun MainScreen(
 
 //    val state = viewModel.viewState
 
-//    if (currentScreen?.route != NamesMainScreen.Home.name)
+    if (currentScreen?.route != NamesHomeScreen.Notification.name)
         Scaffold(
-            topBar = {
-                if (currentScreen?.route != NamesMainScreen.Home.name) {
-                    MainTopAppBar(viewModel, currentScreen)
-                }
-            },
+            modifier=Modifier.navigationBarsPadding(),
             bottomBar = {
                 MainBottomBar(navController)
             },
@@ -45,13 +41,13 @@ fun MainScreen(
                 viewModel
             )
         }
-//    else {
-//        MainNavHost(
-//            navController = navController,
-//            modifier = Modifier,
-//            viewModel
-//        )
-//    }
+    else {
+        MainNavHost(
+            navController = navController,
+            modifier = Modifier,
+            viewModel
+        )
+    }
 }
 
 sealed class NamesMainScreen(

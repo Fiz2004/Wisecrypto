@@ -1,13 +1,12 @@
 package com.fiz.wisecrypto.ui.theme
 
 import androidx.compose.material3.Typography
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.sp
 import com.fiz.wisecrypto.R
-
-// Set of Material typography styles to start with
 
 val MulishRegular = FontFamily(
     Font(R.font.mulish_regular),
@@ -19,7 +18,7 @@ val MulishBold = FontFamily(
     Font(R.font.mulish_bold),
 )
 
-val Montserrat = FontFamily(
+val MontserratMedium = FontFamily(
     Font(R.font.montserrat_medium),
 )
 
@@ -37,9 +36,24 @@ val Typography = Typography(
         fontSize = 14.sp,
     ),
 
-    titleLarge = TextStyle(
-        fontFamily = Montserrat,
+    headlineMedium = TextStyle(
+        fontFamily = MulishBold,
+        fontSize = 16.sp,
+    ),
+
+//    titleLarge = TextStyle(
+//        fontFamily = MontserratMedium,
+//        fontSize = 14.sp,
+//    ),
+
+    titleMedium = TextStyle(
+        fontFamily = MulishSemiBold,
         fontSize = 14.sp,
+    ),
+
+    titleSmall = TextStyle(
+        fontFamily = MulishBold,
+        fontSize = 12.sp,
     ),
 
     bodyLarge = TextStyle(
@@ -80,3 +94,17 @@ val Typography = Typography(
     )
     */
 )
+
+@get:Composable
+val Typography.titleMedium2: TextStyle
+    get() = TextStyle(
+        fontFamily = MontserratMedium,
+        fontSize = 14.sp,
+    )
+
+@get:Composable
+val Typography.bodyMedium2: TextStyle
+    get() = TextStyle(
+        fontFamily = MulishRegular,
+        fontSize = 12.sp,
+    )

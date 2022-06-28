@@ -7,8 +7,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.fiz.wisecrypto.ui.screens.main.home.HomeScreen
 import com.fiz.wisecrypto.ui.screens.main.home.HomeViewModel
+import com.fiz.wisecrypto.ui.screens.main.home.main.HomeScreen
+import com.fiz.wisecrypto.ui.screens.main.home.notification.HomeNotificationScreen
+import com.fiz.wisecrypto.ui.screens.main.home.notification.HomeNotificationViewModel
 import com.fiz.wisecrypto.ui.screens.main.market.MarketScreen
 import com.fiz.wisecrypto.ui.screens.main.profile.ProfileScreen
 
@@ -29,6 +31,17 @@ fun MainNavHost(
             HomeScreen(
                 mainViewModel,
                 viewModel,
+                moveNotificationScreen = { navController.navigate(NamesHomeScreen.Notification.name) }
+            )
+        }
+
+        composable(NamesHomeScreen.Notification.name) {
+            val viewModel = hiltViewModel<HomeNotificationViewModel>()
+
+            HomeNotificationScreen(
+                mainViewModel,
+                viewModel,
+                moveHomeMain = { navController.popBackStack() }
             )
         }
 
@@ -50,4 +63,8 @@ fun MainNavHost(
             )
         }
     }
+}
+
+enum class NamesHomeScreen(name: String) {
+    Notification("Notification"),
 }
