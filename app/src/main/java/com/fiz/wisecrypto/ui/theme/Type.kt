@@ -36,6 +36,11 @@ val Typography = Typography(
         fontSize = 14.sp,
     ),
 
+    headlineLarge = TextStyle(
+        fontFamily = MulishBold,
+        fontSize = 20.sp,
+    ),
+
     headlineMedium = TextStyle(
         fontFamily = MulishBold,
         fontSize = 16.sp,
@@ -56,10 +61,10 @@ val Typography = Typography(
         fontSize = 12.sp,
     ),
 
-    bodyLarge = TextStyle(
-        fontFamily = MulishBold,
-        fontSize = 20.sp,
-    ),
+//    bodyLarge = TextStyle(
+//        fontFamily = MulishBold,
+//        fontSize = 20.sp,
+//    ),
 
     bodyMedium = TextStyle(
         fontFamily = MulishSemiBold,
@@ -99,6 +104,13 @@ val Typography = Typography(
 val Typography.titleMedium2: TextStyle
     get() = TextStyle(
         fontFamily = MontserratMedium,
+        fontSize = 14.sp,
+    )
+
+@get:Composable
+val Typography.textField: TextStyle
+    get() = TextStyle(
+        fontFamily = MulishRegular,
         fontSize = 14.sp,
     )
 

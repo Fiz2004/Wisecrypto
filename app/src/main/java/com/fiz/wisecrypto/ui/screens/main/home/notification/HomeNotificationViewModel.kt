@@ -12,20 +12,6 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-data class HomeNotificationViewState(
-    val fullName: String = "",
-    val photo: String = ""
-)
-
-sealed class HomeNotificationViewEffect {
-    object MoveSignIn : HomeNotificationViewEffect()
-    object MoveReturn : HomeNotificationViewEffect()
-}
-
-sealed class HomeNotificationEvent {
-    object BackButtonClicked : HomeNotificationEvent()
-}
-
 @HiltViewModel
 class HomeNotificationViewModel @Inject constructor(
     private val authRepository: AuthRepositoryImpl,

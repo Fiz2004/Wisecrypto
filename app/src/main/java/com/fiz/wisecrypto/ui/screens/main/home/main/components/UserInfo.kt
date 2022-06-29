@@ -39,7 +39,7 @@ fun UserInfo(icon: Int, fullName: String, onClickIconButton: () -> Unit = {}) {
             )
             Text(
                 text = fullName,
-                style = MaterialTheme.typography.bodyLarge,
+                style = MaterialTheme.typography.headlineLarge,
                 color = MaterialTheme.colorScheme.onSurface
             )
         }

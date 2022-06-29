@@ -12,18 +12,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.fiz.wisecrypto.ui.screens.main.models.CoinUi
 import com.fiz.wisecrypto.ui.theme.MulishBold
 import com.fiz.wisecrypto.ui.theme.MulishRegular
 
 @Composable
-fun WatchListItem(
-    icon: Int,
-    abbreviated: String,
-    name: String,
-    cost: String,
-    up: Boolean,
-    value: String
-) {
+fun WatchListItem(coinUi: CoinUi) {
     Row(
         modifier = Modifier
             .height(88.dp)
@@ -43,20 +37,20 @@ fun WatchListItem(
             Image(
                 modifier = Modifier
                     .size(40.dp),
-                painter = painterResource(id = icon),
+                painter = painterResource(id = coinUi.icon),
                 contentDescription = null
             )
         }
         Spacer(modifier = Modifier.width(16.dp))
         Column {
             Text(
-                text = abbreviated,
-                style = MaterialTheme.typography.bodyLarge,
+                text = coinUi.abbreviated,
+                style = MaterialTheme.typography.headlineLarge,
                 color = MaterialTheme.colorScheme.onSurface
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = name,
+                text = coinUi.name,
                 style = MaterialTheme.typography.displayMedium.copy(
                     fontFamily = MulishRegular
                 ),
@@ -68,12 +62,12 @@ fun WatchListItem(
             horizontalAlignment = Alignment.End
         ) {
             Text(
-                text = cost,
+                text = coinUi.cost,
                 style = MaterialTheme.typography.displayMedium.copy(fontFamily = MulishBold),
                 color = MaterialTheme.colorScheme.onSurface
             )
             Spacer(modifier = Modifier.height(4.dp))
-            RelativeLabel(up = up, value = value)
+            RelativeLabel(up = coinUi.up, value = coinUi.value)
         }
     }
 }

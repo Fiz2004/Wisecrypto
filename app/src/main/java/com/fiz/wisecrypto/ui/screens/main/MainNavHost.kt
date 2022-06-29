@@ -7,11 +7,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.fiz.wisecrypto.ui.screens.main.home.HomeViewModel
 import com.fiz.wisecrypto.ui.screens.main.home.main.HomeScreen
+import com.fiz.wisecrypto.ui.screens.main.home.main.HomeViewModel
 import com.fiz.wisecrypto.ui.screens.main.home.notification.HomeNotificationScreen
 import com.fiz.wisecrypto.ui.screens.main.home.notification.HomeNotificationViewModel
 import com.fiz.wisecrypto.ui.screens.main.market.MarketScreen
+import com.fiz.wisecrypto.ui.screens.main.market.MarketViewModel
 import com.fiz.wisecrypto.ui.screens.main.profile.ProfileScreen
 
 @Composable
@@ -46,7 +47,7 @@ fun MainNavHost(
         }
 
         composable(NamesMainScreen.Market.name) {
-            val viewModel = hiltViewModel<HomeViewModel>()
+            val viewModel = hiltViewModel<MarketViewModel>()
 
             MarketScreen(
                 mainViewModel,

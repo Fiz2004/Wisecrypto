@@ -67,5 +67,6 @@
     <string name="notification_text_balance_success">Успешное пополнение счета на сумму %1$s долларов</string>
     <string name="notification_text_balance_fail">Не удалось пополнить баланс на %1$s долларов</string>
     <string name="notification_date">29 Ноября 2021 (13.00)</string>
+    <string name="market_search_hint">Поиск...</string>
 
 </resources>

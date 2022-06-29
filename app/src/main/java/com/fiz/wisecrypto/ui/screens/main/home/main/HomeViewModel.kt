@@ -1,12 +1,14 @@
-package com.fiz.wisecrypto.ui.screens.main.home
+package com.fiz.wisecrypto.ui.screens.main.home.main
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fiz.wisecrypto.data.data_source.coinsStore
 import com.fiz.wisecrypto.data.repositories.AuthRepositoryImpl
 import com.fiz.wisecrypto.data.repositories.UserRepositoryImpl
+import com.fiz.wisecrypto.domain.models.Coin
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
@@ -14,7 +16,8 @@ import javax.inject.Inject
 
 data class HomeViewState(
     val fullName: String = "",
-    val photo: String = ""
+    val photo: String = "",
+    val coins: List<Coin> = coinsStore
 )
 
 sealed class HomeViewEffect {

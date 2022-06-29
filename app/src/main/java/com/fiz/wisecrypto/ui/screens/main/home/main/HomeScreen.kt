@@ -12,10 +12,11 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fiz.wisecrypto.R
 import com.fiz.wisecrypto.ui.screens.main.MainViewModel
-import com.fiz.wisecrypto.ui.screens.main.home.HomeEvent
-import com.fiz.wisecrypto.ui.screens.main.home.HomeViewEffect
-import com.fiz.wisecrypto.ui.screens.main.home.HomeViewModel
-import com.fiz.wisecrypto.ui.screens.main.home.components.*
+import com.fiz.wisecrypto.ui.screens.main.components.coinList
+import com.fiz.wisecrypto.ui.screens.main.home.components.BalanceInfo
+import com.fiz.wisecrypto.ui.screens.main.home.components.TitleWatchlist
+import com.fiz.wisecrypto.ui.screens.main.home.components.TitleYourActive
+import com.fiz.wisecrypto.ui.screens.main.home.components.YourActive
 import com.fiz.wisecrypto.ui.screens.main.home.main.components.UserInfo
 
 @Composable
@@ -39,6 +40,7 @@ fun HomeScreen(
                 HomeViewEffect.MoveSignIn -> {
 
                 }
+
             }
         }
     }
@@ -87,54 +89,7 @@ fun HomeScreen(
             Spacer(modifier = Modifier.height(8.dp))
         }
 
-        items(4) { index ->
-            when (index) {
-                0 -> {
-                    WatchListItem(
-                        icon = R.drawable.home_pic_bitcoin,
-                        abbreviated = "BTC/BUSD",
-                        name = "Bitcoin",
-                        cost = "\$54,382.64",
-                        up = true,
-                        value = "15,3%"
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                }
-                1 -> {
-                    WatchListItem(
-                        icon = R.drawable.home_pic_etherium,
-                        abbreviated = "ETH/BUSD",
-                        name = "Etherium",
-                        cost = "\$4,145.61",
-                        up = false,
-                        value = "-2,1%"
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                }
-                2 -> {
-                    WatchListItem(
-                        icon = R.drawable.home_pic_litecoin,
-                        abbreviated = "LTC/BUSD",
-                        name = "Litecoin",
-                        cost = "\$207.3",
-                        up = false,
-                        value = "-1,1%"
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                }
-                3 -> {
-                    WatchListItem(
-                        icon = R.drawable.home_pic_solana,
-                        abbreviated = "SOL/BUSD",
-                        name = "Solana",
-                        cost = "\$227.93",
-                        up = true,
-                        value = "15,3%"
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                }
-            }
-        }
+        coinList(viewState.coins)
     }
 }
 
