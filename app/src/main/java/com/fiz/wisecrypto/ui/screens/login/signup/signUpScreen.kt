@@ -46,7 +46,8 @@ fun SignUpScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(color = MaterialTheme.colorScheme.surface)
-            .padding(horizontal = 16.dp, vertical = 16.dp)
+            .padding(horizontal = 16.dp)
+            .padding(top = 16.dp)
     ) {
 
         item {
