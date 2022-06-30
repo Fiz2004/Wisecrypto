@@ -1,3 +1,5 @@
 package com.fiz.wisecrypto.ui.screens.main.market
 
-sealed class MarketViewEffect
+sealed class MarketViewEffect {
+    data class ShowError(val message: String) : MarketViewEffect()
+}

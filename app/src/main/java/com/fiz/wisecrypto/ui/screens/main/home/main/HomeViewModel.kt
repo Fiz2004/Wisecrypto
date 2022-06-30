@@ -1,38 +1,25 @@
 package com.fiz.wisecrypto.ui.screens.main.home.main
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fiz.wisecrypto.data.data_source.coinsStore
 import com.fiz.wisecrypto.data.repositories.AuthRepositoryImpl
+import com.fiz.wisecrypto.data.repositories.CoinRepositoryImpl
 import com.fiz.wisecrypto.data.repositories.UserRepositoryImpl
-import com.fiz.wisecrypto.domain.models.Coin
+import com.fiz.wisecrypto.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-data class HomeViewState(
-    val fullName: String = "",
-    val photo: String = "",
-    val coins: List<Coin> = coinsStore
-)
-
-sealed class HomeViewEffect {
-    object MoveSignIn : HomeViewEffect()
-    object MoveNotificationScreen : HomeViewEffect()
-}
-
-sealed class HomeEvent {
-    object NotificationClicked : HomeEvent()
-}
-
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val authRepository: AuthRepositoryImpl,
     private val userRepository: UserRepositoryImpl,
+    private val coinRepositoryImpl: CoinRepositoryImpl,
 
     ) : ViewModel() {
     var viewState by mutableStateOf(HomeViewState())
@@ -53,6 +40,15 @@ class HomeViewModel @Inject constructor(
                 else
                     viewState = viewState.copy(fullName = user.fullName)
             }
+
+            viewState = viewState.copy(isLoading = true)
+            val result = coinRepositoryImpl.getCoins()
+            if (result is Resource.Success)
+                Log.i("TAG", result.data.toString())
+            else
+                viewEffect.emit(HomeViewEffect.ShowError("Сбой загрузки из сети"))
+            viewState = viewState.copy(isLoading = false)
+
         }
     }
 

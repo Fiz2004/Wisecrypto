@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.room.Room
 import com.fiz.wisecrypto.R
+import com.fiz.wisecrypto.data.data_source.remote.CoingeckoApi
 import com.fiz.wisecrypto.data.database.Database
 import com.fiz.wisecrypto.data.database.dao.UserDao
 import dagger.Module
@@ -13,6 +14,8 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 private const val NAME_DATABASE = "database"
@@ -20,6 +23,16 @@ private const val NAME_DATABASE = "database"
 @Module
 @InstallIn(SingletonComponent::class)
 class MainComponent {
+
+    @Provides
+    @Singleton
+    fun provideCoingeckoApi(): CoingeckoApi {
+        return Retrofit.Builder()
+            .baseUrl(CoingeckoApi.BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(CoingeckoApi::class.java)
+    }
 
     @Provides
     @Singleton

@@ -1,16 +1,19 @@
 package com.fiz.wisecrypto.ui.screens.main.home.main
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fiz.wisecrypto.R
+import com.fiz.wisecrypto.ui.components.Progress
 import com.fiz.wisecrypto.ui.screens.main.MainViewModel
 import com.fiz.wisecrypto.ui.screens.main.components.coinList
 import com.fiz.wisecrypto.ui.screens.main.home.components.BalanceInfo
@@ -40,7 +43,9 @@ fun HomeScreen(
                 HomeViewEffect.MoveSignIn -> {
 
                 }
-
+                is HomeViewEffect.ShowError -> {
+                    Toast.makeText(context, effect.message, Toast.LENGTH_LONG).show()
+                }
             }
         }
     }
@@ -91,6 +96,14 @@ fun HomeScreen(
 
         coinList(viewState.coins)
     }
+
+    if (viewState.isLoading)
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Progress()
+        }
 }
 
 

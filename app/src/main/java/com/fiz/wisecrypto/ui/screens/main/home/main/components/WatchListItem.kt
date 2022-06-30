@@ -1,6 +1,5 @@
-package com.fiz.wisecrypto.ui.screens.main.home.components
+package com.fiz.wisecrypto.ui.screens.main.home.main.components
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -10,11 +9,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.fiz.wisecrypto.R
+import com.fiz.wisecrypto.ui.screens.main.home.components.RelativeLabel
 import com.fiz.wisecrypto.ui.screens.main.models.CoinUi
 import com.fiz.wisecrypto.ui.theme.MulishBold
 import com.fiz.wisecrypto.ui.theme.MulishRegular
+import com.skydoves.landscapist.glide.GlideImage
 
 @Composable
 fun WatchListItem(coinUi: CoinUi) {
@@ -34,17 +37,20 @@ fun WatchListItem(coinUi: CoinUi) {
                 .clip(shape = RoundedCornerShape(10.dp)),
             contentAlignment = Alignment.Center
         ) {
-            Image(
+            GlideImage(
                 modifier = Modifier
                     .size(40.dp),
-                painter = painterResource(id = coinUi.icon),
+                imageModel = coinUi.icon,
+                contentScale = ContentScale.Crop,
+                placeHolder = painterResource(id = R.drawable.placeholder_loading),
+                error = painterResource(id = R.drawable.placeholder_error),
                 contentDescription = null
             )
         }
         Spacer(modifier = Modifier.width(16.dp))
         Column {
             Text(
-                text = coinUi.abbreviated,
+                text = coinUi.abbreviated.uppercase(),
                 style = MaterialTheme.typography.headlineLarge,
                 color = MaterialTheme.colorScheme.onSurface
             )

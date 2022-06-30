@@ -1,39 +1,38 @@
 package com.fiz.wisecrypto.data.data_source
 
-import com.fiz.wisecrypto.R
 import com.fiz.wisecrypto.domain.models.Coin
 
 val coinsStore = listOf(
     Coin(
-        icon = R.drawable.home_pic_bitcoin,
+        icon = "",
         abbreviated = "BTC",
         market = "BUSD",
         name = "Bitcoin",
         cost = 54382.64,
-        costLast = 46062.09
+        priceChange = 15.3
     ),
     Coin(
-        icon = R.drawable.home_pic_etherium,
+        icon = "",
         abbreviated = "ETH",
         market = "BUSD",
         name = "Etherium",
         cost = 4145.61,
-        costLast = 4232.68
+        priceChange = -2.1
     ),
     Coin(
-        icon = R.drawable.home_pic_litecoin,
+        icon = "",
         abbreviated = "LTC",
         market = "BUSD",
         name = "Litecoin",
         cost = 207.3,
-        costLast = 209.58
+        priceChange = -1.1
     ),
     Coin(
-        icon = R.drawable.home_pic_solana,
+        icon = "",
         abbreviated = "SOL",
         market = "FIAT",
         name = "Solana",
         cost = 227.93,
-        costLast = 193.06
+        priceChange = 15.3
     ),
 )

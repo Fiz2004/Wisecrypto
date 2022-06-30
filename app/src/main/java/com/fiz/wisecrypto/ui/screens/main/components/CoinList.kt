@@ -8,7 +8,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.fiz.wisecrypto.domain.models.Coin
-import com.fiz.wisecrypto.ui.screens.main.home.components.WatchListItem
+import com.fiz.wisecrypto.ui.screens.main.home.main.components.WatchListItem
 
 @OptIn(ExperimentalMaterial3Api::class)
 @LazyScopeMarker
