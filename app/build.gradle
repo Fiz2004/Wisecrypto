@@ -8,12 +8,12 @@ plugins {
 }
 
 android {
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.fiz.wisecrypto"
         minSdk 21
-        targetSdk 32
+        targetSdk 33
         versionCode 1
         versionName "1.0"
 
@@ -59,7 +59,7 @@ dependencies {
     implementation('androidx.activity:activity-compose:1.6.0-alpha05')
 
     // Constraint layout
-    implementation('androidx.constraintlayout:constraintlayout-compose:1.1.0-alpha02')
+    implementation('androidx.constraintlayout:constraintlayout-compose:1.1.0-alpha03')
 
     // Lifecycle
     implementation('androidx.lifecycle:lifecycle-runtime-ktx:2.5.0')

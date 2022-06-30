@@ -17,7 +17,7 @@ class CoinRepositoryImpl @Inject constructor(
 
     var coins: Response<List<CoinDto>>? = null
 
-    suspend fun getCoins(): Resource<List<Coin>> {
+    suspend fun initCoins(): Resource<List<Coin>> {
         return withContext(dispatcher) {
             if (coins == null)
                 coins = coingeckoApi.getCoins()
@@ -26,5 +26,9 @@ class CoinRepositoryImpl @Inject constructor(
             else
                 Resource.Error("Ошибка загрузки из сети")
         }
+    }
+
+    suspend fun getCoins(): Resource<List<Coin>> {
+        return initCoins()
     }
 }

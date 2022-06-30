@@ -33,12 +33,14 @@ data class CoinDto(
 ) {
     fun toCoin(): Coin {
         val coin = Coin(
+            id = id ?: "",
             icon = image ?: "",
             abbreviated = symbol.orEmpty(),
             market = "BUSD",
             name = name.orEmpty(),
+            currentPrice = currentPrice ?: 0.0,
             cost = currentPrice ?: 0.0,
-            priceChange = priceChangePercentage24h ?: 0.0,
+            priceChangePercentage = priceChangePercentage24h ?: 0.0,
         )
         return coin
     }

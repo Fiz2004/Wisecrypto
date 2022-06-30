@@ -5,8 +5,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fiz.wisecrypto.data.data_source.coinsStore
 import com.fiz.wisecrypto.data.repositories.CoinRepositoryImpl
+import com.fiz.wisecrypto.data.repositories.UserRepositoryImpl
+import com.fiz.wisecrypto.domain.models.Coin
 import com.fiz.wisecrypto.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -15,7 +16,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MarketViewModel @Inject constructor(
-    private val coinRepositoryImpl: CoinRepositoryImpl
+    private val userRepository: UserRepositoryImpl,
+    private val coinRepository: CoinRepositoryImpl
 ) : ViewModel() {
     var viewState by mutableStateOf(MarketViewState())
         private set
@@ -26,9 +28,9 @@ class MarketViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             viewState = viewState.copy(isLoading = true)
-            val result = coinRepositoryImpl.getCoins()
+            val result = coinRepository.getCoins()
             if (result is Resource.Success)
-                viewState = viewState.copy(coins = result.data ?: emptyList())
+                viewState = viewState.copy(coins = filterCoins())
             else
                 viewEffect.emit(MarketViewEffect.ShowError("Сбой загрузки из сети"))
             viewState = viewState.copy(isLoading = false)
@@ -42,27 +44,38 @@ class MarketViewModel @Inject constructor(
         }
     }
 
+    private suspend fun filterCoins(): List<Coin> {
+        val checkValue = viewState.searchText.lowercase()
+
+        var newCoins = coinRepository.getCoins().data?.filter {
+            it.name.lowercase().contains(checkValue)
+                    || it.market.lowercase().contains(checkValue)
+                    || it.abbreviated.lowercase().contains(checkValue)
+        }
+
+        newCoins = when (viewState.selectedChipNumber) {
+            0 -> {
+                newCoins?.filter { userRepository.watchList.contains(it.id) }
+            }
+            else -> {
+                newCoins
+            }
+        }
+
+        return newCoins ?: emptyList()
+    }
+
     private fun marketChipClicked(index: Int) {
         viewModelScope.launch {
-            val newCoins = when (index) {
-                0 -> coinRepositoryImpl.getCoins().data
-                else -> {
-                    coinRepositoryImpl.getCoins().data?.filter { it.market == "FIAT" }
-                }
-            }
-            viewState = viewState.copy(selectedChipNumber = index, coins = newCoins ?: emptyList())
+            viewState = viewState.copy(selectedChipNumber = index)
+            viewState = viewState.copy(coins = filterCoins())
         }
     }
 
     private fun searchTextChanged(value: String) {
         viewModelScope.launch {
-            val checkValue = value.lowercase()
-            val newCoins = coinsStore.filter {
-                it.name.lowercase().contains(checkValue)
-                        || it.market.lowercase().contains(checkValue)
-                        || it.abbreviated.lowercase().contains(checkValue)
-            }
-            viewState = viewState.copy(searchText = value, coins = newCoins)
+            viewState = viewState.copy(searchText = value)
+            viewState = viewState.copy(coins = filterCoins())
         }
     }
 

@@ -16,11 +16,11 @@ import com.fiz.wisecrypto.R
 import com.fiz.wisecrypto.ui.components.Progress
 import com.fiz.wisecrypto.ui.screens.main.MainViewModel
 import com.fiz.wisecrypto.ui.screens.main.components.coinList
-import com.fiz.wisecrypto.ui.screens.main.home.components.BalanceInfo
 import com.fiz.wisecrypto.ui.screens.main.home.components.TitleWatchlist
-import com.fiz.wisecrypto.ui.screens.main.home.components.TitleYourActive
-import com.fiz.wisecrypto.ui.screens.main.home.components.YourActive
+import com.fiz.wisecrypto.ui.screens.main.home.main.components.BalanceInfo
+import com.fiz.wisecrypto.ui.screens.main.home.main.components.TitleYourActive
 import com.fiz.wisecrypto.ui.screens.main.home.main.components.UserInfo
+import com.fiz.wisecrypto.ui.screens.main.home.main.components.YourActive
 
 @Composable
 fun HomeScreen(
@@ -75,7 +75,7 @@ fun HomeScreen(
         }
 
         item {
-            BalanceInfo()
+            BalanceInfo(viewState.balance, viewState.changePercentageBalance)
             Spacer(modifier = Modifier.height(24.dp))
         }
 
@@ -85,7 +85,7 @@ fun HomeScreen(
         }
 
         item {
-            YourActive()
+            YourActive(viewState.portfolio)
             Spacer(modifier = Modifier.height(24.dp))
         }
 

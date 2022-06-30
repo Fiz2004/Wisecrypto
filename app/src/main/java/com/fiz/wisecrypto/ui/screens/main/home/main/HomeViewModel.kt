@@ -1,6 +1,5 @@
 package com.fiz.wisecrypto.ui.screens.main.home.main
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -43,9 +42,24 @@ class HomeViewModel @Inject constructor(
 
             viewState = viewState.copy(isLoading = true)
             val result = coinRepositoryImpl.getCoins()
-            if (result is Resource.Success)
-                Log.i("TAG", result.data.toString())
-            else
+            if (result is Resource.Success) {
+                val balance = userRepository.portfolio.fold(0.0) { acc, active ->
+                    acc + active.count * (result.data?.first { it.id == active.id }?.currentPrice
+                        ?: 0.0)
+                }
+                val balanceForBuy = userRepository.portfolio.fold(0.0) { acc, active ->
+                    acc + active.count * active.countForBuy
+                }
+                val divided = balance / balanceForBuy * 100
+                val percent = if (divided > 0) divided - 100 else 100 - divided
+                viewState = viewState.copy(
+                    portfolio = userRepository.portfolio.map { it.toActiveUi(result.data) },
+                    balance = "\$${"%.2f".format(balance)}",
+                    changePercentageBalance = percent,
+                    coins = result.data?.filter { userRepository.watchList.contains(it.id) }
+                        ?: emptyList()
+                )
+            } else
                 viewEffect.emit(HomeViewEffect.ShowError("Сбой загрузки из сети"))
             viewState = viewState.copy(isLoading = false)
 
@@ -64,3 +78,4 @@ class HomeViewModel @Inject constructor(
         }
     }
 }
+

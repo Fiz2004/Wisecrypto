@@ -1,4 +1,4 @@
-package com.fiz.wisecrypto.ui.screens.main.home.components
+package com.fiz.wisecrypto.ui.screens.main.home.main.components
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer

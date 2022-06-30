@@ -1,6 +1,5 @@
-package com.fiz.wisecrypto.ui.screens.main.home.components
+package com.fiz.wisecrypto.ui.screens.main.home.main.components
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -11,23 +10,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.fiz.wisecrypto.R
+import com.fiz.wisecrypto.ui.screens.main.home.components.RelativeLabel
+import com.fiz.wisecrypto.ui.screens.main.models.ActiveUi
 import com.fiz.wisecrypto.ui.theme.MulishBold
 import com.fiz.wisecrypto.ui.theme.hint
+import com.skydoves.landscapist.glide.GlideImage
 
 @Composable
 fun YourActiveItem(
-    icon: Int,
-    abbreviated: String,
-    name: String,
-    portfolio: String,
-    equivalent: String,
-    up: Boolean,
-    value: String
+    active: ActiveUi
 ) {
     Column(
         modifier = Modifier
@@ -49,10 +46,13 @@ fun YourActiveItem(
                     .clip(shape = RoundedCornerShape(10.dp)),
                 contentAlignment = Alignment.Center
             ) {
-                Image(
+                GlideImage(
                     modifier = Modifier
                         .size(28.dp),
-                    painter = painterResource(id = icon),
+                    imageModel = active.icon,
+                    contentScale = ContentScale.Crop,
+                    placeHolder = painterResource(id = R.drawable.placeholder_loading),
+                    error = painterResource(id = R.drawable.placeholder_error),
                     contentDescription = null
                 )
             }
@@ -61,12 +61,12 @@ fun YourActiveItem(
 
             Column {
                 Text(
-                    text = abbreviated,
+                    text = active.abbreviated,
                     style = MaterialTheme.typography.displayMedium,
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
-                    text = name,
+                    text = active.name,
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -74,7 +74,7 @@ fun YourActiveItem(
 
             Spacer(modifier = Modifier.width(24.dp))
 
-            RelativeLabel(up = up, value = value)
+            RelativeLabel(up = active.isUpDirectChangePercentage, value = active.changePercentage)
         }
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -100,7 +100,7 @@ fun YourActiveItem(
                     color = MaterialTheme.colorScheme.hint
                 )
                 Text(
-                    text = portfolio,
+                    text = active.portfolio,
                     style = MaterialTheme.typography.titleLarge.copy(
                         fontFamily = MulishBold,
                         //                                    fontWeight = FontWeight.Bold,
@@ -111,7 +111,7 @@ fun YourActiveItem(
             Spacer(modifier = Modifier.weight(1f))
             Text(
                 modifier = Modifier.align(Alignment.Bottom),
-                text = equivalent,
+                text = active.equivalent,
                 style = MaterialTheme.typography.bodySmall.copy(fontFamily = MulishBold),
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )

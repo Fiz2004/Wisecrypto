@@ -1,4 +1,4 @@
-package com.fiz.wisecrypto.ui.screens.main.home.components
+package com.fiz.wisecrypto.ui.screens.main.home.main.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -14,9 +14,22 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fiz.wisecrypto.R
+import kotlin.math.abs
 
 @Composable
-fun BalanceInfo() {
+fun BalanceInfo(balance: String, changePercentageBalance: Double) {
+
+    val icon = if (changePercentageBalance > 0.0)
+        R.drawable.home_ic_up_right
+    else
+        R.drawable.home_ic_down_left
+
+    val color = if (changePercentageBalance > 0.0)
+        MaterialTheme.colorScheme.primary
+    else
+        MaterialTheme.colorScheme.secondary
+
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -47,7 +60,7 @@ fun BalanceInfo() {
                     color = MaterialTheme.colorScheme.onPrimary
                 )
                 Text(
-                    text = "$56.98",
+                    text = balance,
                     style = MaterialTheme.typography.displayLarge,
                     color = MaterialTheme.colorScheme.onPrimary
                 )
@@ -63,15 +76,15 @@ fun BalanceInfo() {
             ) {
                 Icon(
                     modifier = Modifier.size(16.dp),
-                    painter = painterResource(id = R.drawable.home_ic_up_right),
-                    tint = MaterialTheme.colorScheme.primary,
+                    painter = painterResource(id = icon),
+                    tint = color,
                     contentDescription = null
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
-                    text = "15,3%",
+                    text = "${"%.1f".format(abs(changePercentageBalance))}%",
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.primary
+                    color = color
                 )
             }
         }
