@@ -8,10 +8,11 @@ import androidx.lifecycle.viewModelScope
 import com.fiz.wisecrypto.data.repositories.CoinRepositoryImpl
 import com.fiz.wisecrypto.data.repositories.UserRepositoryImpl
 import com.fiz.wisecrypto.domain.models.Coin
+import com.fiz.wisecrypto.util.Consts.TIME_REFRESH_NETWORK_MS
 import com.fiz.wisecrypto.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -25,23 +26,46 @@ class MarketViewModel @Inject constructor(
     var viewEffect = MutableSharedFlow<MarketViewEffect>()
         private set
 
-    init {
-        viewModelScope.launch {
-            viewState = viewState.copy(isLoading = true)
-            val result = coinRepository.getCoins()
-            if (result is Resource.Success)
-                viewState = viewState.copy(coins = filterCoins())
-            else
-                viewEffect.emit(MarketViewEffect.ShowError("Сбой загрузки из сети"))
-            viewState = viewState.copy(isLoading = false)
-        }
-    }
+    private var jobRefresh: Job? = null
 
     fun onEvent(event: MarketEvent) {
         when (event) {
             is MarketEvent.SearchTextChanged -> searchTextChanged(event.value)
             is MarketEvent.MarketChipClicked -> marketChipClicked(event.index)
+            MarketEvent.Started -> started()
+            MarketEvent.Stopped -> stopped()
         }
+    }
+
+    private fun stopped() {
+        viewModelScope.launch {
+            jobRefresh?.cancelAndJoin()
+            jobRefresh = null
+        }
+    }
+
+    private fun started() {
+        if (jobRefresh == null)
+            jobRefresh = viewModelScope.launch(Dispatchers.Default) {
+                while (isActive) {
+                    refreshState()
+                    delay(TIME_REFRESH_NETWORK_MS.toLong())
+                }
+            }
+    }
+
+    private suspend fun refreshState() {
+        viewState = viewState.copy(isLoading = true)
+        val result = coinRepository.getCoins()
+        if (result is Resource.Success)
+            viewState = viewState.copy(coins = filterCoins())
+        else
+            viewEffect.emit(
+                MarketViewEffect.ShowError(
+                    result.message ?: "Ошибка при загрузке данных из сети"
+                )
+            )
+        viewState = viewState.copy(isLoading = false)
     }
 
     private suspend fun filterCoins(): List<Coin> {

@@ -34,7 +34,6 @@ class SplashViewModel @Inject constructor(
         viewModelScope.launch {
             viewState = viewState.copy(isLoading = true)
             val authRegistryStatus = authRepository.getAuthStatus()
-            val coins = coinRepository.initCoins()
             viewState = viewState.copy(isLoading = false)
             if (authRegistryStatus)
                 viewEffect.emit(SplashViewEffect.MoveMainContentScreen)
