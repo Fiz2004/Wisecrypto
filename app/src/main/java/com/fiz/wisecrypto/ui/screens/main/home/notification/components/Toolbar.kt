@@ -39,9 +39,11 @@ fun Toolbar(
         Text(
             text = stringResource(R.string.notification_notifications),
             style = MaterialTheme.typography.headlineMedium,
-            color=MaterialTheme.colorScheme.onSurface
+            color = MaterialTheme.colorScheme.onSurface
         )
 
     }
+
+    Spacer(modifier = Modifier.height(16.dp))
 
 }

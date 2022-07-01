@@ -52,4 +52,5 @@ fun UserInfo(icon: Int, fullName: String, onClickIconButton: () -> Unit = {}) {
             )
         }
     }
+    Spacer(modifier = Modifier.height(16.dp))
 }

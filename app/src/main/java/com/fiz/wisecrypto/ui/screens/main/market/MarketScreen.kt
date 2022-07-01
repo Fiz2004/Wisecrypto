@@ -3,6 +3,7 @@ package com.fiz.wisecrypto.ui.screens.main.market
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -18,10 +19,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fiz.wisecrypto.R
 import com.fiz.wisecrypto.ui.components.Progress
 import com.fiz.wisecrypto.ui.screens.main.MainViewModel
-import com.fiz.wisecrypto.ui.screens.main.components.coinList
-import com.fiz.wisecrypto.ui.screens.main.market.components.filterRow
-import com.fiz.wisecrypto.ui.screens.main.market.components.findTextField
-import com.fiz.wisecrypto.ui.screens.main.market.components.topSpacer
+import com.fiz.wisecrypto.ui.screens.main.components.CoinItem
+import com.fiz.wisecrypto.ui.screens.main.components.TopSpacer
+import com.fiz.wisecrypto.ui.screens.main.market.components.FilterRow
+import com.fiz.wisecrypto.ui.screens.main.market.components.FindTextField
 
 @Composable
 fun MarketScreen(
@@ -47,23 +48,32 @@ fun MarketScreen(
         }
     }
 
-
-    LazyColumn(
+    Column(
         modifier = Modifier
             .fillMaxSize()
             .background(color = MaterialTheme.colorScheme.surface)
             .padding(horizontal = 16.dp)
     ) {
-        topSpacer()
-        findTextField(
+
+        TopSpacer()
+
+        FindTextField(
             text = viewState.searchText,
             onValueChange = {
                 viewModel.onEvent(MarketEvent.SearchTextChanged(it))
             },
             textHint = textHint
         )
-        filterRow(viewState.selectedChipNumber, viewModel)
-        coinList(viewState.coins)
+
+        FilterRow(viewState.selectedChipNumber, viewModel)
+
+        LazyColumn {
+            viewState.coins.forEach {
+                item {
+                    CoinItem(it)
+                }
+            }
+        }
     }
 
     if (viewState.isLoading)

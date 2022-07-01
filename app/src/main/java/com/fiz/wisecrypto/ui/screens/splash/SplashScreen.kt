@@ -32,7 +32,7 @@ fun SplashScreen(
 
     LaunchedEffect(Unit) {
 
-    viewModel.onEvent(SplashEvent.StartScreen)
+        viewModel.onEvent(SplashEvent.StartScreen)
 
         viewEffect.collect { effect ->
             when (effect) {
@@ -78,6 +78,8 @@ fun SplashScreen(
 
         if (viewState.isLoading)
             Progress(modifier = Modifier.align(CenterHorizontally))
+        else
+            Spacer(modifier = Modifier.height(40.dp))
 
         Spacer(modifier = Modifier.weight(0.5f))
     }

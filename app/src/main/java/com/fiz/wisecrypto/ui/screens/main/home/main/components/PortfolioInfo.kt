@@ -17,7 +17,7 @@ import com.fiz.wisecrypto.R
 import kotlin.math.abs
 
 @Composable
-fun BalanceInfo(balance: String, changePercentageBalance: Double) {
+fun PortfolioInfo(balance: String, changePercentageBalance: Double) {
 
     val icon = if (changePercentageBalance > 0.0)
         R.drawable.home_ic_up_right
@@ -43,7 +43,8 @@ fun BalanceInfo(balance: String, changePercentageBalance: Double) {
             painterResource(id = R.drawable.home_pic_total_background),
             modifier = Modifier
                 .fillMaxWidth()
-                .height(112.dp),
+                .height(72.dp)
+                .align(Alignment.BottomCenter),
             contentDescription = null
         )
         Row(
@@ -89,4 +90,5 @@ fun BalanceInfo(balance: String, changePercentageBalance: Double) {
             }
         }
     }
+    Spacer(modifier = Modifier.height(24.dp))
 }

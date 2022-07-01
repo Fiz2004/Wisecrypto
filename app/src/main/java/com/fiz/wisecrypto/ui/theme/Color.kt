@@ -5,6 +5,8 @@ import androidx.compose.ui.graphics.Color
 val LightGreen2 = Color(0xFF_E0_FF_F0)
 val LightYellow2 = Color(0xFF_FF_FC_E0)
 val LightRed2 = Color(0xFF_FF_E0_E0)
+val LightBlue2 = Color(0xFF_E0_FD_FF)
+val LightPurple2 = Color(0xFF_F1_E0_FF)
 val LightGreen = Color(0xFF_5E_DE_99)
 val VeryLightGreen = Color(0xFF_E9_FC_E9)
 val Pink = Color(0xFF_F2_88_F4)

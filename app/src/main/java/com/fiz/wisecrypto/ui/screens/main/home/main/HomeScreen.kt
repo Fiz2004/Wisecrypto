@@ -2,7 +2,10 @@ package com.fiz.wisecrypto.ui.screens.main.home.main
 
 import android.widget.Toast
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -15,9 +18,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fiz.wisecrypto.R
 import com.fiz.wisecrypto.ui.components.Progress
 import com.fiz.wisecrypto.ui.screens.main.MainViewModel
-import com.fiz.wisecrypto.ui.screens.main.components.coinList
+import com.fiz.wisecrypto.ui.screens.main.components.CoinItem
+import com.fiz.wisecrypto.ui.screens.main.components.TopSpacer
 import com.fiz.wisecrypto.ui.screens.main.home.components.TitleWatchlist
-import com.fiz.wisecrypto.ui.screens.main.home.main.components.BalanceInfo
+import com.fiz.wisecrypto.ui.screens.main.home.main.components.PortfolioInfo
 import com.fiz.wisecrypto.ui.screens.main.home.main.components.TitleYourActive
 import com.fiz.wisecrypto.ui.screens.main.home.main.components.UserInfo
 import com.fiz.wisecrypto.ui.screens.main.home.main.components.YourActive
@@ -50,51 +54,38 @@ fun HomeScreen(
         }
     }
 
-    LazyColumn(
+    Column(
         modifier = Modifier
             .fillMaxSize()
             .background(color = MaterialTheme.colorScheme.surface)
             .padding(horizontal = 16.dp)
     ) {
 
-        item {
-            Spacer(
-                modifier = Modifier
-                    .windowInsetsTopHeight(WindowInsets.statusBars)
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-        }
+        TopSpacer()
 
-        item {
-            UserInfo(
-                icon = R.drawable.home_pic_avatar_test,
-                fullName = viewState.fullName,
-                onClickIconButton = { viewModel.onEvent(HomeEvent.NotificationClicked) }
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-        }
+        UserInfo(
+            icon = R.drawable.pic_avatar_test,
+            fullName = viewState.fullName,
+            onClickIconButton = { viewModel.onEvent(HomeEvent.NotificationClicked) }
+        )
 
-        item {
-            BalanceInfo(viewState.balance, viewState.changePercentageBalance)
-            Spacer(modifier = Modifier.height(24.dp))
-        }
+        PortfolioInfo(viewState.balance, viewState.changePercentageBalance)
 
-        item {
-            TitleYourActive()
-            Spacer(modifier = Modifier.height(8.dp))
-        }
+        TitleYourActive()
 
-        item {
-            YourActive(viewState.portfolio)
-            Spacer(modifier = Modifier.height(24.dp))
-        }
+        YourActive(viewState.portfolio)
 
-        item {
-            TitleWatchlist()
-            Spacer(modifier = Modifier.height(8.dp))
-        }
+        TitleWatchlist()
 
-        coinList(viewState.coins)
+        LazyColumn {
+
+            viewState.coins.forEach {
+                item {
+                    CoinItem(it)
+                }
+            }
+
+        }
     }
 
     if (viewState.isLoading)

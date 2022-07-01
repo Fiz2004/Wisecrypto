@@ -18,7 +18,7 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val authRepository: AuthRepositoryImpl,
     private val userRepository: UserRepositoryImpl,
-    private val coinRepositoryImpl: CoinRepositoryImpl,
+    private val coinRepository: CoinRepositoryImpl,
 
     ) : ViewModel() {
     var viewState by mutableStateOf(HomeViewState())
@@ -41,7 +41,7 @@ class HomeViewModel @Inject constructor(
             }
 
             viewState = viewState.copy(isLoading = true)
-            val result = coinRepositoryImpl.getCoins()
+            val result = coinRepository.getCoins()
             if (result is Resource.Success) {
                 val balance = userRepository.portfolio.fold(0.0) { acc, active ->
                     acc + active.count * (result.data?.first { it.id == active.id }?.currentPrice

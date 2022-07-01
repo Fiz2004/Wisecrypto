@@ -17,7 +17,9 @@ val MulishSemiBold = FontFamily(
 val MulishBold = FontFamily(
     Font(R.font.mulish_bold),
 )
-
+val MulishExtraBold = FontFamily(
+    Font(R.font.mulish_extra_bold),
+)
 val MontserratMedium = FontFamily(
     Font(R.font.montserrat_medium),
 )
@@ -61,10 +63,10 @@ val Typography = Typography(
         fontSize = 12.sp,
     ),
 
-//    bodyLarge = TextStyle(
-//        fontFamily = MulishBold,
-//        fontSize = 20.sp,
-//    ),
+    bodyLarge = TextStyle(
+        fontFamily = MulishRegular,
+        fontSize = 16.sp,
+    ),
 
     bodyMedium = TextStyle(
         fontFamily = MulishSemiBold,
@@ -101,6 +103,13 @@ val Typography = Typography(
 )
 
 @get:Composable
+val Typography.displayLarge2: TextStyle
+    get() = TextStyle(
+        fontFamily = MulishBold,
+        fontSize = 24.sp,
+    )
+
+@get:Composable
 val Typography.titleMedium2: TextStyle
     get() = TextStyle(
         fontFamily = MontserratMedium,
@@ -119,4 +128,11 @@ val Typography.bodyMedium2: TextStyle
     get() = TextStyle(
         fontFamily = MulishRegular,
         fontSize = 12.sp,
+    )
+
+@get:Composable
+val Typography.bodyLarge2: TextStyle
+    get() = TextStyle(
+        fontFamily = MulishExtraBold,
+        fontSize = 16.sp,
     )
