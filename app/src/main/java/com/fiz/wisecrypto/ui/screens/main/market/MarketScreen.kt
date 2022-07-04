@@ -44,6 +44,15 @@ fun MarketScreen(
 
     val lifecycleOwner = LocalLifecycleOwner.current
 
+    val marketFilters = listOf(
+        stringResource(R.string.market_favorities),
+        stringResource(R.string.market_fiat),
+        stringResource(R.string.market_etf),
+        stringResource(R.string.market_bnb),
+        stringResource(R.string.market_btc),
+        stringResource(R.string.market_alts)
+    )
+
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_START) {
@@ -85,7 +94,11 @@ fun MarketScreen(
             textHint = textHint
         )
 
-        FilterRow(viewState.selectedChipNumber, viewModel)
+        FilterRow(
+            texts = marketFilters,
+            indexSelected = viewState.selectedChipNumber,
+            onClick = { number -> viewModel.onEvent(MarketEvent.MarketChipClicked(number)) }
+        )
 
         LazyColumn {
             viewState.coins.forEach {

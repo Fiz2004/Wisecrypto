@@ -13,8 +13,10 @@ import com.fiz.wisecrypto.ui.screens.main.home.notification.HomeNotificationScre
 import com.fiz.wisecrypto.ui.screens.main.home.notification.HomeNotificationViewModel
 import com.fiz.wisecrypto.ui.screens.main.market.MarketScreen
 import com.fiz.wisecrypto.ui.screens.main.market.MarketViewModel
-import com.fiz.wisecrypto.ui.screens.main.profile.ProfileScreen
-import com.fiz.wisecrypto.ui.screens.main.profile.ProfileViewModel
+import com.fiz.wisecrypto.ui.screens.main.profile.list_transactions.ProfileListTransactionsScreen
+import com.fiz.wisecrypto.ui.screens.main.profile.list_transactions.ProfileListTransactionsViewModel
+import com.fiz.wisecrypto.ui.screens.main.profile.main.ProfileScreen
+import com.fiz.wisecrypto.ui.screens.main.profile.main.ProfileViewModel
 
 @Composable
 fun MainNavHost(
@@ -65,7 +67,7 @@ fun MainNavHost(
                 viewModel,
                 movePullScreen = {},
                 moveAddScreen = {},
-                moveListTransactionsScreen = {},
+                moveListTransactionsScreen = { navController.navigate(NamesProfileScreen.ListTransactions.name) },
                 movePrivacyScreen = {},
                 movePaymentScreen = {},
                 moveNotificationsScreen = {},
@@ -74,9 +76,23 @@ fun MainNavHost(
                 }
             )
         }
+
+        composable(NamesProfileScreen.ListTransactions.name) {
+            val viewModel = hiltViewModel<ProfileListTransactionsViewModel>()
+
+            ProfileListTransactionsScreen(
+                mainViewModel,
+                viewModel,
+                moveReturn = { navController.popBackStack() }
+            )
+        }
     }
 }
 
 enum class NamesHomeScreen(name: String) {
     Notification("Notification"),
+}
+
+enum class NamesProfileScreen(name: String) {
+    ListTransactions("List Transactions"),
 }

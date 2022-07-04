@@ -1,4 +1,4 @@
-package com.fiz.wisecrypto.ui.screens.main.profile
+package com.fiz.wisecrypto.ui.screens.main.profile.main
 
 sealed class ProfileEvent {
     object ListTransactionsClicked : ProfileEvent()

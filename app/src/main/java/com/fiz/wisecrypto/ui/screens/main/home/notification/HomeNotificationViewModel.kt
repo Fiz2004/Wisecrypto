@@ -24,21 +24,6 @@ class HomeNotificationViewModel @Inject constructor(
     var viewEffect = MutableSharedFlow<HomeNotificationViewEffect>()
         private set
 
-    init {
-        viewModelScope.launch {
-            val email = authRepository.getAuthEmail()
-            if (email == null) {
-                viewEffect.emit(HomeNotificationViewEffect.MoveSignIn)
-            } else {
-                val user = userRepository.getUserInfo(email)
-                if (user == null)
-                    viewEffect.emit(HomeNotificationViewEffect.MoveSignIn)
-                else
-                    viewState = viewState.copy(fullName = user.fullName)
-            }
-        }
-    }
-
     fun onEvent(event: HomeNotificationEvent) {
         when (event) {
             HomeNotificationEvent.BackButtonClicked -> backButtonClicked()

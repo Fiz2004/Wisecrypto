@@ -33,7 +33,7 @@ class MainActivity : ComponentActivity() {
             val backstackEntry by navController.currentBackStackEntryAsState()
             val currentScreen = backstackEntry?.destination
 
-            val useDarkIcons = isLight
+            val useDarkIcons = MaterialTheme.colorScheme.isLight()
             val systemUiController = rememberSystemUiController()
 
             SideEffect {

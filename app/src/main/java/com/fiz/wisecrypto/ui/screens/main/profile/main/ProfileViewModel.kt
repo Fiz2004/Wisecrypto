@@ -1,4 +1,4 @@
-package com.fiz.wisecrypto.ui.screens.main.profile
+package com.fiz.wisecrypto.ui.screens.main.profile.main
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

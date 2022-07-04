@@ -1,10 +1,10 @@
 package com.fiz.wisecrypto.ui.screens.main.home.main.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,7 +30,9 @@ fun UserInfo(icon: Int, fullName: String, onClickIconButton: () -> Unit = {}) {
             painter = painterResource(id = icon),
             contentDescription = null
         )
+
         Spacer(modifier = Modifier.width(12.dp))
+
         Column {
             Text(
                 text = stringResource(R.string.home_hello),
@@ -43,14 +45,17 @@ fun UserInfo(icon: Int, fullName: String, onClickIconButton: () -> Unit = {}) {
                 color = MaterialTheme.colorScheme.onSurface
             )
         }
+
         Spacer(modifier = Modifier.weight(1f))
-        IconButton(onClick = onClickIconButton) {
-            Icon(
-                modifier = Modifier.size(24.dp),
-                painter = painterResource(id = R.drawable.home_ic_notification),
-                contentDescription = null
-            )
-        }
+
+        Icon(
+            modifier = Modifier
+                .size(24.dp)
+                .clickable { onClickIconButton() },
+            painter = painterResource(id = R.drawable.home_ic_notification),
+            contentDescription = null
+        )
     }
+
     Spacer(modifier = Modifier.height(16.dp))
 }

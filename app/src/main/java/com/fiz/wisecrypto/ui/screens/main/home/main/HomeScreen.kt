@@ -24,11 +24,7 @@ import com.fiz.wisecrypto.ui.components.Progress
 import com.fiz.wisecrypto.ui.screens.main.MainViewModel
 import com.fiz.wisecrypto.ui.screens.main.components.CoinItem
 import com.fiz.wisecrypto.ui.screens.main.components.TopSpacer
-import com.fiz.wisecrypto.ui.screens.main.home.components.TitleWatchlist
-import com.fiz.wisecrypto.ui.screens.main.home.main.components.PortfolioInfo
-import com.fiz.wisecrypto.ui.screens.main.home.main.components.TitleYourActive
-import com.fiz.wisecrypto.ui.screens.main.home.main.components.UserInfo
-import com.fiz.wisecrypto.ui.screens.main.home.main.components.YourActive
+import com.fiz.wisecrypto.ui.screens.main.home.main.components.*
 
 @Composable
 fun HomeScreen(

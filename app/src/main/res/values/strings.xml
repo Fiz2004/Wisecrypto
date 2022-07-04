@@ -3,12 +3,12 @@
     <string name="preferences">com.fiz.wisecrypto</string>
 
     <string name="slogan">Доверяют миллионы пользователей по всему миру</string>
+
     <!--    Log In-->
     <string name="login_email_title">Электронная почта</string>
     <string name="login_email_hint">botpablo@gmail.com</string>
     <string name="login_password_title">Пароль</string>
     <string name="login_password_hint">Введите пароль</string>
-
 
     <!--    Sign In-->
     <string name="signin_welcome">Добро пожаловать</string>
@@ -17,6 +17,7 @@
     <string name="signin_signup">Создать учетную запись</string>
     <string name="signin_noaccount">У вас еще нет учетной записи?</string>
     <string name="signin_error_signin">Не могу войти</string>
+
     <!--    Sign Up-->
     <string name="signup_title">Зарегистрируйтесь Сейчас</string>
     <string name="signup_fullname_title">Полное имя</string>
@@ -29,6 +30,7 @@
     <string name="signup_already_register">У Вас Уже Есть Учетная Запись?</string>
     <string name="signup_signin">Войдите здесь</string>
     <string name="signup_skip">Пропустить этот шаг</string>
+
     <!--    Sign Up2-->
     <string name="signup2_confirm_password_title">Подтвердите пароль</string>
     <string name="signup2_confirm_password_hint">Подтвердите пароль</string>
@@ -67,7 +69,15 @@
     <string name="notification_text_balance_success">Успешное пополнение счета на сумму %1$s долларов</string>
     <string name="notification_text_balance_fail">Не удалось пополнить баланс на %1$s долларов</string>
     <string name="notification_date">29 Ноября 2021 (13.00)</string>
+
+    <!--    Market-->
     <string name="market_search_hint">Поиск…</string>
+    <string name="market_favorities">Избранное</string>
+    <string name="market_fiat">Рынки FIAT</string>
+    <string name="market_etf">Рынки ETF</string>
+    <string name="market_bnb">Рынки BNB</string>
+    <string name="market_btc">Рынки BTC</string>
+    <string name="market_alts">Рынки ALTS</string>
 
     <!--    Profile-->
     <string name="profile_list_transactions_title">История транзакций</string>
@@ -85,5 +95,17 @@
     <string name="profile_pull">Отправить</string>
     <string name="profile_add">Добавить</string>
     <string name="profile_current_balance_value">"= %1$s рублей"</string>
+
+    <!--    List Transactions-->
+    <string name="list_transactions_title">История транзакций</string>
+    <string name="list_transactions_all">Все</string>
+    <string name="list_transactions_balance">Баланс</string>
+    <string name="list_transactions_buy">Покупка</string>
+    <string name="list_transactions_sell">Продажа</string>
+    <string name="list_transactions_transaction_code">Код транзакции : %1$s</string>
+    <string name="list_transactions_add_balance">Пополнение баланса</string>
+    <string name="list_transactions_success">Успешно</string>
+    <string name="list_transactions_pending">В процессе</string>
+    <string name="list_transactions_fail">Неудачно</string>
 
 </resources>

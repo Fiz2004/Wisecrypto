@@ -1,4 +1,4 @@
-package com.fiz.wisecrypto.ui.screens.main.profile.components
+package com.fiz.wisecrypto.ui.screens.main.profile.main.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

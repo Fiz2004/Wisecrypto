@@ -50,5 +50,5 @@ fun FindTextField(
             unfocusedBorderColor = MaterialTheme.colorScheme.veryLightPrimary
         )
     )
-    Spacer(modifier = Modifier.height(16.dp))
+    Spacer(modifier = Modifier.height(8.dp))
 }

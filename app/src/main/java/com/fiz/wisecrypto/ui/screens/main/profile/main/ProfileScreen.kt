@@ -1,4 +1,4 @@
-package com.fiz.wisecrypto.ui.screens.main.profile
+package com.fiz.wisecrypto.ui.screens.main.profile.main
 
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -16,9 +16,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fiz.wisecrypto.R
 import com.fiz.wisecrypto.ui.screens.main.MainViewModel
 import com.fiz.wisecrypto.ui.screens.main.components.TopSpacer
-import com.fiz.wisecrypto.ui.screens.main.profile.components.BalanceInfo
-import com.fiz.wisecrypto.ui.screens.main.profile.components.ProfileMenuItem
-import com.fiz.wisecrypto.ui.screens.main.profile.components.UserInfoLarge
+import com.fiz.wisecrypto.ui.screens.main.profile.main.components.BalanceInfo
+import com.fiz.wisecrypto.ui.screens.main.profile.main.components.ProfileMenuItem
+import com.fiz.wisecrypto.ui.screens.main.profile.main.components.UserInfoLarge
 import com.fiz.wisecrypto.ui.theme.*
 
 @Composable

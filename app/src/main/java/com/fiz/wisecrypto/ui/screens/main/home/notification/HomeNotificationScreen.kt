@@ -13,11 +13,12 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fiz.wisecrypto.R
 import com.fiz.wisecrypto.ui.screens.main.MainViewModel
+import com.fiz.wisecrypto.ui.screens.main.components.Toolbar
 import com.fiz.wisecrypto.ui.screens.main.home.notification.components.NotificationItem
-import com.fiz.wisecrypto.ui.screens.main.home.notification.components.Toolbar
-import com.fiz.wisecrypto.ui.theme.LightGreen2
-import com.fiz.wisecrypto.ui.theme.LightRed2
-import com.fiz.wisecrypto.ui.theme.LightYellow2
+import com.fiz.wisecrypto.ui.screens.main.home.notification.models.Notification
+import com.fiz.wisecrypto.ui.screens.main.home.notification.models.StatusNotification
+import com.fiz.wisecrypto.ui.screens.main.home.notification.models.TypeNotification
+import org.threeten.bp.LocalDateTime
 
 @Composable
 fun HomeNotificationScreen(
@@ -31,112 +32,97 @@ fun HomeNotificationScreen(
     val mainViewState = MainViewModel.viewState
     val viewEffect = viewModel.viewEffect
 
+    val notifications = listOf(
+        Notification(
+            StatusNotification.Chart,
+            TypeNotification.Info,
+            stringResource(R.string.notification_title_portfolio_increase),
+            stringResource(
+                R.string.notification_text_portfolio_increase,
+                "биткойн",
+                "1,1%"
+            ),
+            LocalDateTime.of(2021, 11, 29, 13, 0)
+        ),
+        Notification(
+            StatusNotification.Success,
+            TypeNotification.Transaction(0.00001),
+            stringResource(R.string.notification_title_transaction_success),
+            stringResource(
+                R.string.notification_text_transaction_success,
+                "0.00001"
+            ),
+            LocalDateTime.of(2021, 11, 29, 13, 0)
+        ),
+        Notification(
+            StatusNotification.Process,
+            TypeNotification.Balance(10),
+            stringResource(R.string.notification_title_balance_process),
+            stringResource(
+                R.string.notification_text_balance_process,
+                "10"
+            ),
+            LocalDateTime.of(2021, 11, 29, 13, 0)
+        ),
+        Notification(
+            StatusNotification.Success,
+            TypeNotification.Balance(10),
+            stringResource(R.string.notification_title_balance_success),
+            stringResource(
+                R.string.notification_text_balance_success,
+                "10"
+            ),
+            LocalDateTime.of(2021, 11, 29, 13, 0)
+        ),
+        Notification(
+            StatusNotification.Fail,
+            TypeNotification.Balance(10),
+            stringResource(R.string.notification_title_balance_fail),
+            stringResource(
+                R.string.notification_text_balance_fail,
+                "10"
+            ),
+            LocalDateTime.of(2021, 11, 29, 13, 0)
+        ),
+    )
+
     LaunchedEffect(Unit) {
         viewEffect.collect { effect ->
             when (effect) {
                 HomeNotificationViewEffect.MoveReturn -> {
                     moveHomeMain()
                 }
-                HomeNotificationViewEffect.MoveSignIn -> {
-
-                }
             }
         }
     }
 
-    LazyColumn(
+    Column(
         modifier = Modifier
             .fillMaxSize()
             .background(color = MaterialTheme.colorScheme.surface)
             .padding(horizontal = 16.dp)
     ) {
-        item {
 
-            Spacer(
-                modifier = Modifier
-                    .windowInsetsTopHeight(WindowInsets.statusBars)
-            )
+        Spacer(
+            modifier = Modifier
+                .windowInsetsTopHeight(WindowInsets.statusBars)
+        )
 
-            Spacer(modifier = Modifier.height(4.dp))
+        Toolbar(
+            title = stringResource(R.string.notification_notifications),
+            onClickBackButton = { viewModel.onEvent(HomeNotificationEvent.BackButtonClicked) }
+        )
+        Spacer(modifier = Modifier.height(16.dp))
 
-        }
+        LazyColumn {
 
-        item {
-            Toolbar(
-                onClickBackButton = { viewModel.onEvent(HomeNotificationEvent.BackButtonClicked) }
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-        }
-
-        items(5) { index ->
-            when (index) {
-                0 -> {
-                    NotificationItem(
-                        icon = R.drawable.notification_ic_chart,
-                        color = LightGreen2,
-                        titleNotification = stringResource(R.string.notification_title_portfolio_increase),
-                        textNotification = stringResource(
-                            R.string.notification_text_portfolio_increase,
-                            "биткойн",
-                            "1,1%"
-                        ),
-                        data = stringResource(R.string.notification_date),
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                }
-                1 -> {
-                    NotificationItem(
-                        icon = R.drawable.notification_ic_ok,
-                        color = LightGreen2,
-                        titleNotification = stringResource(R.string.notification_title_transaction_success),
-                        textNotification = stringResource(
-                            R.string.notification_text_transaction_success,
-                            "0.00001"
-                        ),
-                        data = stringResource(R.string.notification_date),
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                }
-                2 -> {
-                    NotificationItem(
-                        icon = R.drawable.notification_ic_time,
-                        color = LightYellow2,
-                        titleNotification = stringResource(R.string.notification_title_balance_process),
-                        textNotification = stringResource(
-                            R.string.notification_text_balance_process,
-                            "10"
-                        ),
-                        data = stringResource(R.string.notification_date),
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                }
-                3 -> {
-                    NotificationItem(
-                        icon = R.drawable.notification_ic_ok,
-                        color = LightGreen2,
-                        titleNotification = stringResource(R.string.notification_title_balance_success),
-                        textNotification = stringResource(
-                            R.string.notification_text_balance_success,
-                            "10"
-                        ),
-                        data = stringResource(R.string.notification_date),
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                }
-                4 -> {
-                    NotificationItem(
-                        icon = R.drawable.notification_ic_cancel,
-                        color = LightRed2,
-                        titleNotification = stringResource(R.string.notification_title_balance_fail),
-                        textNotification = stringResource(
-                            R.string.notification_text_balance_fail,
-                            "10"
-                        ),
-                        data = stringResource(R.string.notification_date),
-                    )
+            notifications.forEach { notification ->
+                item {
+                    NotificationItem(notification)
                     Spacer(modifier = Modifier.height(8.dp))
                 }
             }
+
         }
     }
 }
