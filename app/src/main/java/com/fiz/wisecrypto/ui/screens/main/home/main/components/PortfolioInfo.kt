@@ -10,6 +10,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -33,9 +35,9 @@ fun PortfolioInfo(balance: String, changePercentageBalance: Double) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
+            .clip(shape = RoundedCornerShape(10.dp))
             .background(
                 color = MaterialTheme.colorScheme.primary,
-                shape = RoundedCornerShape(10.dp)
             ),
         contentAlignment = Alignment.TopStart
     ) {
@@ -45,6 +47,7 @@ fun PortfolioInfo(balance: String, changePercentageBalance: Double) {
                 .fillMaxWidth()
                 .height(72.dp)
                 .align(Alignment.BottomCenter),
+            contentScale = ContentScale.Crop,
             contentDescription = null
         )
         Row(

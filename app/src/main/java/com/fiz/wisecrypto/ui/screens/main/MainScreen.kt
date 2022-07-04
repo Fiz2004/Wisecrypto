@@ -20,6 +20,7 @@ import com.fiz.wisecrypto.ui.screens.main.components.MainBottomBar
 @Composable
 fun MainScreen(
     viewModel: MainViewModel = viewModel(),
+    moveReturn: () -> Unit
 ) {
     val navController = rememberNavController()
     val backstackEntry by navController.currentBackStackEntryAsState()
@@ -37,6 +38,7 @@ fun MainScreen(
         ) { innerPadding ->
             MainNavHost(
                 navController = navController,
+                moveReturn = moveReturn,
                 modifier = Modifier.padding(innerPadding),
                 viewModel
             )
@@ -44,6 +46,7 @@ fun MainScreen(
     else {
         MainNavHost(
             navController = navController,
+            moveReturn = moveReturn,
             modifier = Modifier,
             viewModel
         )

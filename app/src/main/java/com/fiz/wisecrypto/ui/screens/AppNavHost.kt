@@ -79,7 +79,8 @@ fun AppNavHost(
             val viewModel = hiltViewModel<MainViewModel>()
 
             MainScreen(
-                viewModel = viewModel
+                viewModel = viewModel,
+                moveReturn = { navController.popBackStack() }
             )
         }
 

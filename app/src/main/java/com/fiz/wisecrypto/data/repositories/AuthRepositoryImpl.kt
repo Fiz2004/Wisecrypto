@@ -31,7 +31,7 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-    fun authCompleted(email:String) {
+    fun authCompleted(email: String) {
         sharedPreferences.edit()
             .putBoolean(AUTH_KEY, true)
             .putString(EMAIL_KEY, email.trim().lowercase())
@@ -39,6 +39,13 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     fun authExit() {
+        sharedPreferences.edit()
+            .putBoolean(AUTH_KEY, false)
+            .putString(EMAIL_KEY, null)
+            .apply()
+    }
+
+    suspend fun exit() {
         sharedPreferences.edit()
             .putBoolean(AUTH_KEY, false)
             .putString(EMAIL_KEY, null)

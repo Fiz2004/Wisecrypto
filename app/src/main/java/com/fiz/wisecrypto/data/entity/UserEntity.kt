@@ -5,20 +5,22 @@ import androidx.room.PrimaryKey
 import com.fiz.wisecrypto.domain.models.User
 
 @Entity
-class UserEntity (
+class UserEntity(
     val fullName: String = "",
     val numberPhone: String = "",
     val userName: String = "",
     @PrimaryKey
     val email: String = "",
     val password: String = "",
+    val balance: Double = 0.0
 ) {
     fun toUser(): User {
         return User(
             userName = userName,
             email = email,
             numberPhone = numberPhone,
-            fullName=fullName
+            fullName = fullName,
+            balance = balance
         )
     }
 }

@@ -1,6 +1,7 @@
 package com.fiz.wisecrypto.ui.screens.main.profile.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -15,20 +16,34 @@ import com.fiz.wisecrypto.R
 import com.fiz.wisecrypto.ui.theme.displayLarge2
 
 @Composable
-fun UserInfoLarge() {
+fun UserInfoLarge(
+    fullName: String,
+    onClickChangeAvatar: () -> Unit
+) {
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Image(
-            modifier = Modifier
-                .size(80.dp)
-                .clip(shape = RoundedCornerShape(40.dp)),
-            painter = painterResource(id = R.drawable.pic_avatar_test),
-            contentDescription = null
-        )
+        Box {
+            Image(
+                modifier = Modifier
+                    .size(80.dp)
+                    .clip(shape = RoundedCornerShape(40.dp)),
+                painter = painterResource(id = R.drawable.pic_avatar_test),
+                contentDescription = null
+            )
+            Image(
+                modifier = Modifier
+                    .size(28.dp)
+                    .clip(shape = RoundedCornerShape(24.dp))
+                    .clickable { onClickChangeAvatar() }
+                    .align(Alignment.BottomEnd),
+                painter = painterResource(id = R.drawable.profile_change_avatar),
+                contentDescription = null
+            )
+        }
         Text(
-            text = "Test Test",
+            text = fullName,
             style = MaterialTheme.typography.displayLarge2
         )
     }

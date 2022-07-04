@@ -2,6 +2,7 @@ package com.fiz.wisecrypto.ui.screens.main.profile.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Divider
@@ -11,13 +12,20 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fiz.wisecrypto.R
 import com.fiz.wisecrypto.ui.theme.bodyLarge2
 
 @Composable
-fun BalanceInfo() {
+fun BalanceInfo(
+    currentBalance: String,
+    currentBalanceUsd: String,
+    onClickPull: () -> Unit,
+    onClickAdd: () -> Unit
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth(),
@@ -39,6 +47,7 @@ fun BalanceInfo() {
                     .fillMaxWidth()
                     .height(72.dp)
                     .align(Alignment.BottomCenter),
+                contentScale = ContentScale.Crop,
                 contentDescription = null
             )
             Row(
@@ -50,19 +59,22 @@ fun BalanceInfo() {
             ) {
                 Column {
                     Text(
-                        text = "Текущий баланс",
+                        text = stringResource(R.string.profile_current_balance),
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.onPrimary
                     )
                     Text(
-                        text = "= Rp.360.242.500",
+                        text = stringResource(
+                            id = R.string.profile_current_balance_value,
+                            currentBalance
+                        ),
                         style = MaterialTheme.typography.bodyLarge2,
                         color = MaterialTheme.colorScheme.onPrimary
                     )
                 }
                 Spacer(modifier = Modifier.weight(1f))
                 Text(
-                    text = "\$25,000",
+                    text = "\$${currentBalanceUsd}",
                     style = MaterialTheme.typography.displayLarge,
                     color = MaterialTheme.colorScheme.onPrimary
                 )
@@ -86,7 +98,9 @@ fun BalanceInfo() {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column(
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier
+                        .weight(1f)
+                        .clickable { onClickPull() },
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Icon(
@@ -96,7 +110,7 @@ fun BalanceInfo() {
                         tint = MaterialTheme.colorScheme.primary
                     )
                     Text(
-                        text = "Отправить",
+                        text = stringResource(R.string.profile_pull),
                         maxLines = 1,
                         style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.primary
@@ -113,7 +127,9 @@ fun BalanceInfo() {
                 Spacer(modifier = Modifier.width(40.dp))
 
                 Column(
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier
+                        .weight(1f)
+                        .clickable { onClickAdd() },
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Icon(
@@ -123,7 +139,7 @@ fun BalanceInfo() {
                         tint = MaterialTheme.colorScheme.primary
                     )
                     Text(
-                        text = "Добавить",
+                        text = stringResource(R.string.profile_add),
                         maxLines = 1,
                         style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.primary

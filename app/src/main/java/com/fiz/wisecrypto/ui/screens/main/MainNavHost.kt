@@ -14,10 +14,12 @@ import com.fiz.wisecrypto.ui.screens.main.home.notification.HomeNotificationView
 import com.fiz.wisecrypto.ui.screens.main.market.MarketScreen
 import com.fiz.wisecrypto.ui.screens.main.market.MarketViewModel
 import com.fiz.wisecrypto.ui.screens.main.profile.ProfileScreen
+import com.fiz.wisecrypto.ui.screens.main.profile.ProfileViewModel
 
 @Composable
 fun MainNavHost(
     navController: NavHostController,
+    moveReturn: () -> Unit,
     modifier: Modifier = Modifier,
     mainViewModel: MainViewModel = viewModel()
 ) {
@@ -56,11 +58,20 @@ fun MainNavHost(
         }
 
         composable(NamesMainScreen.Profile.name) {
-            val viewModel = hiltViewModel<HomeViewModel>()
+            val viewModel = hiltViewModel<ProfileViewModel>()
 
             ProfileScreen(
                 mainViewModel,
                 viewModel,
+                movePullScreen = {},
+                moveAddScreen = {},
+                moveListTransactionsScreen = {},
+                movePrivacyScreen = {},
+                movePaymentScreen = {},
+                moveNotificationsScreen = {},
+                moveSignInScreen = {
+                    moveReturn()
+                }
             )
         }
     }

@@ -67,6 +67,23 @@
     <string name="notification_text_balance_success">Успешное пополнение счета на сумму %1$s долларов</string>
     <string name="notification_text_balance_fail">Не удалось пополнить баланс на %1$s долларов</string>
     <string name="notification_date">29 Ноября 2021 (13.00)</string>
-    <string name="market_search_hint">Поиск...</string>
+    <string name="market_search_hint">Поиск…</string>
+
+    <!--    Profile-->
+    <string name="profile_list_transactions_title">История транзакций</string>
+    <string name="profile_list_transactions_description">Транзакции, Которые У Вас Есть</string>
+    <string name="profile_settings">Настройки</string>
+    <string name="profile_privacy_title">Конфиденциальность</string>
+    <string name="profile_privacy_description">Измените адрес электронной почты и пароль</string>
+    <string name="profile_payment_title">Платеж</string>
+    <string name="profile_payment_description">Обновить настройки оплаты</string>
+    <string name="profile_notifications_title">Уведомления</string>
+    <string name="profile_notifications_description">Изменение настроек уведомлений</string>
+    <string name="profile_exit_title">Выход</string>
+    <string name="profile_exit_description">Закройте приложение</string>
+    <string name="profile_current_balance">Текущий баланс</string>
+    <string name="profile_pull">Отправить</string>
+    <string name="profile_add">Добавить</string>
+    <string name="profile_current_balance_value">"= %1$s рублей"</string>
 
 </resources>
