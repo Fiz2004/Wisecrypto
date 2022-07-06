@@ -101,4 +101,32 @@ class UserRepositoryImpl @Inject constructor(
             user
         }
     }
+
+    suspend fun changeEmailPassword(
+        oldEmail: String,
+        newEmail: String,
+        oldPassword: String,
+        newPassword: String
+    ): Boolean {
+        return withContext(dispatcher) {
+            val checkOldEmail = oldEmail.trim().lowercase()
+            val checkNewEmail = newEmail.trim().lowercase()
+            val checkOldPassword = oldPassword.trim().lowercase()
+            val checkNewPassword = newPassword.trim().lowercase()
+
+            if (checkOldEmail != checkNewEmail)
+                if (userLocalDataSource.checkUser(checkOldEmail, checkOldPassword)) {
+                    if (!userLocalDataSource.changeEmail(checkOldEmail, checkNewEmail))
+                        return@withContext false
+                } else {
+                    return@withContext false
+                }
+
+            if (userLocalDataSource.checkUser(checkNewEmail, checkOldPassword)) {
+                userLocalDataSource.changePassword(checkNewEmail, checkNewPassword)
+            } else {
+                false
+            }
+        }
+    }
 }

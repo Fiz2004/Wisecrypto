@@ -17,8 +17,8 @@ interface UserDao {
     @Query("SELECT EXISTS (SELECT* FROM UserEntity WHERE numberPhone =:numberPhone)")
     suspend fun isValidatePhone(numberPhone: String): Boolean
 
-    @Query("UPDATE UserEntity SET password=:password WHERE numberPhone =:numberPhone")
-    suspend fun changePassword(numberPhone: String, password: String)
+    @Query("UPDATE UserEntity SET password=:password WHERE email =:email")
+    suspend fun changePassword(email: String, password: String)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(userEntity: UserEntity)

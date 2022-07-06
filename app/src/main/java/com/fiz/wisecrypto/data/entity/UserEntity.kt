@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 import com.fiz.wisecrypto.domain.models.User
 
 @Entity
-class UserEntity(
+data class UserEntity(
     val fullName: String = "",
     val numberPhone: String = "",
     val userName: String = "",

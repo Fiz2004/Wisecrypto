@@ -43,4 +43,28 @@ class UserLocalDataSourceImpl @Inject constructor(
             }
         }
     }
+
+    suspend fun changePassword(checkEmail: String, checkNewPassword: String): Boolean {
+        return withContext(dispatcher) {
+            try {
+                userDao.changePassword(checkEmail, checkNewPassword)
+                true
+            } catch (e: Exception) {
+                false
+            }
+        }
+    }
+
+    suspend fun changeEmail(checkOldEmail: String, checkNewEmail: String): Boolean {
+        return withContext(dispatcher) {
+            try {
+                val user = userDao.getUserByEmail(checkOldEmail)
+                userDao.insert(user.copy(email = checkNewEmail))
+                userDao.delete(user)
+                true
+            } catch (e: Exception) {
+                false
+            }
+        }
+    }
 }
