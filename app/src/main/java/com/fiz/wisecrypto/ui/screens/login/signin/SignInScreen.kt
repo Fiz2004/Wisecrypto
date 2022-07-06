@@ -16,7 +16,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fiz.wisecrypto.R
-import com.fiz.wisecrypto.ui.screens.login.components.*
+import com.fiz.wisecrypto.ui.components.PrimaryButton
+import com.fiz.wisecrypto.ui.components.TextFieldWithHeader
+import com.fiz.wisecrypto.ui.screens.login.components.LogoItem
+import com.fiz.wisecrypto.ui.screens.login.components.TextExtraAction
+import com.fiz.wisecrypto.ui.screens.login.components.TitleAndGreeting
 
 @Composable
 fun SignInScreen(
@@ -70,8 +74,8 @@ fun SignInScreen(
             TextFieldWithHeader(
                 text = viewState.email,
                 onValueChange = { viewModel.onEvent(SignInEvent.EmailChanged(it)) },
-                textHeader = stringResource(R.string.login_email_title),
-                textHint = stringResource(R.string.login_email_hint)
+                textHeader = stringResource(R.string.email_title),
+                textHint = stringResource(R.string.email_hint)
             )
         }
 
