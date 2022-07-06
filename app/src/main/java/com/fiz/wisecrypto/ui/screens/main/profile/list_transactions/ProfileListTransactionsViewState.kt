@@ -1,5 +1,7 @@
 package com.fiz.wisecrypto.ui.screens.main.profile.list_transactions
 
+import com.fiz.wisecrypto.ui.screens.main.profile.list_transactions.models.Transaction
+
 data class ProfileListTransactionsViewState(
     val fullName: String = "",
     val photo: String = "",

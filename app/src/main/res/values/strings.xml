@@ -3,10 +3,10 @@
     <string name="preferences">com.fiz.wisecrypto</string>
 
     <string name="slogan">Доверяют миллионы пользователей по всему миру</string>
+    <string name="email_title">Электронная почта</string>
+    <string name="email_hint">botpablo@gmail.com</string>
 
     <!--    Log In-->
-    <string name="login_email_title">Электронная почта</string>
-    <string name="login_email_hint">botpablo@gmail.com</string>
     <string name="login_password_title">Пароль</string>
     <string name="login_password_hint">Введите пароль</string>
 
@@ -107,5 +107,15 @@
     <string name="list_transactions_success">Успешно</string>
     <string name="list_transactions_pending">В процессе</string>
     <string name="list_transactions_fail">Неудачно</string>
+
+    <!--    Privacy-->
+    <string name="privacy_title">Privacy</string>
+    <string name="privacy_new_password_title">Новый пароль</string>
+    <string name="privacy_new_password_hint">Введите новый пароль</string>
+    <string name="privacy_old_password_title">Старый Пароль</string>
+    <string name="privacy_old_password_hint">Введите старый пароль</string>
+    <string name="privacy_save">Сохранить</string>
+    <string name="privacy_change_ok">Данные успешно изменены</string>
+    <string name="privacy_change_error">Ошибка, не получилось изменить данные</string>
 
 </resources>

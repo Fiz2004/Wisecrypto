@@ -17,6 +17,8 @@ import com.fiz.wisecrypto.ui.screens.main.profile.list_transactions.ProfileListT
 import com.fiz.wisecrypto.ui.screens.main.profile.list_transactions.ProfileListTransactionsViewModel
 import com.fiz.wisecrypto.ui.screens.main.profile.main.ProfileScreen
 import com.fiz.wisecrypto.ui.screens.main.profile.main.ProfileViewModel
+import com.fiz.wisecrypto.ui.screens.main.profile.privacy.ProfilePrivacyScreen
+import com.fiz.wisecrypto.ui.screens.main.profile.privacy.ProfilePrivacyViewModel
 
 @Composable
 fun MainNavHost(
@@ -68,7 +70,7 @@ fun MainNavHost(
                 movePullScreen = {},
                 moveAddScreen = {},
                 moveListTransactionsScreen = { navController.navigate(NamesProfileScreen.ListTransactions.name) },
-                movePrivacyScreen = {},
+                movePrivacyScreen = { navController.navigate(NamesProfileScreen.Privacy.name) },
                 movePaymentScreen = {},
                 moveNotificationsScreen = {},
                 moveSignInScreen = {
@@ -86,6 +88,16 @@ fun MainNavHost(
                 moveReturn = { navController.popBackStack() }
             )
         }
+
+        composable(NamesProfileScreen.Privacy.name) {
+            val viewModel = hiltViewModel<ProfilePrivacyViewModel>()
+
+            ProfilePrivacyScreen(
+                mainViewModel,
+                viewModel,
+                moveReturn = { navController.popBackStack() }
+            )
+        }
     }
 }
 
@@ -95,4 +107,5 @@ enum class NamesHomeScreen(name: String) {
 
 enum class NamesProfileScreen(name: String) {
     ListTransactions("List Transactions"),
+    Privacy("Privacy"),
 }

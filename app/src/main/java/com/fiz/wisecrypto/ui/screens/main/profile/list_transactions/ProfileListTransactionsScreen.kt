@@ -16,25 +16,6 @@ import com.fiz.wisecrypto.ui.screens.main.MainViewModel
 import com.fiz.wisecrypto.ui.screens.main.components.Toolbar
 import com.fiz.wisecrypto.ui.screens.main.market.components.FilterRow
 import com.fiz.wisecrypto.ui.screens.main.profile.list_transactions.components.TransactionItem
-import org.threeten.bp.LocalDateTime
-
-data class Transaction(
-    val status: StatusTransaction,
-    val type: TypeTransaction,
-    val textDescription: String,
-    val id: String,
-    val data: LocalDateTime
-)
-
-enum class StatusTransaction {
-    Success, Process, Fail
-}
-
-sealed class TypeTransaction {
-    data class Balance(val value: Double) : TypeTransaction()
-    data class Buy(val value: Double) : TypeTransaction()
-    data class Sell(val value: Double) : TypeTransaction()
-}
 
 
 @Composable

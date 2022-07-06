@@ -7,6 +7,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fiz.wisecrypto.data.repositories.AuthRepositoryImpl
 import com.fiz.wisecrypto.data.repositories.UserRepositoryImpl
+import com.fiz.wisecrypto.ui.screens.main.profile.list_transactions.models.StatusTransaction
+import com.fiz.wisecrypto.ui.screens.main.profile.list_transactions.models.Transaction
+import com.fiz.wisecrypto.ui.screens.main.profile.list_transactions.models.TypeTransaction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch

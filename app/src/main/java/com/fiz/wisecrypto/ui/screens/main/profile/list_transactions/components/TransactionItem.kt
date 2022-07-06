@@ -15,9 +15,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fiz.wisecrypto.R
-import com.fiz.wisecrypto.ui.screens.main.profile.list_transactions.StatusTransaction
-import com.fiz.wisecrypto.ui.screens.main.profile.list_transactions.Transaction
-import com.fiz.wisecrypto.ui.screens.main.profile.list_transactions.TypeTransaction
+import com.fiz.wisecrypto.ui.screens.main.profile.list_transactions.models.StatusTransaction
+import com.fiz.wisecrypto.ui.screens.main.profile.list_transactions.models.Transaction
+import com.fiz.wisecrypto.ui.screens.main.profile.list_transactions.models.TypeTransaction
 import com.fiz.wisecrypto.ui.theme.*
 import org.threeten.bp.format.DateTimeFormatter
 
