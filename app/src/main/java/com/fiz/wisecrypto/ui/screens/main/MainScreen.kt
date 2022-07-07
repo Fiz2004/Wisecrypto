@@ -28,9 +28,12 @@ fun MainScreen(
 
 //    val state = viewModel.viewState
 
-    if (currentScreen?.route != NamesHomeScreen.Notification.name)
+    if (currentScreen?.route == NamesMainScreen.Home.name ||
+        currentScreen?.route == NamesMainScreen.Market.name ||
+        currentScreen?.route == NamesMainScreen.Profile.name
+    )
         Scaffold(
-            modifier=Modifier.navigationBarsPadding(),
+            modifier = Modifier.navigationBarsPadding(),
             bottomBar = {
                 MainBottomBar(navController)
             },

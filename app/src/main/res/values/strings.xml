@@ -2,7 +2,7 @@
     <string name="app_name">Wisecrypto</string>
     <string name="preferences">com.fiz.wisecrypto</string>
 
-    <string name="slogan">Доверяют миллионы пользователей по всему миру</string>
+    <string name="slogan">Нам доверяют миллионы пользователей по всему миру</string>
     <string name="email_title">Электронная почта</string>
     <string name="email_hint">botpablo@gmail.com</string>
 
@@ -19,7 +19,7 @@
     <string name="signin_error_signin">Не могу войти</string>
 
     <!--    Sign Up-->
-    <string name="signup_title">Зарегистрируйтесь Сейчас</string>
+    <string name="signup_title">Зарегистрируйтесь сейчас</string>
     <string name="signup_fullname_title">Полное имя</string>
     <string name="signup_fullname_hint">Полное имя пользователя</string>
     <string name="signup_number_phone_title">Номер телефона</string>
@@ -59,7 +59,7 @@
     <!--    Notifications-->
     <string name="notification_notifications">Уведомления</string>
     <string name="notification_title_portfolio_increase">Увеличение активов</string>
-    <string name="notification_title_transaction_success">Успешная Транзакция</string>
+    <string name="notification_title_transaction_success">Успешная операция</string>
     <string name="notification_title_balance_process">Операция в обработке</string>
     <string name="notification_title_balance_success">Операция выполнена</string>
     <string name="notification_title_balance_fail">Операция не удалась</string>
@@ -80,13 +80,13 @@
     <string name="market_alts">Рынки ALTS</string>
 
     <!--    Profile-->
-    <string name="profile_list_transactions_title">История транзакций</string>
-    <string name="profile_list_transactions_description">Транзакции, Которые У Вас Есть</string>
+    <string name="profile_list_transactions_title">История операций</string>
+    <string name="profile_list_transactions_description">Список всех операций</string>
     <string name="profile_settings">Настройки</string>
     <string name="profile_privacy_title">Конфиденциальность</string>
     <string name="profile_privacy_description">Измените адрес электронной почты и пароль</string>
-    <string name="profile_payment_title">Платеж</string>
-    <string name="profile_payment_description">Обновить настройки оплаты</string>
+    <string name="profile_payment_title">Способы оплаты</string>
+    <string name="profile_payment_description">Редактировать способы оплаты</string>
     <string name="profile_notifications_title">Уведомления</string>
     <string name="profile_notifications_description">Изменение настроек уведомлений</string>
     <string name="profile_exit_title">Выход</string>
@@ -97,19 +97,19 @@
     <string name="profile_current_balance_value">"= %1$s рублей"</string>
 
     <!--    List Transactions-->
-    <string name="list_transactions_title">История транзакций</string>
+    <string name="list_transactions_title">История операций</string>
     <string name="list_transactions_all">Все</string>
     <string name="list_transactions_balance">Баланс</string>
     <string name="list_transactions_buy">Покупка</string>
     <string name="list_transactions_sell">Продажа</string>
-    <string name="list_transactions_transaction_code">Код транзакции : %1$s</string>
+    <string name="list_transactions_transaction_code">Код операции : %1$s</string>
     <string name="list_transactions_add_balance">Пополнение баланса</string>
     <string name="list_transactions_success">Успешно</string>
     <string name="list_transactions_pending">В процессе</string>
     <string name="list_transactions_fail">Неудачно</string>
 
     <!--    Privacy-->
-    <string name="privacy_title">Privacy</string>
+    <string name="privacy_title">Конфиденциальность</string>
     <string name="privacy_new_password_title">Новый пароль</string>
     <string name="privacy_new_password_hint">Введите новый пароль</string>
     <string name="privacy_old_password_title">Старый Пароль</string>
@@ -117,5 +117,9 @@
     <string name="privacy_save">Сохранить</string>
     <string name="privacy_change_ok">Данные успешно изменены</string>
     <string name="privacy_change_error">Ошибка, не получилось изменить данные</string>
+
+    <!--    Payment-->
+    <string name="payment_title">Настройки способов оплаты</string>
+    <string name="payment_add_new_pay">Добавить новый способ оплаты</string>
 
 </resources>

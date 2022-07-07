@@ -124,6 +124,11 @@ fun HomeNotificationScreen(
             }
 
         }
+
+        Spacer(
+            modifier = Modifier
+                .windowInsetsBottomHeight(WindowInsets.navigationBars)
+        )
     }
 }
 

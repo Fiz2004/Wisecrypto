@@ -82,6 +82,11 @@ fun ProfileListTransactionsScreen(
             }
 
         }
+
+        Spacer(
+            modifier = Modifier
+                .windowInsetsBottomHeight(WindowInsets.navigationBars)
+        )
     }
 }
 

@@ -13,12 +13,3 @@ fun TopSpacer() {
     )
     Spacer(modifier = Modifier.height(16.dp))
 }
-
-@Composable
-fun TopSpacerWithMenu() {
-    Spacer(
-        modifier = Modifier
-            .windowInsetsTopHeight(WindowInsets.statusBars)
-    )
-    Spacer(modifier = Modifier.height(4.dp))
-}

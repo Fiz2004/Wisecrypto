@@ -14,13 +14,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fiz.wisecrypto.R
 import com.fiz.wisecrypto.ui.components.PrimaryButton
 import com.fiz.wisecrypto.ui.components.TextFieldWithHeader
-import com.fiz.wisecrypto.ui.screens.main.MainViewModel
 import com.fiz.wisecrypto.ui.screens.main.components.Toolbar
 
 
 @Composable
 fun ProfilePrivacyScreen(
-    MainViewModel: MainViewModel = viewModel(),
     viewModel: ProfilePrivacyViewModel = viewModel(),
     moveReturn: () -> Unit,
 ) {
@@ -28,7 +26,6 @@ fun ProfilePrivacyScreen(
     val context = LocalContext.current
 
     val viewState = viewModel.viewState
-    val mainViewState = MainViewModel.viewState
     val viewEffect = viewModel.viewEffect
 
     LaunchedEffect(Unit) {
@@ -91,6 +88,11 @@ fun ProfilePrivacyScreen(
         PrimaryButton(
             text = R.string.privacy_save,
             onClick = { viewModel.onEvent(ProfilePrivacyEvent.SaveButtonClicked) })
+
+        Spacer(
+            modifier = Modifier
+                .windowInsetsBottomHeight(WindowInsets.navigationBars)
+        )
     }
 }
 

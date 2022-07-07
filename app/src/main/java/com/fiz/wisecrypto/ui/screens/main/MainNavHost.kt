@@ -17,6 +17,8 @@ import com.fiz.wisecrypto.ui.screens.main.profile.list_transactions.ProfileListT
 import com.fiz.wisecrypto.ui.screens.main.profile.list_transactions.ProfileListTransactionsViewModel
 import com.fiz.wisecrypto.ui.screens.main.profile.main.ProfileScreen
 import com.fiz.wisecrypto.ui.screens.main.profile.main.ProfileViewModel
+import com.fiz.wisecrypto.ui.screens.main.profile.payment.ProfilePaymentScreen
+import com.fiz.wisecrypto.ui.screens.main.profile.payment.ProfilePaymentViewModel
 import com.fiz.wisecrypto.ui.screens.main.profile.privacy.ProfilePrivacyScreen
 import com.fiz.wisecrypto.ui.screens.main.profile.privacy.ProfilePrivacyViewModel
 
@@ -71,7 +73,7 @@ fun MainNavHost(
                 moveAddScreen = {},
                 moveListTransactionsScreen = { navController.navigate(NamesProfileScreen.ListTransactions.name) },
                 movePrivacyScreen = { navController.navigate(NamesProfileScreen.Privacy.name) },
-                movePaymentScreen = {},
+                movePaymentScreen = { navController.navigate(NamesProfileScreen.Payment.name) },
                 moveNotificationsScreen = {},
                 moveSignInScreen = {
                     moveReturn()
@@ -93,7 +95,15 @@ fun MainNavHost(
             val viewModel = hiltViewModel<ProfilePrivacyViewModel>()
 
             ProfilePrivacyScreen(
-                mainViewModel,
+                viewModel,
+                moveReturn = { navController.popBackStack() }
+            )
+        }
+
+        composable(NamesProfileScreen.Payment.name) {
+            val viewModel = hiltViewModel<ProfilePaymentViewModel>()
+
+            ProfilePaymentScreen(
                 viewModel,
                 moveReturn = { navController.popBackStack() }
             )
@@ -108,4 +118,5 @@ enum class NamesHomeScreen(name: String) {
 enum class NamesProfileScreen(name: String) {
     ListTransactions("List Transactions"),
     Privacy("Privacy"),
+    Payment("Payment"),
 }

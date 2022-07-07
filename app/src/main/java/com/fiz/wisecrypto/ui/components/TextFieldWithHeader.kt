@@ -1,5 +1,6 @@
 package com.fiz.wisecrypto.ui.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -49,15 +50,14 @@ fun TextFieldWithHeader(
         },
         trailingIcon = {
             if (password)
-                IconButton(onClick = { transform = !transform }) {
-                    Icon(
-                        modifier = Modifier
-                            .size(16.dp),
-                        painter = painterResource(id = R.drawable.components_password_show),
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
+                Icon(
+                    modifier = Modifier
+                        .size(16.dp)
+                        .clickable { transform = !transform },
+                    painter = painterResource(id = R.drawable.components_password_show),
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                )
         },
         visualTransformation = if (password)
             if (transform)

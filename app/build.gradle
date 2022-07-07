@@ -92,10 +92,10 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
 
     // Glide
-    implementation("com.github.skydoves:landscapist-glide:1.5.2")
+    implementation('com.github.skydoves:landscapist-glide:1.5.3')
 
     // UI Controller
-    implementation("com.google.accompanist:accompanist-systemuicontroller:0.24.12-rc")
+    implementation("com.google.accompanist:accompanist-systemuicontroller:0.24.13-rc")
     implementation("com.google.accompanist:accompanist-insets:0.24.13-rc")
     implementation("com.google.accompanist:accompanist-insets-ui:0.24.13-rc")
 

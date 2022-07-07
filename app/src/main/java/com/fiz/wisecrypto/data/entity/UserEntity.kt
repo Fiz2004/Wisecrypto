@@ -6,13 +6,13 @@ import com.fiz.wisecrypto.domain.models.User
 
 @Entity
 data class UserEntity(
+    @PrimaryKey
+    val email: String = "",
     val fullName: String = "",
     val numberPhone: String = "",
     val userName: String = "",
-    @PrimaryKey
-    val email: String = "",
     val password: String = "",
-    val balance: Double = 0.0
+    val balance: Double = 0.0,
 ) {
     fun toUser(): User {
         return User(
