@@ -122,4 +122,13 @@
     <string name="payment_title">Настройки способов оплаты</string>
     <string name="payment_add_new_pay">Добавить новый способ оплаты</string>
 
+    <!--    Notifications-->
+    <string name="notifications_title">Настройки уведомлений</string>
+    <string name="notifications_types_notifications">Типы Уведомлений</string>
+    <string name="notifications_save">Сохранить</string>
+    <string name="notifications_portfolio">Портфель</string>
+    <string name="notifications_popular">Популярный</string>
+    <string name="notifications_watchlist">Список наблюдения</string>
+    <string name="notifications_promotions">Продвижение</string>
+
 </resources>

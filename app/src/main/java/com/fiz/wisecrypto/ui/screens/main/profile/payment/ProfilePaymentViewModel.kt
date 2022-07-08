@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fiz.wisecrypto.data.repositories.AuthRepositoryImpl
+import com.fiz.wisecrypto.data.repositories.SettingsRepositoryImpl
 import com.fiz.wisecrypto.data.repositories.UserRepositoryImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProfilePaymentViewModel @Inject constructor(
-    private val authRepository: AuthRepositoryImpl,
+    private val authRepository: SettingsRepositoryImpl,
     private val userRepository: UserRepositoryImpl,
 
     ) : ViewModel() {

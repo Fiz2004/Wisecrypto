@@ -5,8 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fiz.wisecrypto.data.repositories.AuthRepositoryImpl
 import com.fiz.wisecrypto.data.repositories.CoinRepositoryImpl
+import com.fiz.wisecrypto.data.repositories.SettingsRepositoryImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SplashViewModel @Inject constructor(
-    private val authRepository: AuthRepositoryImpl,
+    private val authRepository: SettingsRepositoryImpl,
     private val coinRepository: CoinRepositoryImpl
 ) : ViewModel() {
 

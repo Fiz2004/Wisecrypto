@@ -5,8 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fiz.wisecrypto.data.repositories.AuthRepositoryImpl
 import com.fiz.wisecrypto.data.repositories.CoinRepositoryImpl
+import com.fiz.wisecrypto.data.repositories.SettingsRepositoryImpl
 import com.fiz.wisecrypto.data.repositories.UserRepositoryImpl
 import com.fiz.wisecrypto.util.Consts.TIME_REFRESH_NETWORK_MS
 import com.fiz.wisecrypto.util.Resource
@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val authRepository: AuthRepositoryImpl,
+    private val authRepository: SettingsRepositoryImpl,
     private val userRepository: UserRepositoryImpl,
     private val coinRepository: CoinRepositoryImpl,
 

@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fiz.wisecrypto.data.repositories.AuthRepositoryImpl
+import com.fiz.wisecrypto.data.repositories.SettingsRepositoryImpl
 import com.fiz.wisecrypto.data.repositories.UserRepositoryImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -17,7 +17,7 @@ const val coefCurrentToUsd = 1 / 52.0
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     private val userRepository: UserRepositoryImpl,
-    private val authRepository: AuthRepositoryImpl
+    private val authRepository: SettingsRepositoryImpl
 ) : ViewModel() {
     var viewState by mutableStateOf(ProfileViewState())
         private set

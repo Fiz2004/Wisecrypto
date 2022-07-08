@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fiz.wisecrypto.data.repositories.AuthRepositoryImpl
+import com.fiz.wisecrypto.data.repositories.SettingsRepositoryImpl
 import com.fiz.wisecrypto.data.repositories.UserRepositoryImpl
 import com.fiz.wisecrypto.ui.screens.main.profile.list_transactions.models.StatusTransaction
 import com.fiz.wisecrypto.ui.screens.main.profile.list_transactions.models.Transaction
@@ -56,7 +56,7 @@ private val transactionsDefault = listOf(
 
 @HiltViewModel
 class ProfileListTransactionsViewModel @Inject constructor(
-    private val authRepository: AuthRepositoryImpl,
+    private val authRepository: SettingsRepositoryImpl,
     private val userRepository: UserRepositoryImpl,
 
     ) : ViewModel() {
