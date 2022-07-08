@@ -38,7 +38,7 @@ fun UserInfoLarge(
                     .clip(shape = RoundedCornerShape(24.dp))
                     .clickable { onClickChangeAvatar() }
                     .align(Alignment.BottomEnd),
-                painter = painterResource(id = R.drawable.profile_change_avatar),
+                painter = painterResource(id = R.drawable.profile_ic_change_avatar),
                 contentDescription = null
             )
         }

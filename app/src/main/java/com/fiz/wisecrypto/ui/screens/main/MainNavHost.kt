@@ -69,7 +69,6 @@ fun MainNavHost(
             val viewModel = hiltViewModel<ProfileViewModel>()
 
             ProfileScreen(
-                mainViewModel,
                 viewModel,
                 movePullScreen = {},
                 moveAddScreen = {},
@@ -87,7 +86,6 @@ fun MainNavHost(
             val viewModel = hiltViewModel<ProfileListTransactionsViewModel>()
 
             ProfileListTransactionsScreen(
-                mainViewModel,
                 viewModel,
                 moveReturn = { navController.popBackStack() }
             )

@@ -54,6 +54,20 @@ class ProfileViewModel @Inject constructor(
             ProfileEvent.ProfileExitClicked -> profileExitClicked()
             ProfileEvent.PullClicked -> pullClicked()
             ProfileEvent.ChangeAvatarClicked -> changeAvatarClicked()
+            ProfileEvent.CancelExitClicked -> cancelExitClicked()
+            ProfileEvent.ConfirmExitClicked -> confirmExitClicked()
+        }
+    }
+
+    private fun confirmExitClicked() {
+        viewModelScope.launch {
+            authRepository.exit()
+            viewEffect.emit(ProfileViewEffect.MoveSignInScreen)
+        }
+    }
+
+    private fun cancelExitClicked() {
+        viewModelScope.launch {
         }
     }
 
@@ -71,8 +85,7 @@ class ProfileViewModel @Inject constructor(
 
     private fun profileExitClicked() {
         viewModelScope.launch {
-            authRepository.exit()
-            viewEffect.emit(ProfileViewEffect.MoveSignInScreen)
+            viewEffect.emit(ProfileViewEffect.ShowAlertDialogConfirmExit)
         }
     }
 

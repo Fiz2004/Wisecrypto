@@ -9,4 +9,6 @@ sealed class ProfileEvent {
     object PullClicked : ProfileEvent()
     object AddClicked : ProfileEvent()
     object ChangeAvatarClicked : ProfileEvent()
+    object ConfirmExitClicked : ProfileEvent()
+    object CancelExitClicked : ProfileEvent()
 }

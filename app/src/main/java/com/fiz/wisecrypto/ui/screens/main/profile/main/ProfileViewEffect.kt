@@ -9,5 +9,6 @@ sealed class ProfileViewEffect {
     object MovePaymentScreen : ProfileViewEffect()
     object MoveNotificationsScreen : ProfileViewEffect()
     object MoveSignInScreen : ProfileViewEffect()
+    object ShowAlertDialogConfirmExit : ProfileViewEffect()
     object ShowChangeAvatarScreen : ProfileViewEffect()
 }

@@ -12,7 +12,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fiz.wisecrypto.R
-import com.fiz.wisecrypto.ui.screens.main.MainViewModel
 import com.fiz.wisecrypto.ui.screens.main.components.Toolbar
 import com.fiz.wisecrypto.ui.screens.main.market.components.FilterRow
 import com.fiz.wisecrypto.ui.screens.main.profile.list_transactions.components.TransactionItem
@@ -20,7 +19,6 @@ import com.fiz.wisecrypto.ui.screens.main.profile.list_transactions.components.T
 
 @Composable
 fun ProfileListTransactionsScreen(
-    MainViewModel: MainViewModel = viewModel(),
     viewModel: ProfileListTransactionsViewModel = viewModel(),
     moveReturn: () -> Unit,
 ) {
@@ -28,7 +26,6 @@ fun ProfileListTransactionsScreen(
     val context = LocalContext.current
 
     val viewState = viewModel.viewState
-    val mainViewState = MainViewModel.viewState
     val viewEffect = viewModel.viewEffect
 
     val transactionsFilters = listOf(

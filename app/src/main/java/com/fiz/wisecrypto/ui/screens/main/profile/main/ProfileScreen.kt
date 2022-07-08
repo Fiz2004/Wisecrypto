@@ -1,20 +1,23 @@
 package com.fiz.wisecrypto.ui.screens.main.profile.main
 
 import android.widget.Toast
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fiz.wisecrypto.R
-import com.fiz.wisecrypto.ui.screens.main.MainViewModel
 import com.fiz.wisecrypto.ui.screens.main.components.TopSpacer
 import com.fiz.wisecrypto.ui.screens.main.profile.main.components.BalanceInfo
 import com.fiz.wisecrypto.ui.screens.main.profile.main.components.ProfileMenuItem
@@ -23,7 +26,6 @@ import com.fiz.wisecrypto.ui.theme.*
 
 @Composable
 fun ProfileScreen(
-    MainViewModel: MainViewModel = viewModel(),
     viewModel: ProfileViewModel = viewModel(),
     movePullScreen: () -> Unit,
     moveAddScreen: () -> Unit,
@@ -37,8 +39,9 @@ fun ProfileScreen(
     val context = LocalContext.current
 
     val viewState = viewModel.viewState
-    val mainViewState = MainViewModel.viewState
     val viewEffect = viewModel.viewEffect
+
+    val openDialog = rememberSaveable { mutableStateOf(false) }
 
 
     LaunchedEffect(Unit) {
@@ -70,6 +73,9 @@ fun ProfileScreen(
                 }
                 ProfileViewEffect.ShowChangeAvatarScreen -> {
 
+                }
+                ProfileViewEffect.ShowAlertDialogConfirmExit -> {
+                    openDialog.value = true
                 }
             }
         }
@@ -164,6 +170,62 @@ fun ProfileScreen(
             }
         }
 
+    }
+
+    if (openDialog.value) {
+        AlertDialog(
+            onDismissRequest = { openDialog.value = false },
+            icon = {
+                Icon(
+                    modifier = Modifier.size(64.dp),
+                    painter = painterResource(id = R.drawable.profile_ic_info),
+                    contentDescription = null
+                )
+            },
+            text = {
+                Text(
+                    text = stringResource(R.string.profile_confirm_exit),
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            },
+            confirmButton = {
+                Button(
+                    shape = RoundedCornerShape(4.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Red
+                    ),
+                    contentPadding = PaddingValues(horizontal = 32.dp),
+                    onClick = {
+                        openDialog.value = false
+                        viewModel.onEvent(ProfileEvent.ConfirmExitClicked)
+                    }) {
+                    Text(
+                        text = stringResource(R.string.profile_exit),
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+            },
+            dismissButton = {
+                Button(
+                    shape = RoundedCornerShape(4.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.surface
+                    ),
+                    border = BorderStroke(width = 1.dp, color = Red),
+                    contentPadding = PaddingValues(horizontal = 32.dp),
+                    onClick = {
+                        openDialog.value = false
+                        viewModel.onEvent(ProfileEvent.CancelExitClicked)
+                    }) {
+                    Text(
+                        text = stringResource(R.string.profile_cancel),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Red
+                    )
+                }
+            }
+        )
     }
 }
 

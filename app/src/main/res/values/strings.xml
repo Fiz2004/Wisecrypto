@@ -130,5 +130,8 @@
     <string name="notifications_popular">Популярный</string>
     <string name="notifications_watchlist">Список наблюдения</string>
     <string name="notifications_promotions">Продвижение</string>
+    <string name="profile_confirm_exit">Вы уверены, что хотите выйти?</string>
+    <string name="profile_exit">Выход</string>
+    <string name="profile_cancel">Отмена</string>
 
 </resources>
