@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fiz.wisecrypto.R
 import com.fiz.wisecrypto.ui.components.PrimaryButton
-import com.fiz.wisecrypto.ui.screens.main.components.Toolbar
+import com.fiz.wisecrypto.ui.screens.main.components.MainColumnWithoutBottomBar
 import com.fiz.wisecrypto.ui.theme.Red
 
 @Composable
@@ -49,25 +49,10 @@ fun ProfilePaymentScreen(
         }
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = MaterialTheme.colorScheme.surface)
-            .padding(horizontal = 16.dp)
+    MainColumnWithoutBottomBar(
+        textToolbar = stringResource(R.string.payment_title),
+        onClickBackButton = { viewModel.onEvent(ProfilePaymentEvent.BackButtonClicked) }
     ) {
-
-        Spacer(
-            modifier = Modifier
-                .windowInsetsTopHeight(WindowInsets.statusBars)
-        )
-
-        Toolbar(
-            title = stringResource(R.string.payment_title),
-            onClickBackButton = { viewModel.onEvent(ProfilePaymentEvent.BackButtonClicked) }
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-
-
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
@@ -98,7 +83,8 @@ fun ProfilePaymentScreen(
                         Column {
                             Text(
                                 text = payment.name,
-                                style = MaterialTheme.typography.headlineLarge
+                                style = MaterialTheme.typography.headlineLarge,
+                                color = MaterialTheme.colorScheme.onSurface
                             )
                             Spacer(modifier = Modifier.height(8.dp))
                             Text(

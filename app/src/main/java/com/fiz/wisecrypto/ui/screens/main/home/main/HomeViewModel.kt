@@ -33,13 +33,9 @@ class HomeViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             val email = authRepository.getAuthEmail()
-            if (email == null) {
-                viewEffect.emit(HomeViewEffect.MoveSignIn)
-            } else {
+            if (email != null) {
                 val user = userRepository.getUserInfo(email)
-                if (user == null)
-                    viewEffect.emit(HomeViewEffect.MoveSignIn)
-                else
+                if (user != null)
                     viewState = viewState.copy(fullName = user.fullName)
             }
         }

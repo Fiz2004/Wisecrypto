@@ -3,7 +3,6 @@ package com.fiz.wisecrypto.ui.screens.main
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -29,7 +28,6 @@ fun MainNavHost(
     navController: NavHostController,
     moveReturn: () -> Unit,
     modifier: Modifier = Modifier,
-    mainViewModel: MainViewModel = viewModel()
 ) {
     NavHost(
         navController = navController,
@@ -40,7 +38,6 @@ fun MainNavHost(
             val viewModel = hiltViewModel<HomeViewModel>()
 
             HomeScreen(
-                mainViewModel,
                 viewModel,
                 moveNotificationScreen = { navController.navigate(NamesHomeScreen.Notification.name) }
             )
@@ -50,7 +47,6 @@ fun MainNavHost(
             val viewModel = hiltViewModel<HomeNotificationViewModel>()
 
             HomeNotificationScreen(
-                mainViewModel,
                 viewModel,
                 moveHomeMain = { navController.popBackStack() }
             )
@@ -60,7 +56,6 @@ fun MainNavHost(
             val viewModel = hiltViewModel<MarketViewModel>()
 
             MarketScreen(
-                mainViewModel,
                 viewModel,
             )
         }
@@ -120,13 +115,13 @@ fun MainNavHost(
     }
 }
 
-enum class NamesHomeScreen(name: String) {
-    Notification("Notification"),
+enum class NamesHomeScreen {
+    Notification,
 }
 
-enum class NamesProfileScreen(name: String) {
-    ListTransactions("List Transactions"),
-    Privacy("Privacy"),
-    Payment("Payment"),
-    Notifications("Notifications"),
+enum class NamesProfileScreen {
+    ListTransactions,
+    Privacy,
+    Payment,
+    Notifications,
 }

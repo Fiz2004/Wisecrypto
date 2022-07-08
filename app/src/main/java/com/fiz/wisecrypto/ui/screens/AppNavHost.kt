@@ -13,7 +13,6 @@ import com.fiz.wisecrypto.ui.screens.login.signup.SignUpViewModel
 import com.fiz.wisecrypto.ui.screens.login.signup2.SignUp2Screen
 import com.fiz.wisecrypto.ui.screens.login.signup2.SignUp2ViewModel
 import com.fiz.wisecrypto.ui.screens.main.MainScreen
-import com.fiz.wisecrypto.ui.screens.main.MainViewModel
 import com.fiz.wisecrypto.ui.screens.splash.SplashScreen
 import com.fiz.wisecrypto.ui.screens.splash.SplashViewModel
 
@@ -76,10 +75,7 @@ fun AppNavHost(
         }
 
         composable(NamesScreen.Main.name) {
-            val viewModel = hiltViewModel<MainViewModel>()
-
             MainScreen(
-                viewModel = viewModel,
                 moveReturn = { navController.popBackStack() }
             )
         }
@@ -87,10 +83,10 @@ fun AppNavHost(
     }
 }
 
-enum class NamesScreen(name: String) {
-    Splash("Splash"),
-    SignIn("SignIn"),
-    SignUp("SignUp"),
-    SignUp2("SignUp2"),
-    Main("Main"),
+enum class NamesScreen {
+    Splash,
+    SignIn,
+    SignUp,
+    SignUp2,
+    Main,
 }

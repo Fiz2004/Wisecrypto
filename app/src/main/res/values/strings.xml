@@ -59,12 +59,16 @@
     <!--    Notifications-->
     <string name="notification_notifications">Уведомления</string>
     <string name="notification_title_portfolio_increase">Увеличение активов</string>
+    <string name="notification_title_portfolio_decrease">Уменьшение активов</string>
     <string name="notification_title_transaction_success">Успешная операция</string>
     <string name="notification_title_balance_process">Операция в обработке</string>
     <string name="notification_title_balance_success">Операция выполнена</string>
     <string name="notification_title_balance_fail">Операция не удалась</string>
     <string name="notification_text_portfolio_increase">Увеличение %1$s-активов на %2$s</string>
-    <string name="notification_text_transaction_success">Покупка %1$s биткоина успешно выполнена</string>
+    <string name="notification_text_portfolio_decrease">Уменьшение %1$s-активов на %2$s</string>
+    <string name="notification_text_transaction_success">Покупка %1$s %2$s успешно выполнена</string>
+    <string name="notification_text_transaction_process">Покупка %1$s %2$s в процессе выполнения</string>
+    <string name="notification_text_transaction_fail">Покупка %1$s %2$s не удалась</string>
     <string name="notification_text_balance_process">Пополнение баланса на %1$s долларов в процессе выполнения</string>
     <string name="notification_text_balance_success">Успешное пополнение счета на сумму %1$s долларов</string>
     <string name="notification_text_balance_fail">Не удалось пополнить баланс на %1$s долларов</string>
@@ -95,6 +99,9 @@
     <string name="profile_pull">Отправить</string>
     <string name="profile_add">Добавить</string>
     <string name="profile_current_balance_value">"= %1$s рублей"</string>
+    <string name="profile_confirm_exit">Вы уверены, что хотите выйти?</string>
+    <string name="profile_exit">Выход</string>
+    <string name="profile_cancel">Отмена</string>
 
     <!--    List Transactions-->
     <string name="list_transactions_title">История операций</string>
@@ -130,8 +137,5 @@
     <string name="notifications_popular">Популярный</string>
     <string name="notifications_watchlist">Список наблюдения</string>
     <string name="notifications_promotions">Продвижение</string>
-    <string name="profile_confirm_exit">Вы уверены, что хотите выйти?</string>
-    <string name="profile_exit">Выход</string>
-    <string name="profile_cancel">Отмена</string>
 
 </resources>

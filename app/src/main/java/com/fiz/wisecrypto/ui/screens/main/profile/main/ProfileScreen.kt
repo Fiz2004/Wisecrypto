@@ -1,25 +1,24 @@
 package com.fiz.wisecrypto.ui.screens.main.profile.main
 
 import android.widget.Toast
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fiz.wisecrypto.R
-import com.fiz.wisecrypto.ui.screens.main.components.TopSpacer
+import com.fiz.wisecrypto.ui.screens.main.components.MainColumnWithBottomBar
 import com.fiz.wisecrypto.ui.screens.main.profile.main.components.BalanceInfo
+import com.fiz.wisecrypto.ui.screens.main.profile.main.components.ExitDialog
 import com.fiz.wisecrypto.ui.screens.main.profile.main.components.ProfileMenuItem
 import com.fiz.wisecrypto.ui.screens.main.profile.main.components.UserInfoLarge
 import com.fiz.wisecrypto.ui.theme.*
@@ -42,7 +41,6 @@ fun ProfileScreen(
     val viewEffect = viewModel.viewEffect
 
     val openDialog = rememberSaveable { mutableStateOf(false) }
-
 
     LaunchedEffect(Unit) {
         viewEffect.collect { effect ->
@@ -81,15 +79,7 @@ fun ProfileScreen(
         }
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = MaterialTheme.colorScheme.surface)
-            .padding(horizontal = 16.dp)
-    ) {
-
-        TopSpacer()
-
+    MainColumnWithBottomBar {
         UserInfoLarge(
             fullName = viewState.fullName,
             onClickChangeAvatar = { viewModel.onEvent(ProfileEvent.ChangeAvatarClicked) }
@@ -172,61 +162,17 @@ fun ProfileScreen(
 
     }
 
-    if (openDialog.value) {
-        AlertDialog(
-            onDismissRequest = { openDialog.value = false },
-            icon = {
-                Icon(
-                    modifier = Modifier.size(64.dp),
-                    painter = painterResource(id = R.drawable.profile_ic_info),
-                    contentDescription = null
-                )
-            },
-            text = {
-                Text(
-                    text = stringResource(R.string.profile_confirm_exit),
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            },
-            confirmButton = {
-                Button(
-                    shape = RoundedCornerShape(4.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Red
-                    ),
-                    contentPadding = PaddingValues(horizontal = 32.dp),
-                    onClick = {
-                        openDialog.value = false
-                        viewModel.onEvent(ProfileEvent.ConfirmExitClicked)
-                    }) {
-                    Text(
-                        text = stringResource(R.string.profile_exit),
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                }
-            },
-            dismissButton = {
-                Button(
-                    shape = RoundedCornerShape(4.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.surface
-                    ),
-                    border = BorderStroke(width = 1.dp, color = Red),
-                    contentPadding = PaddingValues(horizontal = 32.dp),
-                    onClick = {
-                        openDialog.value = false
-                        viewModel.onEvent(ProfileEvent.CancelExitClicked)
-                    }) {
-                    Text(
-                        text = stringResource(R.string.profile_cancel),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = Red
-                    )
-                }
-            }
-        )
-    }
+    ExitDialog(
+        openDialog = openDialog.value,
+        onClickConfirm = {
+            openDialog.value = false
+            viewModel.onEvent(ProfileEvent.ConfirmExitClicked)
+        },
+        onClickDismiss = {
+            openDialog.value = false
+            viewModel.onEvent(ProfileEvent.CancelExitClicked)
+        }
+    )
 }
 
 

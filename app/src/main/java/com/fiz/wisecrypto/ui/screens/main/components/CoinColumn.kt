@@ -1,7 +1,8 @@
-package com.fiz.wisecrypto.ui.screens.main.home.main.components
+package com.fiz.wisecrypto.ui.screens.main.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -13,14 +14,29 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.fiz.wisecrypto.R
+import com.fiz.wisecrypto.domain.models.Coin
 import com.fiz.wisecrypto.ui.screens.main.home.components.RelativeLabel
-import com.fiz.wisecrypto.ui.screens.main.models.CoinUi
 import com.fiz.wisecrypto.ui.theme.MulishBold
 import com.fiz.wisecrypto.ui.theme.MulishRegular
 import com.skydoves.landscapist.glide.GlideImage
 
 @Composable
-fun WatchListItem(coinUi: CoinUi) {
+fun CoinColumn(coins: List<Coin>) {
+    LazyColumn {
+        coins.forEach {
+            item {
+                CoinItem(it)
+            }
+        }
+    }
+}
+
+
+@Composable
+private fun CoinItem(coin: Coin) {
+
+    val coinUi = coin.toCoinUi()
+
     Row(
         modifier = Modifier
             .height(88.dp)
@@ -76,4 +92,6 @@ fun WatchListItem(coinUi: CoinUi) {
             RelativeLabel(up = coinUi.up, value = coinUi.value)
         }
     }
+
+    Spacer(modifier = Modifier.height(8.dp))
 }

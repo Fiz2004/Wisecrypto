@@ -1,15 +1,12 @@
 package com.fiz.wisecrypto.ui.screens.main.profile.notifications
 
 import android.widget.Toast
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -17,7 +14,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fiz.wisecrypto.R
 import com.fiz.wisecrypto.ui.components.PrimaryButton
-import com.fiz.wisecrypto.ui.screens.main.components.Toolbar
+import com.fiz.wisecrypto.ui.screens.main.components.MainColumnWithoutBottomBar
+import com.fiz.wisecrypto.ui.screens.main.profile.notifications.components.RowNotification
 
 @Composable
 fun ProfileNotificationsScreen(
@@ -44,24 +42,10 @@ fun ProfileNotificationsScreen(
         }
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = MaterialTheme.colorScheme.surface)
-            .padding(horizontal = 16.dp)
+    MainColumnWithoutBottomBar(
+        textToolbar = stringResource(R.string.notifications_title),
+        onClickBackButton = { viewModel.onEvent(ProfileNotificationsEvent.BackButtonClicked) }
     ) {
-
-        Spacer(
-            modifier = Modifier
-                .windowInsetsTopHeight(WindowInsets.statusBars)
-        )
-
-        Toolbar(
-            title = stringResource(R.string.notifications_title),
-            onClickBackButton = { viewModel.onEvent(ProfileNotificationsEvent.BackButtonClicked) }
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-
         Column(
             modifier = Modifier
                 .padding(vertical = 16.dp)
@@ -70,7 +54,8 @@ fun ProfileNotificationsScreen(
 
             Text(
                 text = stringResource(R.string.notifications_types_notifications),
-                style = MaterialTheme.typography.headlineMedium
+                style = MaterialTheme.typography.headlineMedium,
+                color = MaterialTheme.colorScheme.onSurface
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -114,28 +99,6 @@ fun ProfileNotificationsScreen(
         PrimaryButton(
             text = R.string.notifications_save,
             onClick = { viewModel.onEvent(ProfileNotificationsEvent.SaveButtonClicked) })
-    }
-}
-
-@Composable
-private fun RowNotification(
-    text: String,
-    valueSwitch: Boolean,
-    onCheckedChange: (Boolean) -> Unit
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 4.dp)
-            .padding(horizontal = 16.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = text,
-            style = MaterialTheme.typography.displayMedium
-        )
-        Spacer(modifier = Modifier.weight(1f))
-        Switch(checked = valueSwitch, onCheckedChange = onCheckedChange)
     }
 }
 

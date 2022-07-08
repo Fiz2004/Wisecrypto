@@ -3,6 +3,7 @@ package com.fiz.wisecrypto.ui.screens.main.profile.list_transactions.components
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
@@ -21,8 +22,23 @@ import com.fiz.wisecrypto.ui.screens.main.profile.list_transactions.models.TypeT
 import com.fiz.wisecrypto.ui.theme.*
 import org.threeten.bp.format.DateTimeFormatter
 
+
 @Composable
-fun TransactionItem(
+fun TransactionList(transactions: List<Transaction>) {
+    LazyColumn {
+
+        transactions.forEach {
+            item {
+                TransactionItem(transaction = it)
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+        }
+
+    }
+}
+
+@Composable
+private fun TransactionItem(
     transaction: Transaction
 ) {
 
