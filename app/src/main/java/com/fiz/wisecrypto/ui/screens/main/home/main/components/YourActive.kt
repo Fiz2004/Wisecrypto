@@ -1,5 +1,6 @@
 package com.fiz.wisecrypto.ui.screens.main.home.main.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -15,13 +16,16 @@ import com.fiz.wisecrypto.R
 import com.fiz.wisecrypto.ui.screens.main.models.ActiveUi
 
 @Composable
-fun YourActive(portfolio: List<ActiveUi>) {
-    TitleYourActive()
+fun YourActive(
+    portfolio: List<ActiveUi>,
+    moveHomePortfolioScreen: () -> Unit
+) {
+    TitleYourActive(moveHomePortfolioScreen)
     YourActiveRow(portfolio)
 }
 
 @Composable
-private fun TitleYourActive() {
+private fun TitleYourActive(moveHomePortfolioScreen: () -> Unit) {
     Row {
         Text(
             text = stringResource(R.string.home_your_active),
@@ -29,6 +33,7 @@ private fun TitleYourActive() {
         )
         Spacer(modifier = Modifier.weight(1f))
         Text(
+            modifier = Modifier.clickable { moveHomePortfolioScreen() },
             text = stringResource(R.string.home_see_all),
             style = MaterialTheme.typography.titleSmall,
             color = MaterialTheme.colorScheme.primary

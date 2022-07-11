@@ -15,7 +15,7 @@ data class CoinDto(
     @SerializedName("total_volume") val totalVolume: Double? = 0.0,
     @SerializedName("high_24h") val high24h: Double? = 0.0,
     @SerializedName("low_24h") val low24h: Double? = 0.04,
-    @SerializedName("price_change_24h") val priceChange24h: Double = 0.0,
+    @SerializedName("price_change_24h") val priceChange24h: Double? = 0.0,
     @SerializedName("price_change_percentage_24h") val priceChangePercentage24h: Double? = 0.0,
     @SerializedName("market_cap_change_24h") val marketCapChange24h: Double? = 0.0,
     @SerializedName("market_cap_change_percentage_24h") val marketCapChangePercentage24h: Double? = 0.0,
@@ -39,6 +39,7 @@ data class CoinDto(
             market = "BUSD",
             name = name.orEmpty(),
             currentPrice = currentPrice ?: 0.0,
+            priceChange = priceChange24h ?: 0.0,
             cost = currentPrice ?: 0.0,
             priceChangePercentage = priceChangePercentage24h ?: 0.0,
         )

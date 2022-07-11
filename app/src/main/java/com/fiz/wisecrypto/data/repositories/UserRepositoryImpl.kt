@@ -2,9 +2,8 @@ package com.fiz.wisecrypto.data.repositories
 
 import com.fiz.wisecrypto.data.data_source.UserLocalDataSourceImpl
 import com.fiz.wisecrypto.data.entity.UserEntity
-import com.fiz.wisecrypto.domain.models.Coin
+import com.fiz.wisecrypto.domain.models.Active
 import com.fiz.wisecrypto.domain.models.User
-import com.fiz.wisecrypto.ui.screens.main.models.ActiveUi
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -31,28 +30,6 @@ class UserRepositoryImpl @Inject constructor(
             1000.0
         )
     )
-
-    data class Active(
-        val id: String = "",
-        val count: Double = 0.0,
-        val countForBuy: Double = 0.0
-    ) {
-        fun toActiveUi(data: List<Coin>?): ActiveUi {
-            val current = data?.first { it.id == id } ?: return ActiveUi()
-            val divided = current.currentPrice / countForBuy * 100
-            val percent = if (divided > 0) divided - 100 else 100 - divided
-            val portfolio = count * (current.currentPrice)
-            return ActiveUi(
-                abbreviated = current.abbreviated.uppercase(),
-                name = current.name,
-                icon = current.icon,
-                portfolio = "\$${"%.2f".format(portfolio)}",
-                equivalent = "${"%.4f".format(count)} ${current.abbreviated.uppercase()}",
-                isUpDirectChangePercentage = percent > 0.0,
-                changePercentage = "${"%.1f".format(percent)}%"
-            )
-        }
-    }
 
     suspend fun saveUser(
         fullName: String,

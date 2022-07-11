@@ -20,6 +20,7 @@ data class Coin(
             name = name,
             cost = "\$${"%.2f".format(cost)}",
             up = priceChangePercentage > 0.0,
+            priceChange = "${"%.1f".format(priceChange)}%",
             value = "${"%.1f".format(priceChangePercentage)}%"
         )
         return coinUi

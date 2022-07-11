@@ -7,6 +7,7 @@ data class HomeViewState(
     val fullName: String = "",
     val photo: String = "",
     val coins: List<Coin> = emptyList(),
+    val pricePortfolio: String = "",
     val balance: String = "",
     val changePercentageBalance: Double = 0.0,
     val portfolio: List<ActiveUi> = emptyList(),

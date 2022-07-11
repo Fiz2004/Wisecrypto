@@ -10,6 +10,8 @@ import com.fiz.wisecrypto.ui.screens.main.home.main.HomeScreen
 import com.fiz.wisecrypto.ui.screens.main.home.main.HomeViewModel
 import com.fiz.wisecrypto.ui.screens.main.home.notification.HomeNotificationScreen
 import com.fiz.wisecrypto.ui.screens.main.home.notification.HomeNotificationViewModel
+import com.fiz.wisecrypto.ui.screens.main.home.portfolio.HomePortfolioScreen
+import com.fiz.wisecrypto.ui.screens.main.home.portfolio.HomePortfolioViewModel
 import com.fiz.wisecrypto.ui.screens.main.market.MarketScreen
 import com.fiz.wisecrypto.ui.screens.main.market.MarketViewModel
 import com.fiz.wisecrypto.ui.screens.main.profile.list_transactions.ProfileListTransactionsScreen
@@ -39,7 +41,8 @@ fun MainNavHost(
 
             HomeScreen(
                 viewModel,
-                moveNotificationScreen = { navController.navigate(NamesHomeScreen.Notification.name) }
+                moveNotificationScreen = { navController.navigate(NamesHomeScreen.Notification.name) },
+                moveHomePortfolioScreen = { navController.navigate(NamesHomeScreen.Portfolio.name) }
             )
         }
 
@@ -47,6 +50,15 @@ fun MainNavHost(
             val viewModel = hiltViewModel<HomeNotificationViewModel>()
 
             HomeNotificationScreen(
+                viewModel,
+                moveHomeMain = { navController.popBackStack() }
+            )
+        }
+
+        composable(NamesHomeScreen.Portfolio.name) {
+            val viewModel = hiltViewModel<HomePortfolioViewModel>()
+
+            HomePortfolioScreen(
                 viewModel,
                 moveHomeMain = { navController.popBackStack() }
             )
@@ -117,6 +129,7 @@ fun MainNavHost(
 
 enum class NamesHomeScreen {
     Notification,
+    Portfolio
 }
 
 enum class NamesProfileScreen {

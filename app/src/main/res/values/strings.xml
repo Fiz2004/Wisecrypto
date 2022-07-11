@@ -50,11 +50,13 @@
 
     <!--    Home-->
     <string name="home_hello">Здравствуйте,</string>
-    <string name="home_see_all">Просмотреть Все</string>
+    <string name="home_see_all">Посмотреть Все</string>
     <string name="home_your_active">Ваши активы</string>
     <string name="home_total_portfolio">Общий портфель</string>
     <string name="home_portfolio">Портфель</string>
     <string name="home_watchlist">Список наблюдения</string>
+    <string name="home_your_balance">Ваш баланс</string>
+    <string name="home_add_balance">Пополнить</string>
 
     <!--    Notifications-->
     <string name="notification_notifications">Уведомления</string>
@@ -137,5 +139,7 @@
     <string name="notifications_popular">Популярный</string>
     <string name="notifications_watchlist">Список наблюдения</string>
     <string name="notifications_promotions">Продвижение</string>
+    <string name="portfolio_portfolio">Портфель</string>
+
 
 </resources>

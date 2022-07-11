@@ -7,5 +7,6 @@ data class ActiveUi(
     val portfolio: String = "",
     val equivalent: String = "",
     val isUpDirectChangePercentage: Boolean = true,
-    val changePercentage: String = ""
+    val changePercentage: String = "",
+    val changeValue: String = ""
 )

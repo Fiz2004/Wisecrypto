@@ -20,7 +20,8 @@ import com.fiz.wisecrypto.ui.screens.main.home.main.components.YourActive
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel = viewModel(),
-    moveNotificationScreen: () -> Unit
+    moveNotificationScreen: () -> Unit,
+    moveHomePortfolioScreen: () -> Unit,
 ) {
     val context = LocalContext.current
 
@@ -62,8 +63,12 @@ fun HomeScreen(
             fullName = viewState.fullName,
             onClickIconButton = { viewModel.onEvent(HomeEvent.NotificationClicked) }
         )
-        PortfolioInfo(viewState.balance, viewState.changePercentageBalance)
-        YourActive(viewState.portfolio)
+        PortfolioInfo(
+            viewState.pricePortfolio,
+            viewState.changePercentageBalance,
+            viewState.balance
+        )
+        YourActive(viewState.portfolio) { moveHomePortfolioScreen() }
         Watchlist(coins = viewState.coins)
     }
 
