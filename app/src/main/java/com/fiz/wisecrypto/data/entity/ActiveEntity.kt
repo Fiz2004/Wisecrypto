@@ -31,4 +31,15 @@ data class ActiveEntity(
             priceForBuy = priceForBuy
         )
     }
+
+
+}
+
+fun Active.toActiveEntity(email: String): ActiveEntity {
+    return ActiveEntity(
+        id = id,
+        emailId = email,
+        count = count,
+        priceForBuy = priceForBuy
+    )
 }

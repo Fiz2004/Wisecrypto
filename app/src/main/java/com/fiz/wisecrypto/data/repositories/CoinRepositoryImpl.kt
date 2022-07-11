@@ -8,6 +8,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
+private const val coefCurrentToUsd = 1 / 52.0
+
 class CoinRepositoryImpl @Inject constructor(
     private val coingeckoApi: CoingeckoApi,
     private val dispatcher: CoroutineDispatcher = Dispatchers.Default
@@ -19,10 +21,13 @@ class CoinRepositoryImpl @Inject constructor(
                 val coins = coingeckoApi.getCoins()
                 Resource.Success(coins.map { it.toCoin() })
             } catch (e: Exception) {
-                Resource.Error("Ошибка при загрузке данных из сети. Код ошибки: ${e.message}")
+                Resource.Error(e.message)
             }
-
         }
+    }
+
+    suspend fun getCoefCurrentToUsd(): Double {
+        return coefCurrentToUsd
     }
 
 }

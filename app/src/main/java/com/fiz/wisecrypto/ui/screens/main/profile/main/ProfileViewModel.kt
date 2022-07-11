@@ -5,18 +5,22 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fiz.wisecrypto.data.repositories.CoinRepositoryImpl
 import com.fiz.wisecrypto.data.repositories.SettingsRepositoryImpl
-import com.fiz.wisecrypto.data.repositories.UserRepositoryImpl
+import com.fiz.wisecrypto.domain.models.User
+import com.fiz.wisecrypto.domain.use_case.CurrentUserUseCase
+import com.fiz.wisecrypto.domain.use_case.FormatUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-const val coefCurrentToUsd = 1 / 52.0
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-    private val userRepository: UserRepositoryImpl,
+    private val formatUseCase: FormatUseCase,
+    private val coinRepository: CoinRepositoryImpl,
+    private val currentUserUseCase: CurrentUserUseCase,
     private val authRepository: SettingsRepositoryImpl
 ) : ViewModel() {
     var viewState by mutableStateOf(ProfileViewState())
@@ -25,22 +29,23 @@ class ProfileViewModel @Inject constructor(
     var viewEffect = MutableSharedFlow<ProfileViewEffect>()
         private set
 
+    var user: User? = null
+
     init {
         viewModelScope.launch {
-            val email = authRepository.getAuthEmail()
-            if (email == null) {
-                viewEffect.emit(ProfileViewEffect.MoveSignInScreen)
-            } else {
-                val user = userRepository.getUserInfo(email)
-                if (user == null)
-                    viewEffect.emit(ProfileViewEffect.MoveSignInScreen)
-                else
-                    viewState = viewState.copy(
-                        fullName = user.fullName,
-                        balanceCurrentCurrency = "%.2f".format(user.balance),
-                        balanceUsd = "%.0f".format(user.balance * coefCurrentToUsd)
-                    )
-            }
+            user = currentUserUseCase.getCurrentUser()
+            user?.let {
+                val balance = it.balance
+                val formatBalance = formatUseCase.getFormatBalance(balance)
+
+                val balanceUsd = (it.balance) * coinRepository.getCoefCurrentToUsd()
+                val formatBalanceUsd = formatUseCase.getFormatBalanceUsd(balanceUsd)
+                viewState = viewState.copy(
+                    fullName = it.fullName,
+                    balanceCurrentCurrency = formatBalance,
+                    balanceUsd = formatBalanceUsd
+                )
+            } ?: viewEffect.emit(ProfileViewEffect.MoveSignInScreen)
         }
     }
 

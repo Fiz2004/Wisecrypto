@@ -2,6 +2,7 @@ package com.fiz.wisecrypto.data.repositories
 
 import com.fiz.wisecrypto.data.data_source.UserLocalDataSourceImpl
 import com.fiz.wisecrypto.data.entity.UserEntity
+import com.fiz.wisecrypto.data.entity.toActiveEntity
 import com.fiz.wisecrypto.domain.models.Active
 import com.fiz.wisecrypto.domain.models.User
 import kotlinx.coroutines.CoroutineDispatcher
@@ -51,7 +52,7 @@ class UserRepositoryImpl @Inject constructor(
                     email = email.trim().lowercase(),
                     password = password.trim().lowercase(),
                     watchList = watchList,
-                    portfolio = portfolio.map { it.toActiveEntity(email.trim().lowercase()) }
+                    actives = portfolio.map { it.toActiveEntity(email.trim().lowercase()) }
                 )
                 userLocalDataSource.saveUser(userEntity)
                 true

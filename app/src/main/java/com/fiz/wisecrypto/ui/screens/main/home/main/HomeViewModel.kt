@@ -6,11 +6,10 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fiz.wisecrypto.data.repositories.CoinRepositoryImpl
-import com.fiz.wisecrypto.data.repositories.SettingsRepositoryImpl
-import com.fiz.wisecrypto.data.repositories.UserRepositoryImpl
 import com.fiz.wisecrypto.domain.models.User
+import com.fiz.wisecrypto.domain.use_case.CurrentUserUseCase
+import com.fiz.wisecrypto.domain.use_case.FormatUseCase
 import com.fiz.wisecrypto.domain.use_case.PortfolioUseCase
-import com.fiz.wisecrypto.ui.screens.main.profile.main.coefCurrentToUsd
 import com.fiz.wisecrypto.util.Consts.TIME_REFRESH_NETWORK_MS
 import com.fiz.wisecrypto.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,9 +19,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
+    private val formatUseCase: FormatUseCase,
+    private val currentUserUseCase: CurrentUserUseCase,
     private val portfolioUseCase: PortfolioUseCase,
-    private val authRepository: SettingsRepositoryImpl,
-    private val userRepository: UserRepositoryImpl,
     private val coinRepository: CoinRepositoryImpl,
 
     ) : ViewModel() {
@@ -38,30 +37,24 @@ class HomeViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            val email = authRepository.getAuthEmail()
-            if (email != null) {
-                user = userRepository.getUserInfo(email)
-                if (user != null)
-                    viewState = viewState.copy(
-                        fullName = user?.fullName ?: "",
-                        balance = "%.0f".format((user?.balance ?: 0.0) * coefCurrentToUsd)
-                    )
+            user = currentUserUseCase.getCurrentUser()
+            user?.let {
+                val fullName = it.fullName
+                val balanceUsd = (it.balance) * coinRepository.getCoefCurrentToUsd()
+                val formatBalanceUsd = formatUseCase.getFormatBalanceUsd(balanceUsd)
+                viewState = viewState.copy(
+                    fullName = fullName,
+                    balance = formatBalanceUsd
+                )
             }
         }
     }
 
     fun onEvent(event: HomeEvent) {
         when (event) {
-            HomeEvent.NotificationClicked -> notificationClicked()
             HomeEvent.Started -> started()
             HomeEvent.Stopped -> stopped()
-        }
-    }
-
-    private fun stopped() {
-        viewModelScope.launch {
-            jobRefresh?.cancelAndJoin()
-            jobRefresh = null
+            HomeEvent.NotificationClicked -> notificationClicked()
         }
     }
 
@@ -77,31 +70,40 @@ class HomeViewModel @Inject constructor(
 
     private suspend fun refreshState() {
         viewState = viewState.copy(isLoading = true)
-        val result = coinRepository.getCoins()
-        if (result is Resource.Success) {
-            val pricePortfolio = portfolioUseCase.getPricePortfolio(
-                user?.portfolio ?: listOf(),
-                result.data ?: listOf()
-            )
-            val changePercentageBalance =
-                portfolioUseCase.getChangePercentageBalance(
-                    user?.portfolio ?: listOf(),
-                    result.data ?: listOf()
+
+        when (val result = coinRepository.getCoins()) {
+            is Resource.Success -> {
+                val coins = result.data ?: listOf()
+                val actives = user?.actives ?: listOf()
+                val watchlist = user?.watchList ?: listOf()
+
+                val portfolioUI = portfolioUseCase.getPortfolioUi(actives, coins)
+                val coinsWatchList = currentUserUseCase.getCoinsWatchList(watchlist, coins)
+                viewState = viewState.copy(
+                    actives = portfolioUI.actives,
+                    pricePortfolio = portfolioUI.pricePortfolio,
+                    pricePortfolioIncreased = portfolioUI.pricePortfolioIncreased,
+                    changePercentageBalance = portfolioUI.changePercentagePricePortfolio,
+                    coins = coinsWatchList
                 )
-            viewState = viewState.copy(
-                portfolio = user?.portfolio?.map { it.toActiveUi(result.data) } ?: listOf(),
-                pricePortfolio = "\$${"%.2f".format(pricePortfolio)}",
-                changePercentageBalance = changePercentageBalance,
-                coins = result.data?.filter { user?.watchList?.contains(it.id) ?: false }
-                    ?: emptyList(),
-            )
-        } else
-            viewEffect.emit(
-                HomeViewEffect.ShowError(
-                    result.message ?: "Ошибка при загрузке данных из сети"
+            }
+            is Resource.Error -> {
+                viewEffect.emit(
+                    HomeViewEffect.ShowError(
+                        result.message
+                    )
                 )
-            )
+            }
+        }
+
         viewState = viewState.copy(isLoading = false)
+    }
+
+    private fun stopped() {
+        viewModelScope.launch {
+            jobRefresh?.cancelAndJoin()
+            jobRefresh = null
+        }
     }
 
     private fun notificationClicked() {
@@ -110,4 +112,5 @@ class HomeViewModel @Inject constructor(
         }
     }
 }
+
 

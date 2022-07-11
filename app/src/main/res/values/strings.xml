@@ -6,6 +6,10 @@
     <string name="email_title">Электронная почта</string>
     <string name="email_hint">botpablo@gmail.com</string>
 
+    <!--    Errors-->
+    <string name="error_network">Ошибка при загрузке данных из сети. Код ошибки: %1$s</string>
+    <string name="error_network_default">Ошибка при загрузке данных из сети</string>
+
     <!--    Log In-->
     <string name="login_password_title">Пароль</string>
     <string name="login_password_hint">Введите пароль</string>
@@ -139,7 +143,10 @@
     <string name="notifications_popular">Популярный</string>
     <string name="notifications_watchlist">Список наблюдения</string>
     <string name="notifications_promotions">Продвижение</string>
+
+    <!--    Portfolio-->
     <string name="portfolio_portfolio">Портфель</string>
+    <string name="portfolio_total_return">Общая доходность %1$s</string>
 
 
 </resources>

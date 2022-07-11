@@ -16,7 +16,7 @@ data class UserEntity(
     var balance: Double = 0.0,
     var watchList: List<String> = listOf(),
     @Ignore
-    var portfolio: List<ActiveEntity> = listOf()
+    var actives: List<ActiveEntity> = listOf()
 ) {
     fun toUser(): User {
         return User(
@@ -26,7 +26,7 @@ data class UserEntity(
             fullName = fullName,
             balance = balance,
             watchList = watchList,
-            portfolio = portfolio.map { it.toActive() }
+            actives = actives.map { it.toActive() }
         )
     }
 }

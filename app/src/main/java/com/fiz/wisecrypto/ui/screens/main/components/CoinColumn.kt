@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import com.fiz.wisecrypto.R
 import com.fiz.wisecrypto.domain.models.Coin
 import com.fiz.wisecrypto.ui.screens.main.home.components.RelativeLabel
+import com.fiz.wisecrypto.ui.screens.main.models.toCoinUi
 import com.fiz.wisecrypto.ui.theme.MulishBold
 import com.fiz.wisecrypto.ui.theme.MulishRegular
 import com.skydoves.landscapist.glide.GlideImage

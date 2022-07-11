@@ -6,10 +6,9 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fiz.wisecrypto.data.repositories.CoinRepositoryImpl
-import com.fiz.wisecrypto.data.repositories.SettingsRepositoryImpl
-import com.fiz.wisecrypto.data.repositories.UserRepositoryImpl
 import com.fiz.wisecrypto.domain.models.Coin
 import com.fiz.wisecrypto.domain.models.User
+import com.fiz.wisecrypto.domain.use_case.CurrentUserUseCase
 import com.fiz.wisecrypto.util.Consts.TIME_REFRESH_NETWORK_MS
 import com.fiz.wisecrypto.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,8 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MarketViewModel @Inject constructor(
-    private val authRepository: SettingsRepositoryImpl,
-    private val userRepository: UserRepositoryImpl,
+    private val currentUserUseCase: CurrentUserUseCase,
     private val coinRepository: CoinRepositoryImpl
 ) : ViewModel() {
     var viewState by mutableStateOf(MarketViewState())
@@ -35,10 +33,7 @@ class MarketViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            val email = authRepository.getAuthEmail()
-            if (email != null) {
-                user = userRepository.getUserInfo(email)
-            }
+            user = currentUserUseCase.getCurrentUser()
         }
     }
 
@@ -76,7 +71,7 @@ class MarketViewModel @Inject constructor(
         else
             viewEffect.emit(
                 MarketViewEffect.ShowError(
-                    result.message ?: "Ошибка при загрузке данных из сети"
+                    result.message
                 )
             )
         viewState = viewState.copy(isLoading = false)
@@ -89,18 +84,19 @@ class MarketViewModel @Inject constructor(
             it.name.lowercase().contains(checkValue)
                     || it.market.lowercase().contains(checkValue)
                     || it.abbreviated.lowercase().contains(checkValue)
-        }
+        } ?: listOf()
+        val watchlist = user?.watchList ?: listOf()
 
         newCoins = when (viewState.selectedChipNumber) {
             0 -> {
-                newCoins?.filter { user?.watchList?.contains(it.id) ?: false }
+                currentUserUseCase.getCoinsWatchList(watchlist, newCoins)
             }
             else -> {
                 newCoins
             }
         }
 
-        return newCoins ?: emptyList()
+        return newCoins
     }
 
     private fun marketChipClicked(index: Int) {

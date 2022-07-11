@@ -6,9 +6,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fiz.wisecrypto.data.repositories.CoinRepositoryImpl
-import com.fiz.wisecrypto.data.repositories.SettingsRepositoryImpl
-import com.fiz.wisecrypto.data.repositories.UserRepositoryImpl
 import com.fiz.wisecrypto.domain.models.User
+import com.fiz.wisecrypto.domain.use_case.CurrentUserUseCase
 import com.fiz.wisecrypto.domain.use_case.PortfolioUseCase
 import com.fiz.wisecrypto.util.Consts
 import com.fiz.wisecrypto.util.Resource
@@ -19,9 +18,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomePortfolioViewModel @Inject constructor(
+    private val currentUserUseCase: CurrentUserUseCase,
     private val portfolioUseCase: PortfolioUseCase,
-    private val authRepository: SettingsRepositoryImpl,
-    private val userRepository: UserRepositoryImpl,
     private val coinRepository: CoinRepositoryImpl,
 
     ) : ViewModel() {
@@ -37,10 +35,7 @@ class HomePortfolioViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            val email = authRepository.getAuthEmail()
-            if (email != null) {
-                user = userRepository.getUserInfo(email)
-            }
+            user = currentUserUseCase.getCurrentUser()
         }
     }
 
@@ -63,32 +58,30 @@ class HomePortfolioViewModel @Inject constructor(
 
     private suspend fun refreshState() {
         viewState = viewState.copy(isLoading = true)
-        val result = coinRepository.getCoins()
-        if (result is Resource.Success) {
-            val pricePortfolio = portfolioUseCase.getPricePortfolio(
-                user?.portfolio ?: listOf(),
-                result.data ?: listOf()
-            )
-            val pricePortfolioForBuy =
-                portfolioUseCase.getPricePortfolioForBuy(user?.portfolio ?: listOf())
-            val changePercentageBalance =
-                portfolioUseCase.getChangePercentageBalance(
-                    user?.portfolio ?: listOf(),
-                    result.data ?: listOf()
+
+        when (val result = coinRepository.getCoins()) {
+            is Resource.Success -> {
+                val coins = result.data ?: listOf()
+                val actives = user?.actives ?: listOf()
+                val portfolioUi = portfolioUseCase.getPortfolioUi(actives, coins)
+
+                viewState = viewState.copy(
+                    portfolio = portfolioUi.actives,
+                    pricePortfolio = portfolioUi.pricePortfolio,
+                    pricePortfolioIncreased = portfolioUi.pricePortfolioIncreased,
+                    changePercentagePricePortfolio = portfolioUi.changePercentagePricePortfolio,
+                    totalReturn = portfolioUi.totalReturn,
                 )
-            val totalReturn = pricePortfolio - pricePortfolioForBuy
-            viewState = viewState.copy(
-                portfolio = user?.portfolio?.map { it.toActiveUi(result.data) } ?: listOf(),
-                pricePortfolio = "\$${"%.2f".format(pricePortfolio)}",
-                changePercentageBalance = changePercentageBalance,
-                totalReturn = "\$${"%.2f".format(totalReturn)}",
-            )
-        } else
-            viewEffect.emit(
-                HomePortfolioViewEffect.ShowError(
-                    result.message ?: "Ошибка при загрузке данных из сети"
+            }
+            is Resource.Error -> {
+                viewEffect.emit(
+                    HomePortfolioViewEffect.ShowError(
+                        result.message
+                    )
                 )
-            )
+            }
+        }
+
         viewState = viewState.copy(isLoading = false)
     }
 

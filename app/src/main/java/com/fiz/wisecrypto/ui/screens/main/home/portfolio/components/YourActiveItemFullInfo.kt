@@ -1,4 +1,4 @@
-package com.fiz.wisecrypto.ui.screens.main.home.main.components
+package com.fiz.wisecrypto.ui.screens.main.home.portfolio.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -12,23 +12,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.fiz.wisecrypto.R
 import com.fiz.wisecrypto.ui.screens.main.home.components.RelativeLabel
 import com.fiz.wisecrypto.ui.screens.main.models.ActiveUi
-import com.fiz.wisecrypto.ui.theme.MulishBold
 import com.fiz.wisecrypto.ui.theme.hint
 import com.skydoves.landscapist.glide.GlideImage
 
 @Composable
-fun YourActiveItem(
-    active: ActiveUi
-) {
+fun YourActiveItemFullInfo(active: ActiveUi) {
+
+    val color = if (active.pricePortfolioIncreased)
+        MaterialTheme.colorScheme.primary
+    else
+        MaterialTheme.colorScheme.secondary
+
     Column(
         modifier = Modifier
-            .width(IntrinsicSize.Max)
+            .fillMaxWidth()
             .background(
                 color = MaterialTheme.colorScheme.onPrimary,
                 shape = RoundedCornerShape(10.dp)
@@ -72,49 +73,43 @@ fun YourActiveItem(
                 )
             }
 
-            Spacer(modifier = Modifier.width(24.dp))
+            Spacer(modifier = Modifier.weight(1f))
 
             RelativeLabel(up = active.pricePortfolioIncreased, value = active.changePercentage)
         }
 
         Spacer(modifier = Modifier.height(8.dp))
-
-        Row(modifier = Modifier.fillMaxWidth()) {
-            Divider(
-                modifier = Modifier.weight(1f),
-                thickness = 0.3.dp,
-                color = MaterialTheme.colorScheme.hint
-            )
-        }
-
+        Divider(
+            modifier = Modifier.fillMaxWidth(),
+            thickness = 0.3.dp,
+            color = MaterialTheme.colorScheme.hint
+        )
         Spacer(modifier = Modifier.height(8.dp))
 
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Column {
-                Text(
-                    text = stringResource(R.string.home_portfolio),
-                    style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Normal),
-                    color = MaterialTheme.colorScheme.hint
-                )
-                Text(
-                    text = active.portfolio,
-                    style = MaterialTheme.typography.titleLarge.copy(
-                        fontFamily = MulishBold,
-                        //                                    fontWeight = FontWeight.Bold,
-                    ),
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-            }
-            Spacer(modifier = Modifier.weight(1f))
             Text(
-                modifier = Modifier.align(Alignment.Bottom),
                 text = active.equivalent,
-                style = MaterialTheme.typography.bodySmall.copy(fontFamily = MulishBold),
+                style = MaterialTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
+            Spacer(modifier = Modifier.weight(1f))
+            Column(
+                horizontalAlignment = Alignment.End
+            ) {
+                Text(
+                    text = active.portfolio,
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Text(
+                    text = active.changeValue,
+                    style = MaterialTheme.typography.titleSmall,
+                    color = color
+                )
+            }
         }
     }
 }

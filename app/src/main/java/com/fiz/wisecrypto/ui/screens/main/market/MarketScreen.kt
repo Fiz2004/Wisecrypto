@@ -58,7 +58,13 @@ fun MarketScreen(
         viewEffect.collect { effect ->
             when (effect) {
                 is MarketViewEffect.ShowError -> {
-                    Toast.makeText(context, effect.message, Toast.LENGTH_LONG).show()
+                    val text = context.getString(
+                        if (effect.message == null)
+                            R.string.error_network_default
+                        else
+                            R.string.error_network, effect.message
+                    )
+                    Toast.makeText(context, text, Toast.LENGTH_LONG).show()
                 }
             }
         }

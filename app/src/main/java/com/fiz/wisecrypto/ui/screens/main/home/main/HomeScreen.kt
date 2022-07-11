@@ -51,7 +51,13 @@ fun HomeScreen(
                     moveNotificationScreen()
                 }
                 is HomeViewEffect.ShowError -> {
-                    Toast.makeText(context, effect.message, Toast.LENGTH_LONG).show()
+                    val text = context.getString(
+                        if (effect.message == null)
+                            R.string.error_network_default
+                        else
+                            R.string.error_network, effect.message
+                    )
+                    Toast.makeText(context, text, Toast.LENGTH_LONG).show()
                 }
             }
         }
@@ -65,10 +71,11 @@ fun HomeScreen(
         )
         PortfolioInfo(
             viewState.pricePortfolio,
+            viewState.pricePortfolioIncreased,
             viewState.changePercentageBalance,
             viewState.balance
         )
-        YourActive(viewState.portfolio) { moveHomePortfolioScreen() }
+        YourActive(viewState.actives) { moveHomePortfolioScreen() }
         Watchlist(coins = viewState.coins)
     }
 

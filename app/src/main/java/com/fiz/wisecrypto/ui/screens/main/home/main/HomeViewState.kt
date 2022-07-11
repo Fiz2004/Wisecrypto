@@ -9,7 +9,8 @@ data class HomeViewState(
     val coins: List<Coin> = emptyList(),
     val pricePortfolio: String = "",
     val balance: String = "",
-    val changePercentageBalance: Double = 0.0,
-    val portfolio: List<ActiveUi> = emptyList(),
+    val pricePortfolioIncreased: Boolean = true,
+    val changePercentageBalance: String = "",
+    val actives: List<ActiveUi> = emptyList(),
     val isLoading: Boolean = false
 )

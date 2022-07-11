@@ -17,17 +17,21 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fiz.wisecrypto.R
-import kotlin.math.abs
 
 @Composable
-fun PortfolioInfo(balancePortfolio: String, changePercentageBalance: Double, balance: String) {
+fun PortfolioInfo(
+    balancePortfolio: String,
+    pricePortfolioIncreased: Boolean,
+    changePercentageBalance: String,
+    balance: String
+) {
 
-    val icon = if (changePercentageBalance > 0.0)
+    val icon = if (pricePortfolioIncreased)
         R.drawable.home_ic_up_right
     else
         R.drawable.home_ic_down_left
 
-    val color = if (changePercentageBalance > 0.0)
+    val color = if (pricePortfolioIncreased)
         MaterialTheme.colorScheme.primary
     else
         MaterialTheme.colorScheme.secondary
@@ -88,7 +92,7 @@ fun PortfolioInfo(balancePortfolio: String, changePercentageBalance: Double, bal
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
-                            text = "${"%.1f".format(abs(changePercentageBalance))}%",
+                            text = changePercentageBalance,
                             style = MaterialTheme.typography.bodyMedium,
                             color = color
                         )
