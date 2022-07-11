@@ -6,8 +6,10 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fiz.wisecrypto.data.repositories.CoinRepositoryImpl
+import com.fiz.wisecrypto.data.repositories.SettingsRepositoryImpl
 import com.fiz.wisecrypto.data.repositories.UserRepositoryImpl
 import com.fiz.wisecrypto.domain.models.Coin
+import com.fiz.wisecrypto.domain.models.User
 import com.fiz.wisecrypto.util.Consts.TIME_REFRESH_NETWORK_MS
 import com.fiz.wisecrypto.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,6 +19,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MarketViewModel @Inject constructor(
+    private val authRepository: SettingsRepositoryImpl,
     private val userRepository: UserRepositoryImpl,
     private val coinRepository: CoinRepositoryImpl
 ) : ViewModel() {
@@ -27,6 +30,17 @@ class MarketViewModel @Inject constructor(
         private set
 
     private var jobRefresh: Job? = null
+
+    var user: User? = null
+
+    init {
+        viewModelScope.launch {
+            val email = authRepository.getAuthEmail()
+            if (email != null) {
+                user = userRepository.getUserInfo(email)
+            }
+        }
+    }
 
     fun onEvent(event: MarketEvent) {
         when (event) {
@@ -79,7 +93,7 @@ class MarketViewModel @Inject constructor(
 
         newCoins = when (viewState.selectedChipNumber) {
             0 -> {
-                newCoins?.filter { userRepository.watchList.contains(it.id) }
+                newCoins?.filter { user?.watchList?.contains(it.id) ?: false }
             }
             else -> {
                 newCoins

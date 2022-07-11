@@ -17,6 +17,7 @@ class UserLocalDataSourceImpl @Inject constructor(
         return withContext(dispatcher) {
             try {
                 userDao.insert(userEntity)
+                userDao.insertActives(userEntity.portfolio)
                 true
             } catch (e: Exception) {
                 false
@@ -38,6 +39,7 @@ class UserLocalDataSourceImpl @Inject constructor(
         return withContext(dispatcher) {
             try {
                 userDao.getUserByEmail(checkEmail)
+                    .copy(portfolio = userDao.getActives(checkEmail))
             } catch (e: Exception) {
                 null
             }

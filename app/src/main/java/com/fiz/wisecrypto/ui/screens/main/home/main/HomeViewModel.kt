@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.fiz.wisecrypto.data.repositories.CoinRepositoryImpl
 import com.fiz.wisecrypto.data.repositories.SettingsRepositoryImpl
 import com.fiz.wisecrypto.data.repositories.UserRepositoryImpl
+import com.fiz.wisecrypto.domain.models.User
 import com.fiz.wisecrypto.domain.use_case.PortfolioUseCase
 import com.fiz.wisecrypto.ui.screens.main.profile.main.coefCurrentToUsd
 import com.fiz.wisecrypto.util.Consts.TIME_REFRESH_NETWORK_MS
@@ -33,15 +34,17 @@ class HomeViewModel @Inject constructor(
 
     private var jobRefresh: Job? = null
 
+    var user: User? = null
+
     init {
         viewModelScope.launch {
             val email = authRepository.getAuthEmail()
             if (email != null) {
-                val user = userRepository.getUserInfo(email)
+                user = userRepository.getUserInfo(email)
                 if (user != null)
                     viewState = viewState.copy(
-                        fullName = user.fullName,
-                        balance = "%.0f".format(user.balance * coefCurrentToUsd)
+                        fullName = user?.fullName ?: "",
+                        balance = "%.0f".format((user?.balance ?: 0.0) * coefCurrentToUsd)
                     )
             }
         }
@@ -76,14 +79,20 @@ class HomeViewModel @Inject constructor(
         viewState = viewState.copy(isLoading = true)
         val result = coinRepository.getCoins()
         if (result is Resource.Success) {
-            val pricePortfolio = portfolioUseCase.getPricePortfolio(result.data ?: listOf())
+            val pricePortfolio = portfolioUseCase.getPricePortfolio(
+                user?.portfolio ?: listOf(),
+                result.data ?: listOf()
+            )
             val changePercentageBalance =
-                portfolioUseCase.getChangePercentageBalance(result.data ?: listOf())
+                portfolioUseCase.getChangePercentageBalance(
+                    user?.portfolio ?: listOf(),
+                    result.data ?: listOf()
+                )
             viewState = viewState.copy(
-                portfolio = userRepository.portfolio.map { it.toActiveUi(result.data) },
+                portfolio = user?.portfolio?.map { it.toActiveUi(result.data) } ?: listOf(),
                 pricePortfolio = "\$${"%.2f".format(pricePortfolio)}",
                 changePercentageBalance = changePercentageBalance,
-                coins = result.data?.filter { userRepository.watchList.contains(it.id) }
+                coins = result.data?.filter { user?.watchList?.contains(it.id) ?: false }
                     ?: emptyList(),
             )
         } else

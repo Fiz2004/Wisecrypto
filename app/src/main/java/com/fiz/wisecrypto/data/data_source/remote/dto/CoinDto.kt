@@ -32,23 +32,16 @@ data class CoinDto(
     @SerializedName("last_updated") val lastUpdated: String? = ""
 ) {
     fun toCoin(): Coin {
-        val coin = Coin(
-            id = id ?: "",
-            icon = image ?: "",
+        return Coin(
+            id = id.orEmpty(),
+            icon = image.orEmpty(),
             abbreviated = symbol.orEmpty(),
             market = "BUSD",
             name = name.orEmpty(),
             currentPrice = currentPrice ?: 0.0,
-            priceChange = priceChange24h ?: 0.0,
             cost = currentPrice ?: 0.0,
             priceChangePercentage = priceChangePercentage24h ?: 0.0,
         )
-        return coin
     }
 }
 
-data class RoiDto(
-    @SerializedName("times") val times: Double = 0.0,
-    @SerializedName("currency") val currency: String = "",
-    @SerializedName("percentage") val percentage: Double = 0.0
-)

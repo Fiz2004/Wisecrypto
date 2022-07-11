@@ -1,18 +1,22 @@
 package com.fiz.wisecrypto.data.entity
 
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.fiz.wisecrypto.domain.models.User
 
 @Entity
 data class UserEntity(
     @PrimaryKey
-    val email: String = "",
-    val fullName: String = "",
-    val numberPhone: String = "",
-    val userName: String = "",
-    val password: String = "",
-    val balance: Double = 0.0,
+    var email: String = "",
+    var fullName: String = "",
+    var numberPhone: String = "",
+    var userName: String = "",
+    var password: String = "",
+    var balance: Double = 0.0,
+    var watchList: List<String> = listOf(),
+    @Ignore
+    var portfolio: List<ActiveEntity> = listOf()
 ) {
     fun toUser(): User {
         return User(
@@ -20,7 +24,9 @@ data class UserEntity(
             email = email,
             numberPhone = numberPhone,
             fullName = fullName,
-            balance = balance
+            balance = balance,
+            watchList = watchList,
+            portfolio = portfolio.map { it.toActive() }
         )
     }
 }

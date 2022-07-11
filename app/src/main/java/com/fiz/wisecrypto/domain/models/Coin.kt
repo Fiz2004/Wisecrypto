@@ -10,19 +10,16 @@ data class Coin(
     val name: String = "",
     val cost: Double = 0.0,
     val currentPrice: Double = 0.0,
-    val priceChange: Double = 0.0,
     val priceChangePercentage: Double = 0.0,
 ) {
     fun toCoinUi(): CoinUi {
-        val coinUi = CoinUi(
+        return CoinUi(
             icon = icon,
             abbreviated = "$abbreviated/$market",
             name = name,
             cost = "\$${"%.2f".format(cost)}",
             up = priceChangePercentage > 0.0,
-            priceChange = "${"%.1f".format(priceChange)}%",
             value = "${"%.1f".format(priceChangePercentage)}%"
         )
-        return coinUi
     }
 }

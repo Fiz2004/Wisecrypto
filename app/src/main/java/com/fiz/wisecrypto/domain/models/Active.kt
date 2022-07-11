@@ -1,5 +1,6 @@
 package com.fiz.wisecrypto.domain.models
 
+import com.fiz.wisecrypto.data.entity.ActiveEntity
 import com.fiz.wisecrypto.ui.screens.main.models.ActiveUi
 
 data class Active(
@@ -26,6 +27,15 @@ data class Active(
             isUpDirectChangePercentage = percent > 0.0,
             changePercentage = "${"%.1f".format(percent)}%",
             changeValue = changeValue
+        )
+    }
+
+    fun toActiveEntity(email: String): ActiveEntity {
+        return ActiveEntity(
+            id = id,
+            emailId = email,
+            count = count,
+            priceForBuy = priceForBuy
         )
     }
 }

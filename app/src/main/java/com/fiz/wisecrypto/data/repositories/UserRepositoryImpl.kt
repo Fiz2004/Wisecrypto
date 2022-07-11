@@ -15,28 +15,32 @@ class UserRepositoryImpl @Inject constructor(
     private val userLocalDataSource: UserLocalDataSourceImpl,
     private val dispatcher: CoroutineDispatcher = Dispatchers.Default
 ) {
-
-    val watchList: List<String> =
-        listOf("bitcoin", "ethereum", "litecoin", "solana", "binancecoin", "ripple")
-    val portfolio: List<Active> = listOf(
-        Active(
-            "bitcoin",
-            0.0012,
-            20000.0
-        ),
-        Active(
-            "ethereum",
-            0.009,
-            1000.0
-        )
-    )
-
     suspend fun saveUser(
         fullName: String,
         numberPhone: String,
         userName: String,
         email: String,
-        password: String
+        password: String,
+        watchList: List<String> = listOf(
+            "bitcoin",
+            "ethereum",
+            "litecoin",
+            "solana",
+            "binancecoin",
+            "ripple"
+        ),
+        portfolio: List<Active> = listOf(
+            Active(
+                "bitcoin",
+                0.0012,
+                20000.0
+            ),
+            Active(
+                "ethereum",
+                0.009,
+                1000.0
+            )
+        )
     ): Boolean {
         return withContext(dispatcher) {
             try {
@@ -45,7 +49,9 @@ class UserRepositoryImpl @Inject constructor(
                     numberPhone = numberPhone.trim().filter { it.isDigit() },
                     userName = userName.trim(),
                     email = email.trim().lowercase(),
-                    password = password.trim().lowercase()
+                    password = password.trim().lowercase(),
+                    watchList = watchList,
+                    portfolio = portfolio.map { it.toActiveEntity(email.trim().lowercase()) }
                 )
                 userLocalDataSource.saveUser(userEntity)
                 true

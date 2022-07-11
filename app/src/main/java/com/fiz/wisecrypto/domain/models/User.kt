@@ -6,5 +6,7 @@ data class User(
     val userName: String = "",
     val email: String = "",
     val photo: String = "",
-    val balance: Double = 0.0
+    val balance: Double = 0.0,
+    val watchList: List<String> = listOf(),
+    var portfolio: List<Active> = listOf()
 )

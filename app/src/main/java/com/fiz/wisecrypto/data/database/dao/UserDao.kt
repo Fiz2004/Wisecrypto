@@ -1,6 +1,7 @@
 package com.fiz.wisecrypto.data.database.dao
 
 import androidx.room.*
+import com.fiz.wisecrypto.data.entity.ActiveEntity
 import com.fiz.wisecrypto.data.entity.UserEntity
 
 @Dao
@@ -10,6 +11,9 @@ interface UserDao {
 
     @Query("SELECT * FROM UserEntity WHERE email =:email")
     suspend fun getUserByEmail(email: String): UserEntity
+
+    @Query("SELECT * FROM ActiveEntity WHERE emailId =:emailId")
+    suspend fun getActives(emailId: String): List<ActiveEntity>
 
     @Query("SELECT EXISTS (SELECT* FROM UserEntity WHERE (email =:email AND password =:password))")
     suspend fun isValidateEmailPassword(email: String, password: String): Boolean
@@ -25,6 +29,9 @@ interface UserDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(userEntity: List<UserEntity>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertActives(actives: List<ActiveEntity>)
 
     @Update
     suspend fun update(userEntity: UserEntity)

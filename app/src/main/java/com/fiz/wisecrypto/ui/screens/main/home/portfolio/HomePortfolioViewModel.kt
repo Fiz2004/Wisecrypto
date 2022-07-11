@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.fiz.wisecrypto.data.repositories.CoinRepositoryImpl
 import com.fiz.wisecrypto.data.repositories.SettingsRepositoryImpl
 import com.fiz.wisecrypto.data.repositories.UserRepositoryImpl
+import com.fiz.wisecrypto.domain.models.User
 import com.fiz.wisecrypto.domain.use_case.PortfolioUseCase
 import com.fiz.wisecrypto.util.Consts
 import com.fiz.wisecrypto.util.Resource
@@ -32,6 +33,17 @@ class HomePortfolioViewModel @Inject constructor(
 
     private var jobRefresh: Job? = null
 
+    var user: User? = null
+
+    init {
+        viewModelScope.launch {
+            val email = authRepository.getAuthEmail()
+            if (email != null) {
+                user = userRepository.getUserInfo(email)
+            }
+        }
+    }
+
     private fun stopped() {
         viewModelScope.launch {
             jobRefresh?.cancelAndJoin()
@@ -53,13 +65,20 @@ class HomePortfolioViewModel @Inject constructor(
         viewState = viewState.copy(isLoading = true)
         val result = coinRepository.getCoins()
         if (result is Resource.Success) {
-            val pricePortfolio = portfolioUseCase.getPricePortfolio(result.data ?: listOf())
-            val pricePortfolioForBuy = portfolioUseCase.getPricePortfolioForBuy()
+            val pricePortfolio = portfolioUseCase.getPricePortfolio(
+                user?.portfolio ?: listOf(),
+                result.data ?: listOf()
+            )
+            val pricePortfolioForBuy =
+                portfolioUseCase.getPricePortfolioForBuy(user?.portfolio ?: listOf())
             val changePercentageBalance =
-                portfolioUseCase.getChangePercentageBalance(result.data ?: listOf())
+                portfolioUseCase.getChangePercentageBalance(
+                    user?.portfolio ?: listOf(),
+                    result.data ?: listOf()
+                )
             val totalReturn = pricePortfolio - pricePortfolioForBuy
             viewState = viewState.copy(
-                portfolio = userRepository.portfolio.map { it.toActiveUi(result.data) },
+                portfolio = user?.portfolio?.map { it.toActiveUi(result.data) } ?: listOf(),
                 pricePortfolio = "\$${"%.2f".format(pricePortfolio)}",
                 changePercentageBalance = changePercentageBalance,
                 totalReturn = "\$${"%.2f".format(totalReturn)}",
