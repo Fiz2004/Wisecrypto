@@ -117,6 +117,13 @@ val Typography.titleMedium2: TextStyle
     )
 
 @get:Composable
+val Typography.titleMedium3: TextStyle
+    get() = TextStyle(
+        fontFamily = MulishBold,
+        fontSize = 14.sp,
+    )
+
+@get:Composable
 val Typography.textField: TextStyle
     get() = TextStyle(
         fontFamily = MulishRegular,

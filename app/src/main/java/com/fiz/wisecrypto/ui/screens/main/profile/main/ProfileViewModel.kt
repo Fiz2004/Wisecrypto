@@ -7,11 +7,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fiz.wisecrypto.data.repositories.CoinRepositoryImpl
 import com.fiz.wisecrypto.data.repositories.SettingsRepositoryImpl
-import com.fiz.wisecrypto.domain.models.User
 import com.fiz.wisecrypto.domain.use_case.CurrentUserUseCase
 import com.fiz.wisecrypto.domain.use_case.FormatUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -29,23 +29,23 @@ class ProfileViewModel @Inject constructor(
     var viewEffect = MutableSharedFlow<ProfileViewEffect>()
         private set
 
-    var user: User? = null
-
     init {
         viewModelScope.launch {
-            user = currentUserUseCase.getCurrentUser()
-            user?.let {
-                val balance = it.balance
-                val formatBalance = formatUseCase.getFormatBalance(balance)
+            currentUserUseCase.getCurrentUser()
+                .collectLatest { user ->
+                    user ?: return@collectLatest
 
-                val balanceUsd = (it.balance) * coinRepository.getCoefCurrentToUsd()
-                val formatBalanceUsd = formatUseCase.getFormatBalanceUsd(balanceUsd)
-                viewState = viewState.copy(
-                    fullName = it.fullName,
-                    balanceCurrentCurrency = formatBalance,
-                    balanceUsd = formatBalanceUsd
-                )
-            } ?: viewEffect.emit(ProfileViewEffect.MoveSignInScreen)
+                    val balance = user.balance
+                    val formatBalance = formatUseCase.getFormatBalance(balance)
+
+                    val balanceUsd = (user.balance) * coinRepository.getCoefCurrentToUsd()
+                    val formatBalanceUsd = formatUseCase.getFormatBalanceUsd(balanceUsd)
+                    viewState = viewState.copy(
+                        fullName = user.fullName,
+                        balanceCurrentCurrency = formatBalance,
+                        balanceUsd = formatBalanceUsd
+                    )
+                }
         }
     }
 

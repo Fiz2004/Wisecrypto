@@ -35,7 +35,7 @@ data class CoinDto(
         return Coin(
             id = id.orEmpty(),
             icon = image.orEmpty(),
-            abbreviated = symbol.orEmpty(),
+            symbol = symbol.orEmpty(),
             market = "BUSD",
             name = name.orEmpty(),
             currentPrice = currentPrice ?: 0.0,

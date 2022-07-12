@@ -22,6 +22,7 @@ fun HomeScreen(
     viewModel: HomeViewModel = viewModel(),
     moveNotificationScreen: () -> Unit,
     moveHomePortfolioScreen: () -> Unit,
+    moveHomeDetailScreen: (String) -> Unit
 ) {
     val context = LocalContext.current
 
@@ -50,6 +51,12 @@ fun HomeScreen(
                 HomeViewEffect.MoveNotificationScreen -> {
                     moveNotificationScreen()
                 }
+                HomeViewEffect.MoveHomePortfolioScreen -> {
+                    moveHomePortfolioScreen()
+                }
+                is HomeViewEffect.MoveHomeDetailScreen -> {
+                    moveHomeDetailScreen(effect.id)
+                }
                 is HomeViewEffect.ShowError -> {
                     val text = context.getString(
                         if (effect.message == null)
@@ -75,8 +82,12 @@ fun HomeScreen(
             viewState.changePercentageBalance,
             viewState.balance
         )
-        YourActive(viewState.actives) { moveHomePortfolioScreen() }
-        Watchlist(coins = viewState.coins)
+        YourActive(
+            viewState.actives,
+            { viewModel.onEvent(HomeEvent.YourActiveAllClicked) },
+            { id -> viewModel.onEvent(HomeEvent.YourActiveClicked(id)) })
+        Watchlist(coins = viewState.watchlist,
+            { id -> viewModel.onEvent(HomeEvent.YourActiveClicked(id)) })
     }
 
     BoxProgress(viewState.isLoading)

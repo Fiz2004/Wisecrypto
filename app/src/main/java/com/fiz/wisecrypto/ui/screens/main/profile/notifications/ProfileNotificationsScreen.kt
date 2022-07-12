@@ -13,7 +13,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fiz.wisecrypto.R
-import com.fiz.wisecrypto.ui.components.PrimaryButton
+import com.fiz.wisecrypto.ui.components.WiseCryptoButton
 import com.fiz.wisecrypto.ui.screens.main.components.MainColumnWithoutBottomBar
 import com.fiz.wisecrypto.ui.screens.main.profile.notifications.components.RowNotification
 
@@ -96,7 +96,7 @@ fun ProfileNotificationsScreen(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        PrimaryButton(
+        WiseCryptoButton(
             text = R.string.notifications_save,
             onClick = { viewModel.onEvent(ProfileNotificationsEvent.SaveButtonClicked) })
     }

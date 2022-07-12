@@ -7,6 +7,8 @@ import com.fiz.wisecrypto.domain.models.Active
 import com.fiz.wisecrypto.domain.models.User
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -62,28 +64,20 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
-    suspend fun checkUser(
+    suspend fun isUser(
         email: String,
         password: String
-    ): User? {
+    ): Boolean {
         return withContext(dispatcher) {
             val checkEmail = email.trim().lowercase()
             val checkPassword = password.trim().lowercase()
-            if (userLocalDataSource.checkUser(checkEmail, checkPassword)) {
-                val user = userLocalDataSource.loadUser(checkEmail)?.toUser()
-                user
-            } else {
-                null
-            }
+            userLocalDataSource.checkUser(checkEmail, checkPassword)
         }
     }
 
-    suspend fun getUserInfo(email: String): User? {
-        return withContext(dispatcher) {
-            val checkEmail = email.trim().lowercase()
-            val user = userLocalDataSource.loadUser(checkEmail)?.toUser()
-            user
-        }
+    fun observeUser(email: String): Flow<User?> {
+        val checkEmail = email.trim().lowercase()
+        return userLocalDataSource.observeUser(checkEmail).map { it?.toUser() }
     }
 
     suspend fun changeEmailPassword(
@@ -111,6 +105,26 @@ class UserRepositoryImpl @Inject constructor(
             } else {
                 false
             }
+        }
+    }
+
+    suspend fun addWatchList(email: String, name: String): Boolean {
+        return withContext(dispatcher) {
+            val checkEmail = email.trim().lowercase()
+            val user = userLocalDataSource.getUser(checkEmail) ?: return@withContext false
+            val newWatchList = user.watchList.toMutableList()
+            newWatchList.add(name)
+            userLocalDataSource.changeWatchList(checkEmail, newWatchList)
+        }
+    }
+
+    suspend fun removeWatchList(email: String, name: String): Boolean {
+        return withContext(dispatcher) {
+            val checkEmail = email.trim().lowercase()
+            val user = userLocalDataSource.getUser(checkEmail) ?: return@withContext false
+            val newWatchList = user.watchList.toMutableList()
+            newWatchList.remove(name)
+            userLocalDataSource.changeWatchList(checkEmail, newWatchList)
         }
     }
 }

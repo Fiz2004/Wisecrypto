@@ -10,13 +10,16 @@ import androidx.compose.ui.unit.dp
 import com.fiz.wisecrypto.ui.screens.main.models.ActiveUi
 
 @Composable
-fun YourActiveFullInfo(portfolio: List<ActiveUi>) {
+fun YourActiveFullInfo(
+    portfolio: List<ActiveUi>,
+    activeClicked: (String) -> Unit
+) {
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         portfolio.forEach {
             item {
-                YourActiveItemFullInfo(active = it)
+                YourActiveItemFullInfo(active = it, activeClicked)
             }
         }
     }

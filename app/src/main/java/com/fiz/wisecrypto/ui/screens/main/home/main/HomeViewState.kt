@@ -6,7 +6,7 @@ import com.fiz.wisecrypto.ui.screens.main.models.ActiveUi
 data class HomeViewState(
     val fullName: String = "",
     val photo: String = "",
-    val coins: List<Coin> = emptyList(),
+    val watchlist: List<Coin> = emptyList(),
     val pricePortfolio: String = "",
     val balance: String = "",
     val pricePortfolioIncreased: Boolean = true,

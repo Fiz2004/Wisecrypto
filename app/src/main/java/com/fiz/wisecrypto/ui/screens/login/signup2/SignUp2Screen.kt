@@ -17,8 +17,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fiz.wisecrypto.R
-import com.fiz.wisecrypto.ui.components.PrimaryButton
 import com.fiz.wisecrypto.ui.components.TextFieldWithHeader
+import com.fiz.wisecrypto.ui.components.WiseCryptoButton
 import com.fiz.wisecrypto.ui.screens.login.components.LogoItem
 import com.fiz.wisecrypto.ui.screens.login.components.TextExtraAction
 import com.fiz.wisecrypto.ui.screens.login.components.TitleAndGreeting
@@ -136,7 +136,7 @@ fun SignUp2Screen(
         }
 
         item {
-            PrimaryButton(
+            WiseCryptoButton(
                 text = R.string.signup2_signup,
                 onClick = { viewModel.onEvent(SignUp2Event.SignUpClicked(signUpViewState)) })
 

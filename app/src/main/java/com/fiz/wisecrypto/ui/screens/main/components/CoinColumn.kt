@@ -1,6 +1,7 @@
 package com.fiz.wisecrypto.ui.screens.main.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -15,18 +16,18 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.fiz.wisecrypto.R
 import com.fiz.wisecrypto.domain.models.Coin
-import com.fiz.wisecrypto.ui.screens.main.home.components.RelativeLabel
+import com.fiz.wisecrypto.ui.screens.main.home.main.components.RelativeLabel
 import com.fiz.wisecrypto.ui.screens.main.models.toCoinUi
 import com.fiz.wisecrypto.ui.theme.MulishBold
 import com.fiz.wisecrypto.ui.theme.MulishRegular
 import com.skydoves.landscapist.glide.GlideImage
 
 @Composable
-fun CoinColumn(coins: List<Coin>) {
+fun CoinColumn(coins: List<Coin>, moveHomeDetailScreen: (String) -> Unit) {
     LazyColumn {
         coins.forEach {
             item {
-                CoinItem(it)
+                CoinItem(it, moveHomeDetailScreen)
             }
         }
     }
@@ -34,7 +35,7 @@ fun CoinColumn(coins: List<Coin>) {
 
 
 @Composable
-private fun CoinItem(coin: Coin) {
+private fun CoinItem(coin: Coin, moveHomeDetailScreen: (String) -> Unit) {
 
     val coinUi = coin.toCoinUi()
 
@@ -45,7 +46,8 @@ private fun CoinItem(coin: Coin) {
                 color = MaterialTheme.colorScheme.onPrimary,
                 shape = RoundedCornerShape(10.dp)
             )
-            .padding(horizontal = 16.dp, vertical = 12.dp),
+            .padding(horizontal = 16.dp, vertical = 12.dp)
+            .clickable { moveHomeDetailScreen(coin.id) },
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box(
@@ -90,7 +92,7 @@ private fun CoinItem(coin: Coin) {
                 color = MaterialTheme.colorScheme.onSurface
             )
             Spacer(modifier = Modifier.height(4.dp))
-            RelativeLabel(up = coinUi.up, value = coinUi.value)
+            RelativeLabel(Increased = coinUi.up, value = coinUi.value)
         }
     }
 

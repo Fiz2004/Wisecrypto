@@ -1,7 +1,6 @@
-package com.fiz.wisecrypto.ui.screens.main.home.portfolio.components
+package com.fiz.wisecrypto.ui.screens.main.home.detail.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Divider
@@ -15,13 +14,28 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.fiz.wisecrypto.R
-import com.fiz.wisecrypto.ui.screens.main.home.main.components.RelativeLabel
 import com.fiz.wisecrypto.ui.screens.main.models.ActiveUi
 import com.fiz.wisecrypto.ui.theme.hint
 import com.skydoves.landscapist.glide.GlideImage
 
 @Composable
-fun YourActiveItemFullInfo(active: ActiveUi, activeClicked: (String) -> Unit) {
+fun YourActiveDetail(active: ActiveUi) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
+        Text(
+            text = "Ваши активы",
+            style = MaterialTheme.typography.displayMedium,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        YourActiveItemDetailInfo(active)
+    }
+}
+
+@Composable
+fun YourActiveItemDetailInfo(active: ActiveUi) {
 
     val color = if (active.pricePortfolioIncreased)
         MaterialTheme.colorScheme.primary
@@ -36,7 +50,6 @@ fun YourActiveItemFullInfo(active: ActiveUi, activeClicked: (String) -> Unit) {
                 shape = RoundedCornerShape(10.dp)
             )
             .padding(16.dp)
-            .clickable { activeClicked(active.id) }
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically
@@ -51,7 +64,7 @@ fun YourActiveItemFullInfo(active: ActiveUi, activeClicked: (String) -> Unit) {
             ) {
                 GlideImage(
                     modifier = Modifier
-                        .size(28.dp),
+                        .size(32.dp),
                     imageModel = active.icon,
                     contentScale = ContentScale.Crop,
                     placeHolder = painterResource(id = R.drawable.placeholder_loading),
@@ -77,9 +90,10 @@ fun YourActiveItemFullInfo(active: ActiveUi, activeClicked: (String) -> Unit) {
 
             Spacer(modifier = Modifier.weight(1f))
 
-            RelativeLabel(
-                Increased = active.pricePortfolioIncreased,
-                value = active.changePercentage
+            Text(
+                text = active.equivalent,
+                style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
 
@@ -96,25 +110,16 @@ fun YourActiveItemFullInfo(active: ActiveUi, activeClicked: (String) -> Unit) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = active.equivalent,
-                style = MaterialTheme.typography.titleSmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                text = active.portfolio,
+                style = MaterialTheme.typography.headlineMedium,
+                color = MaterialTheme.colorScheme.onSurface
             )
             Spacer(modifier = Modifier.weight(1f))
-            Column(
-                horizontalAlignment = Alignment.End
-            ) {
-                Text(
-                    text = active.portfolio,
-                    style = MaterialTheme.typography.headlineMedium,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-                Text(
-                    text = active.changeValue,
-                    style = MaterialTheme.typography.titleSmall,
-                    color = color
-                )
-            }
+            Text(
+                text = active.changeValue,
+                style = MaterialTheme.typography.titleSmall,
+                color = color
+            )
         }
     }
 }

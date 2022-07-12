@@ -19,7 +19,8 @@ import com.fiz.wisecrypto.ui.screens.main.market.components.FindTextField
 
 @Composable
 fun MarketScreen(
-    viewModel: MarketViewModel = viewModel()
+    viewModel: MarketViewModel = viewModel(),
+    moveHomeDetailScreen: (String) -> Unit
 ) {
 
     val context = LocalContext.current
@@ -66,6 +67,9 @@ fun MarketScreen(
                     )
                     Toast.makeText(context, text, Toast.LENGTH_LONG).show()
                 }
+                is MarketViewEffect.MoveHomeDetailScreen -> {
+                    moveHomeDetailScreen(effect.id)
+                }
             }
         }
     }
@@ -85,7 +89,7 @@ fun MarketScreen(
             onClick = { number -> viewModel.onEvent(MarketEvent.MarketChipClicked(number)) }
         )
 
-        CoinColumn(viewState.coins)
+        CoinColumn(viewState.coins, { id -> viewModel.onEvent(MarketEvent.YourActiveClicked(id)) })
     }
 
     BoxProgress(viewState.isLoading)

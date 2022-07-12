@@ -148,5 +148,22 @@
     <string name="portfolio_portfolio">Портфель</string>
     <string name="portfolio_total_return">Общая доходность %1$s</string>
 
+    <!--    Detail-->
+    <string name="detail_sell">Продать</string>
+    <string name="detail_buy">Купить</string>
+    <string name="detail_all_time_high">Макс. стоимость</string>
+    <string name="detail_all_time_low">Мин. стоимость</string>
+    <string name="detail_market_cap">Рын. кап-я</string>
+    <string name="detail_total_volume">Объем торгов</string>
+    <string name="detail_total_supply">Общее предл-е</string>
+    <string name="detail_max_supply">Макс. объем</string>
+    <string name="detail_overview">Обзор</string>
+    <string name="detail_market_cap_change">Рын-я кап-я 24ч</string>
+    <string name="detail_total_volume_change">Объем торгов 24ч</string>
+    <string name="detail_period_day">День</string>
+    <string name="detail_period_week">Неделю</string>
+    <string name="detail_period_month">Месяц</string>
+    <string name="detail_period_year">Год</string>
+
 
 </resources>

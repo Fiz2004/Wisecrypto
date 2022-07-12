@@ -1,6 +1,7 @@
 package com.fiz.wisecrypto.ui.screens.main.home.main.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Divider
@@ -16,15 +17,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.fiz.wisecrypto.R
-import com.fiz.wisecrypto.ui.screens.main.home.components.RelativeLabel
 import com.fiz.wisecrypto.ui.screens.main.models.ActiveUi
-import com.fiz.wisecrypto.ui.theme.MulishBold
 import com.fiz.wisecrypto.ui.theme.hint
+import com.fiz.wisecrypto.ui.theme.titleMedium3
 import com.skydoves.landscapist.glide.GlideImage
 
 @Composable
 fun YourActiveItem(
-    active: ActiveUi
+    active: ActiveUi,
+    moveHomeDetailScreen: (String) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -34,6 +35,7 @@ fun YourActiveItem(
                 shape = RoundedCornerShape(10.dp)
             )
             .padding(16.dp)
+            .clickable { moveHomeDetailScreen(active.id) }
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically
@@ -74,7 +76,10 @@ fun YourActiveItem(
 
             Spacer(modifier = Modifier.width(24.dp))
 
-            RelativeLabel(up = active.pricePortfolioIncreased, value = active.changePercentage)
+            RelativeLabel(
+                Increased = active.pricePortfolioIncreased,
+                value = active.changePercentage
+            )
         }
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -101,10 +106,7 @@ fun YourActiveItem(
                 )
                 Text(
                     text = active.portfolio,
-                    style = MaterialTheme.typography.titleLarge.copy(
-                        fontFamily = MulishBold,
-                        //                                    fontWeight = FontWeight.Bold,
-                    ),
+                    style = MaterialTheme.typography.titleMedium3,
                     color = MaterialTheme.colorScheme.onSurface
                 )
             }
@@ -112,7 +114,7 @@ fun YourActiveItem(
             Text(
                 modifier = Modifier.align(Alignment.Bottom),
                 text = active.equivalent,
-                style = MaterialTheme.typography.bodySmall.copy(fontFamily = MulishBold),
+                style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }

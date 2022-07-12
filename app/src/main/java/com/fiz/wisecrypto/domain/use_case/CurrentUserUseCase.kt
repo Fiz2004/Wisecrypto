@@ -6,6 +6,9 @@ import com.fiz.wisecrypto.domain.models.Coin
 import com.fiz.wisecrypto.domain.models.User
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -15,14 +18,16 @@ class CurrentUserUseCase @Inject constructor(
     private val dispatcher: CoroutineDispatcher = Dispatchers.Default
 ) {
 
-    suspend fun getCurrentUser(): User? {
+    suspend fun getCurrentUser(): Flow<User?> {
         return withContext(dispatcher) {
-            var user: User? = null
+            var user: Flow<User?> = flow {}
             val email = settingsRepository.getAuthEmail()
             if (email != null) {
-                user = userRepository.getUserInfo(email)
+                user = userRepository.observeUser(email)
             }
-            user
+            flow {
+                emitAll(user)
+            }
         }
     }
 

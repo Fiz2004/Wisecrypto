@@ -16,8 +16,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fiz.wisecrypto.R
-import com.fiz.wisecrypto.ui.components.PrimaryButton
 import com.fiz.wisecrypto.ui.components.TextFieldWithHeader
+import com.fiz.wisecrypto.ui.components.WiseCryptoButton
 import com.fiz.wisecrypto.ui.screens.login.components.LogoItem
 import com.fiz.wisecrypto.ui.screens.login.components.TextExtraAction
 import com.fiz.wisecrypto.ui.screens.login.components.TitleAndGreeting
@@ -104,7 +104,7 @@ fun SignInScreen(
         }
 
         item {
-            PrimaryButton(
+            WiseCryptoButton(
                 text = R.string.signin_signin,
                 onClick = { viewModel.onEvent(SignInEvent.SignInClicked) })
 

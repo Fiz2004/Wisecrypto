@@ -21,15 +21,16 @@ fun SplashScreen(
     val viewEffect = viewModel.viewEffect
 
     LaunchedEffect(Unit) {
-
-        viewModel.onEvent(SplashEvent.StartScreen)
-
         viewEffect.collect { effect ->
             when (effect) {
                 SplashViewEffect.MoveMainContentScreen -> moveMainContentScreen()
                 SplashViewEffect.MoveSignInScreen -> moveSignInScreen()
             }
         }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.onEvent(SplashEvent.StartScreen)
     }
 
     SplashColumn {

@@ -20,7 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fiz.wisecrypto.R
-import com.fiz.wisecrypto.ui.components.PrimaryButton
+import com.fiz.wisecrypto.ui.components.WiseCryptoButton
 import com.fiz.wisecrypto.ui.screens.main.components.MainColumnWithoutBottomBar
 import com.fiz.wisecrypto.ui.theme.Red
 
@@ -120,14 +120,9 @@ fun ProfilePaymentScreen(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        PrimaryButton(
+        WiseCryptoButton(
             text = R.string.payment_add_new_pay,
             onClick = { viewModel.onEvent(ProfilePaymentEvent.AddPayButtonClicked) })
-
-        Spacer(
-            modifier = Modifier
-                .windowInsetsBottomHeight(WindowInsets.navigationBars)
-        )
     }
 }
 

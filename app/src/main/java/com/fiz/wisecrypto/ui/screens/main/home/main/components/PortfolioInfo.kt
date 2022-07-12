@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,6 +16,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fiz.wisecrypto.R
+import com.fiz.wisecrypto.ui.screens.main.home.components.BigRelativeLabel
 
 @Composable
 fun PortfolioInfo(
@@ -25,17 +25,6 @@ fun PortfolioInfo(
     changePercentageBalance: String,
     balance: String
 ) {
-
-    val icon = if (pricePortfolioIncreased)
-        R.drawable.home_ic_up_right
-    else
-        R.drawable.home_ic_down_left
-
-    val color = if (pricePortfolioIncreased)
-        MaterialTheme.colorScheme.primary
-    else
-        MaterialTheme.colorScheme.secondary
-
     LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         item {
             Box(
@@ -76,27 +65,11 @@ fun PortfolioInfo(
                         )
                     }
                     Spacer(modifier = Modifier.weight(1f))
-                    Row(
-                        modifier = Modifier
-                            .background(
-                                color = MaterialTheme.colorScheme.onPrimary,
-                                shape = RoundedCornerShape(8.dp)
-                            )
-                            .padding(8.dp)
-                    ) {
-                        Icon(
-                            modifier = Modifier.size(16.dp),
-                            painter = painterResource(id = icon),
-                            tint = color,
-                            contentDescription = null
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text(
-                            text = changePercentageBalance,
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = color
-                        )
-                    }
+                    BigRelativeLabel(
+                        inverse = true,
+                        increased = pricePortfolioIncreased,
+                        value = changePercentageBalance
+                    )
                 }
             }
         }
@@ -151,3 +124,4 @@ fun PortfolioInfo(
     }
     Spacer(modifier = Modifier.height(24.dp))
 }
+

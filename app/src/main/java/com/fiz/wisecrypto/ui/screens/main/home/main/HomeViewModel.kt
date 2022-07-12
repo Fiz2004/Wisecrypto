@@ -6,7 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fiz.wisecrypto.data.repositories.CoinRepositoryImpl
-import com.fiz.wisecrypto.domain.models.User
+import com.fiz.wisecrypto.domain.models.Active
 import com.fiz.wisecrypto.domain.use_case.CurrentUserUseCase
 import com.fiz.wisecrypto.domain.use_case.FormatUseCase
 import com.fiz.wisecrypto.domain.use_case.PortfolioUseCase
@@ -15,6 +15,7 @@ import com.fiz.wisecrypto.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.collectLatest
 import javax.inject.Inject
 
 @HiltViewModel
@@ -33,20 +34,27 @@ class HomeViewModel @Inject constructor(
 
     private var jobRefresh: Job? = null
 
-    var user: User? = null
+    var actives: List<Active> = listOf()
+    var watchlist: List<String> = listOf()
 
     init {
         viewModelScope.launch {
-            user = currentUserUseCase.getCurrentUser()
-            user?.let {
-                val fullName = it.fullName
-                val balanceUsd = (it.balance) * coinRepository.getCoefCurrentToUsd()
-                val formatBalanceUsd = formatUseCase.getFormatBalanceUsd(balanceUsd)
-                viewState = viewState.copy(
-                    fullName = fullName,
-                    balance = formatBalanceUsd
-                )
-            }
+            currentUserUseCase.getCurrentUser()
+                .collectLatest { user ->
+                    user ?: return@collectLatest
+
+                    val fullName = user.fullName
+                    val balanceUsd = (user.balance) * coinRepository.getCoefCurrentToUsd()
+                    val formatBalanceUsd = formatUseCase.getFormatBalanceUsd(balanceUsd)
+
+                    actives = user.actives
+                    watchlist = user.watchList
+
+                    viewState = viewState.copy(
+                        fullName = fullName,
+                        balance = formatBalanceUsd
+                    )
+                }
         }
     }
 
@@ -55,6 +63,20 @@ class HomeViewModel @Inject constructor(
             HomeEvent.Started -> started()
             HomeEvent.Stopped -> stopped()
             HomeEvent.NotificationClicked -> notificationClicked()
+            HomeEvent.YourActiveAllClicked -> yourActiveAllClicked()
+            is HomeEvent.YourActiveClicked -> yourActiveClicked(event.id)
+        }
+    }
+
+    private fun yourActiveClicked(id: String) {
+        viewModelScope.launch {
+            viewEffect.emit(HomeViewEffect.MoveHomeDetailScreen(id))
+        }
+    }
+
+    private fun yourActiveAllClicked() {
+        viewModelScope.launch {
+            viewEffect.emit(HomeViewEffect.MoveHomePortfolioScreen)
         }
     }
 
@@ -74,8 +96,6 @@ class HomeViewModel @Inject constructor(
         when (val result = coinRepository.getCoins()) {
             is Resource.Success -> {
                 val coins = result.data ?: listOf()
-                val actives = user?.actives ?: listOf()
-                val watchlist = user?.watchList ?: listOf()
 
                 val portfolioUI = portfolioUseCase.getPortfolioUi(actives, coins)
                 val coinsWatchList = currentUserUseCase.getCoinsWatchList(watchlist, coins)
@@ -84,7 +104,7 @@ class HomeViewModel @Inject constructor(
                     pricePortfolio = portfolioUI.pricePortfolio,
                     pricePortfolioIncreased = portfolioUI.pricePortfolioIncreased,
                     changePercentageBalance = portfolioUI.changePercentagePricePortfolio,
-                    coins = coinsWatchList
+                    watchlist = coinsWatchList
                 )
             }
             is Resource.Error -> {

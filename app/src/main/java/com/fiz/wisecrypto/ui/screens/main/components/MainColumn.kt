@@ -16,7 +16,10 @@ import com.fiz.wisecrypto.R
 @Composable
 fun MainColumnWithoutBottomBar(
     textToolbar: String,
+    isShowAddWatchList: Boolean = false,
+    isValueAddWatchList: Boolean = false,
     onClickBackButton: () -> Unit = {},
+    onClickAddWatchList: () -> Unit = {},
     content: @Composable ColumnScope.() -> Unit
 ) {
     Column(
@@ -28,7 +31,10 @@ fun MainColumnWithoutBottomBar(
         TopSpacer()
         Toolbar(
             title = textToolbar,
-            onClickBackButton = onClickBackButton
+            isShowAddWatchList = isShowAddWatchList,
+            isValueAddWatchList = isValueAddWatchList,
+            onClickBackButton = onClickBackButton,
+            onClickAddWatchList = onClickAddWatchList
         )
         Spacer(modifier = Modifier.height(16.dp))
         content()
@@ -61,8 +67,19 @@ fun TopSpacer() {
 @Composable
 fun Toolbar(
     title: String,
-    onClickBackButton: () -> Unit
+    isShowAddWatchList: Boolean = false,
+    isValueAddWatchList: Boolean = false,
+    onClickBackButton: () -> Unit,
+    onClickAddWatchList: () -> Unit = {}
 ) {
+
+    val iconAddWatchList = if (isValueAddWatchList)
+//        Icons.Filled.Star
+        R.drawable.detail_ic_star_full
+    else
+//    Icons.Default.Star
+        R.drawable.detail_ic_star_empty
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -86,6 +103,18 @@ fun Toolbar(
             style = MaterialTheme.typography.headlineMedium,
             color = MaterialTheme.colorScheme.onSurface
         )
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        if (isShowAddWatchList)
+            Icon(
+                modifier = Modifier
+                    .size(24.dp)
+                    .clickable { onClickAddWatchList() },
+                painter = painterResource(id = iconAddWatchList),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurface
+            )
 
     }
 }

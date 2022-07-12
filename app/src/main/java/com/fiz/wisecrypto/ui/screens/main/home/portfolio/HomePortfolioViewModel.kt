@@ -6,7 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fiz.wisecrypto.data.repositories.CoinRepositoryImpl
-import com.fiz.wisecrypto.domain.models.User
+import com.fiz.wisecrypto.domain.models.Active
 import com.fiz.wisecrypto.domain.use_case.CurrentUserUseCase
 import com.fiz.wisecrypto.domain.use_case.PortfolioUseCase
 import com.fiz.wisecrypto.util.Consts
@@ -14,6 +14,7 @@ import com.fiz.wisecrypto.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.collectLatest
 import javax.inject.Inject
 
 @HiltViewModel
@@ -31,11 +32,16 @@ class HomePortfolioViewModel @Inject constructor(
 
     private var jobRefresh: Job? = null
 
-    var user: User? = null
+    var actives: List<Active> = listOf()
 
     init {
         viewModelScope.launch {
-            user = currentUserUseCase.getCurrentUser()
+            currentUserUseCase.getCurrentUser()
+                .collectLatest { user ->
+                    user ?: return@collectLatest
+
+                    actives = user.actives
+                }
         }
     }
 
@@ -62,7 +68,6 @@ class HomePortfolioViewModel @Inject constructor(
         when (val result = coinRepository.getCoins()) {
             is Resource.Success -> {
                 val coins = result.data ?: listOf()
-                val actives = user?.actives ?: listOf()
                 val portfolioUi = portfolioUseCase.getPortfolioUi(actives, coins)
 
                 viewState = viewState.copy(

@@ -14,7 +14,7 @@ data class CoinUi(
 fun Coin.toCoinUi(): CoinUi {
     return CoinUi(
         icon = icon,
-        abbreviated = "$abbreviated/$market",
+        abbreviated = "$symbol/$market",
         name = name,
         cost = "\$${"%.2f".format(cost)}",
         up = priceChangePercentage > 0.0,

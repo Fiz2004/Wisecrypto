@@ -18,10 +18,11 @@ import com.fiz.wisecrypto.ui.screens.main.models.ActiveUi
 @Composable
 fun YourActive(
     portfolio: List<ActiveUi>,
-    moveHomePortfolioScreen: () -> Unit
+    moveHomePortfolioScreen: () -> Unit,
+    moveHomeDetailScreen: (String) -> Unit
 ) {
     TitleYourActive(moveHomePortfolioScreen)
-    YourActiveRow(portfolio)
+    YourActiveRow(portfolio, moveHomeDetailScreen)
 }
 
 @Composable
@@ -43,13 +44,13 @@ private fun TitleYourActive(moveHomePortfolioScreen: () -> Unit) {
 }
 
 @Composable
-private fun YourActiveRow(portfolio: List<ActiveUi>) {
+private fun YourActiveRow(portfolio: List<ActiveUi>, moveHomeDetailScreen: (String) -> Unit) {
     LazyRow(
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         portfolio.forEach {
             item {
-                YourActiveItem(active = it)
+                YourActiveItem(active = it, moveHomeDetailScreen)
             }
         }
     }

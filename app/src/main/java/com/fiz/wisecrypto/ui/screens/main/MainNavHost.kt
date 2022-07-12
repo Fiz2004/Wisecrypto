@@ -6,6 +6,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.fiz.wisecrypto.ui.screens.main.home.detail.HomeDetailScreen
+import com.fiz.wisecrypto.ui.screens.main.home.detail.HomeDetailViewModel
 import com.fiz.wisecrypto.ui.screens.main.home.main.HomeScreen
 import com.fiz.wisecrypto.ui.screens.main.home.main.HomeViewModel
 import com.fiz.wisecrypto.ui.screens.main.home.notification.HomeNotificationScreen
@@ -42,7 +44,8 @@ fun MainNavHost(
             HomeScreen(
                 viewModel,
                 moveNotificationScreen = { navController.navigate(NamesHomeScreen.Notification.name) },
-                moveHomePortfolioScreen = { navController.navigate(NamesHomeScreen.Portfolio.name) }
+                moveHomePortfolioScreen = { navController.navigate(NamesHomeScreen.Portfolio.name) },
+                moveHomeDetailScreen = { id -> navController.navigate(NamesHomeScreen.Detail.name + "/$id") }
             )
         }
 
@@ -60,7 +63,19 @@ fun MainNavHost(
 
             HomePortfolioScreen(
                 viewModel,
-                moveHomeMain = { navController.popBackStack() }
+                moveHomeMainScreen = { navController.popBackStack() },
+                moveHomeDetailScreen = { id -> navController.navigate(NamesHomeScreen.Detail.name + "/$id") }
+            )
+        }
+
+        composable(NamesHomeScreen.Detail.name + "/{id}") {
+            val viewModel = hiltViewModel<HomeDetailViewModel>()
+            val id = it.arguments?.getString("id") ?: return@composable
+
+            HomeDetailScreen(
+                viewModel,
+                id,
+                moveHomeMainScreen = { navController.popBackStack() },
             )
         }
 
@@ -69,6 +84,7 @@ fun MainNavHost(
 
             MarketScreen(
                 viewModel,
+                moveHomeDetailScreen = { id -> navController.navigate(NamesHomeScreen.Detail.name + "/$id") }
             )
         }
 
@@ -129,7 +145,8 @@ fun MainNavHost(
 
 enum class NamesHomeScreen {
     Notification,
-    Portfolio
+    Portfolio,
+    Detail
 }
 
 enum class NamesProfileScreen {

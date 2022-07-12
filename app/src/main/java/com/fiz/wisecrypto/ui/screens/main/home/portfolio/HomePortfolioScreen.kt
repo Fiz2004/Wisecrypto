@@ -22,7 +22,8 @@ import com.fiz.wisecrypto.ui.screens.main.home.portfolio.components.YourActiveFu
 @Composable
 fun HomePortfolioScreen(
     viewModel: HomePortfolioViewModel = viewModel(),
-    moveHomeMain: () -> Unit
+    moveHomeMainScreen: () -> Unit,
+    moveHomeDetailScreen: (String) -> Unit
 ) {
 
     val viewState = viewModel.viewState
@@ -50,7 +51,7 @@ fun HomePortfolioScreen(
         viewEffect.collect { effect ->
             when (effect) {
                 HomePortfolioViewEffect.MoveReturn -> {
-                    moveHomeMain()
+                    moveHomeMainScreen()
                 }
                 is HomePortfolioViewEffect.ShowError -> {
                     val text = context.getString(
@@ -76,7 +77,8 @@ fun HomePortfolioScreen(
             viewState.changePercentagePricePortfolio
         )
         Spacer(modifier = Modifier.height(24.dp))
-        YourActiveFullInfo(viewState.portfolio)
+        YourActiveFullInfo(viewState.portfolio,
+            activeClicked = { id -> moveHomeDetailScreen(id) })
     }
 }
 

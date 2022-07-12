@@ -43,7 +43,7 @@ class SignInViewModel @Inject constructor(
 
     private fun signInClicked() {
         viewModelScope.launch {
-            if (userRepository.checkUser(viewState.email, viewState.password) != null) {
+            if (userRepository.isUser(viewState.email, viewState.password)) {
                 authRepository.authCompleted(viewState.email)
                 viewEffect.emit(SignInViewEffect.MoveMainContentScreen)
             } else {

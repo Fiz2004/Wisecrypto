@@ -4,6 +4,10 @@ import com.fiz.wisecrypto.data.database.dao.UserDao
 import com.fiz.wisecrypto.data.entity.UserEntity
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -35,13 +39,26 @@ class UserLocalDataSourceImpl @Inject constructor(
         }
     }
 
-    suspend fun loadUser(checkEmail: String): UserEntity? {
+    suspend fun getUser(checkEmail: String): UserEntity? {
         return withContext(dispatcher) {
             try {
-                userDao.getUserByEmail(checkEmail)
+                userDao
+                    .getUserByEmail(checkEmail)
                     .copy(actives = userDao.getActives(checkEmail))
             } catch (e: Exception) {
                 null
+            }
+        }
+    }
+
+    fun observeUser(checkEmail: String): Flow<UserEntity?> {
+        return flow {
+            try {
+                emitAll(userDao.observeUserByEmail(checkEmail).map {
+                    it.copy(actives = userDao.getActives(checkEmail))
+                })
+            } catch (e: Exception) {
+                emit(null)
             }
         }
     }
@@ -63,6 +80,17 @@ class UserLocalDataSourceImpl @Inject constructor(
                 val user = userDao.getUserByEmail(checkOldEmail)
                 userDao.insert(user.copy(email = checkNewEmail))
                 userDao.delete(user)
+                true
+            } catch (e: Exception) {
+                false
+            }
+        }
+    }
+
+    suspend fun changeWatchList(email: String, watchList: List<String>): Boolean {
+        return withContext(dispatcher) {
+            try {
+                userDao.changeWatchList(email, watchList)
                 true
             } catch (e: Exception) {
                 false

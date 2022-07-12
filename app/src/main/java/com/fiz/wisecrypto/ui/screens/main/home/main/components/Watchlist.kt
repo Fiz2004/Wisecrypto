@@ -14,9 +14,9 @@ import com.fiz.wisecrypto.domain.models.Coin
 import com.fiz.wisecrypto.ui.screens.main.components.CoinColumn
 
 @Composable
-fun Watchlist(coins: List<Coin>) {
+fun Watchlist(coins: List<Coin>, moveHomeDetailScreen: (String) -> Unit) {
     TitleWatchlist()
-    CoinColumn(coins)
+    CoinColumn(coins, moveHomeDetailScreen)
 }
 
 

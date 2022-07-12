@@ -9,8 +9,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fiz.wisecrypto.R
-import com.fiz.wisecrypto.ui.components.PrimaryButton
 import com.fiz.wisecrypto.ui.components.TextFieldWithHeader
+import com.fiz.wisecrypto.ui.components.WiseCryptoButton
 import com.fiz.wisecrypto.ui.screens.main.components.MainColumnWithoutBottomBar
 
 
@@ -68,7 +68,7 @@ fun ProfilePrivacyScreen(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        PrimaryButton(
+        WiseCryptoButton(
             text = R.string.privacy_save,
             onClick = { viewModel.onEvent(ProfilePrivacyEvent.SaveButtonClicked) })
     }

@@ -25,4 +25,19 @@ class FormatUseCase @Inject constructor() {
     fun getFormatBalance(balance: Double): String {
         return "%.2f".format(balance)
     }
+
+    fun getFormatOverview(price: Double?): String {
+        val currency = "\$"
+        if (price == null)
+            return "∞"
+        val value = abs(price)
+        return when {
+            value < 1.0 -> "$currency${"%.2f".format(price)}"
+            value < 1_000_000.0 -> "$currency${"%.0f".format(price)}"
+            value < 1_000_000_000.0 -> "$currency${"%.2f".format(price / 1_000_000)}M"
+            value < 1_000_000_000_000.0 -> "$currency${"%.2f".format(price / 1_000_000_000)}B"
+            value < 1_000_000_000_000_000.0 -> "$currency${"%.2f".format(price / 1_000_000_000_000)}T"
+            else -> "$currency${"%.0f".format(value)}"
+        }
+    }
 }

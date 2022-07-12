@@ -7,13 +7,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fiz.wisecrypto.data.repositories.CoinRepositoryImpl
 import com.fiz.wisecrypto.domain.models.Coin
-import com.fiz.wisecrypto.domain.models.User
 import com.fiz.wisecrypto.domain.use_case.CurrentUserUseCase
 import com.fiz.wisecrypto.util.Consts.TIME_REFRESH_NETWORK_MS
 import com.fiz.wisecrypto.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.collectLatest
 import javax.inject.Inject
 
 @HiltViewModel
@@ -29,11 +29,16 @@ class MarketViewModel @Inject constructor(
 
     private var jobRefresh: Job? = null
 
-    var user: User? = null
+    var watchlist: List<String> = listOf()
 
     init {
         viewModelScope.launch {
-            user = currentUserUseCase.getCurrentUser()
+            currentUserUseCase.getCurrentUser()
+                .collectLatest { user ->
+                    user ?: return@collectLatest
+
+                    watchlist = user.watchList
+                }
         }
     }
 
@@ -43,6 +48,13 @@ class MarketViewModel @Inject constructor(
             is MarketEvent.MarketChipClicked -> marketChipClicked(event.index)
             MarketEvent.Started -> started()
             MarketEvent.Stopped -> stopped()
+            is MarketEvent.YourActiveClicked -> yourActiveClicked(event.id)
+        }
+    }
+
+    private fun yourActiveClicked(id: String) {
+        viewModelScope.launch {
+            viewEffect.emit(MarketViewEffect.MoveHomeDetailScreen(id))
         }
     }
 
@@ -83,9 +95,8 @@ class MarketViewModel @Inject constructor(
         var newCoins = coinRepository.getCoins().data?.filter {
             it.name.lowercase().contains(checkValue)
                     || it.market.lowercase().contains(checkValue)
-                    || it.abbreviated.lowercase().contains(checkValue)
+                    || it.symbol.lowercase().contains(checkValue)
         } ?: listOf()
-        val watchlist = user?.watchList ?: listOf()
 
         newCoins = when (viewState.selectedChipNumber) {
             0 -> {
