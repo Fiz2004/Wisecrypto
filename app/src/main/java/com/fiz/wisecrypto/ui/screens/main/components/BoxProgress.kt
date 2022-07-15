@@ -1,19 +1,22 @@
 package com.fiz.wisecrypto.ui.screens.main.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.fiz.wisecrypto.ui.components.Progress
 
 @Composable
-fun BoxProgress(isLoading: Boolean) {
-    if (isLoading)
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            Progress()
-        }
+fun FullScreenLoading() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = MaterialTheme.colorScheme.surface),
+        contentAlignment = Alignment.Center
+    ) {
+        Progress()
+    }
 }

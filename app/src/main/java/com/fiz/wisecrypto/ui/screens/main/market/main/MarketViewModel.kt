@@ -1,4 +1,4 @@
-package com.fiz.wisecrypto.ui.screens.main.market
+package com.fiz.wisecrypto.ui.screens.main.market.main
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.fiz.wisecrypto.data.repositories.CoinRepositoryImpl
 import com.fiz.wisecrypto.domain.models.Coin
 import com.fiz.wisecrypto.domain.use_case.CurrentUserUseCase
+import com.fiz.wisecrypto.ui.util.LifeCycleEventable
 import com.fiz.wisecrypto.util.Consts.TIME_REFRESH_NETWORK_MS
 import com.fiz.wisecrypto.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,7 +21,7 @@ import javax.inject.Inject
 class MarketViewModel @Inject constructor(
     private val currentUserUseCase: CurrentUserUseCase,
     private val coinRepository: CoinRepositoryImpl
-) : ViewModel() {
+) : ViewModel(), LifeCycleEventable {
     var viewState by mutableStateOf(MarketViewState())
         private set
 
@@ -36,8 +37,8 @@ class MarketViewModel @Inject constructor(
             currentUserUseCase.getCurrentUser()
                 .collectLatest { user ->
                     user ?: return@collectLatest
-
                     watchlist = user.watchList
+                    refreshState()
                 }
         }
     }
@@ -46,9 +47,14 @@ class MarketViewModel @Inject constructor(
         when (event) {
             is MarketEvent.SearchTextChanged -> searchTextChanged(event.value)
             is MarketEvent.MarketChipClicked -> marketChipClicked(event.index)
-            MarketEvent.Started -> started()
-            MarketEvent.Stopped -> stopped()
             is MarketEvent.YourActiveClicked -> yourActiveClicked(event.id)
+            MarketEvent.OnRefresh -> {
+                viewModelScope.launch {
+                    jobRefresh?.cancelAndJoin()
+                    jobRefresh = null
+                    refreshState()
+                }
+            }
         }
     }
 
@@ -56,23 +62,6 @@ class MarketViewModel @Inject constructor(
         viewModelScope.launch {
             viewEffect.emit(MarketViewEffect.MoveHomeDetailScreen(id))
         }
-    }
-
-    private fun stopped() {
-        viewModelScope.launch {
-            jobRefresh?.cancelAndJoin()
-            jobRefresh = null
-        }
-    }
-
-    private fun started() {
-        if (jobRefresh == null)
-            jobRefresh = viewModelScope.launch(Dispatchers.Default) {
-                while (isActive) {
-                    refreshState()
-                    delay(TIME_REFRESH_NETWORK_MS.toLong())
-                }
-            }
     }
 
     private suspend fun refreshState() {
@@ -121,6 +110,23 @@ class MarketViewModel @Inject constructor(
         viewModelScope.launch {
             viewState = viewState.copy(searchText = value)
             viewState = viewState.copy(coins = filterCoins())
+        }
+    }
+
+    override fun started() {
+        if (jobRefresh == null)
+            jobRefresh = viewModelScope.launch(Dispatchers.Default) {
+                while (isActive) {
+                    refreshState()
+                    delay(TIME_REFRESH_NETWORK_MS.toLong())
+                }
+            }
+    }
+
+    override fun stopped() {
+        viewModelScope.launch {
+            jobRefresh?.cancelAndJoin()
+            jobRefresh = null
         }
     }
 

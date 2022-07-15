@@ -1,4 +1,4 @@
-package com.fiz.wisecrypto.ui.screens.main.home.detail.components
+package com.fiz.wisecrypto.ui.screens.main.market.detail.components
 
 import android.graphics.DashPathEffect
 import android.graphics.Paint
@@ -23,11 +23,13 @@ import androidx.compose.ui.unit.sp
 import com.fiz.wisecrypto.R
 import com.fiz.wisecrypto.domain.models.History
 import com.fiz.wisecrypto.ui.screens.main.home.components.BigRelativeLabel
+import com.fiz.wisecrypto.ui.screens.main.market.detail.MarketDetailViewModel
 import com.fiz.wisecrypto.ui.theme.hint
 import com.fiz.wisecrypto.ui.theme.titleMedium3
 
 @Composable
 fun Statistics(
+    viewModel: MarketDetailViewModel,
     priceForOne: String,
     symbol: String,
     increased: Boolean,
@@ -44,7 +46,7 @@ fun Statistics(
     ) {
         TitleStatistics(priceForOne, symbol, increased, changePercentagePricePortfolio)
         Spacer(modifier = Modifier.height(16.dp))
-        Chart(valueCurrentPriceHistory, labels)
+        Chart(viewModel, valueCurrentPriceHistory, labels)
         Spacer(modifier = Modifier.height(16.dp))
         FilterPeriod(indexPeriod, onClickPeriod)
     }
@@ -79,6 +81,7 @@ private fun TitleStatistics(
 
 @Composable
 private fun Chart(
+    viewModel: MarketDetailViewModel,
     valueCurrentPriceHistory: List<History> = emptyList(),
     labels: List<String> = emptyList(),
     countLine: Int = 7,
@@ -128,88 +131,91 @@ private fun Chart(
         valueCurrentPriceHistory.minOfOrNull { it.value } ?: 0.0
     }
 
-    Canvas(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(191.dp)
-    ) {
-        printLabels(labels, density, textPaint)
+    Box {
+        Canvas(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(191.dp)
+        ) {
+            printLabels(labels, density, textPaint)
 
-        val stepY = (size.height - spacingY) / countLine.toFloat()
-        printDottedLine(stepY, countLine, linePaint)
+            val stepY = (size.height - spacingY) / countLine.toFloat()
+            printDottedLine(stepY, countLine, linePaint)
 
-        var lastX = 0f
-        val spaceOneStepX = size.width / valueCurrentPriceHistory.size
+            var lastX = 0f
+            val spaceOneStepX = size.width / valueCurrentPriceHistory.size
 
-        val strokePath = Path().apply {
-            val height = usedLine * stepY
-            for (i in valueCurrentPriceHistory.indices) {
-                val info = valueCurrentPriceHistory[i]
-                val nextInfo =
-                    valueCurrentPriceHistory.getOrNull(i + 1) ?: valueCurrentPriceHistory.last()
-                val leftRatio = (info.value - lowerValue) / (upperValue - lowerValue)
-                val rightRatio = (nextInfo.value - lowerValue) / (upperValue - lowerValue)
+            val strokePath = Path().apply {
+                val height = usedLine * stepY
+                for (i in valueCurrentPriceHistory.indices) {
+                    val info = valueCurrentPriceHistory[i]
+                    val nextInfo =
+                        valueCurrentPriceHistory.getOrNull(i + 1) ?: valueCurrentPriceHistory.last()
+                    val leftRatio = (info.value - lowerValue) / (upperValue - lowerValue)
+                    val rightRatio = (nextInfo.value - lowerValue) / (upperValue - lowerValue)
 
-                val x1 = i * spaceOneStepX
-                val y1 = size.height - stepY - spacingY - (leftRatio * height).toFloat()
-                val x2 = (i + 1) * spaceOneStepX
-                val y2 = size.height - stepY - spacingY - (rightRatio * height).toFloat()
-                if (i == 0) {
-                    moveTo(x1, y1)
+                    val x1 = i * spaceOneStepX
+                    val y1 = size.height - stepY - spacingY - (leftRatio * height).toFloat()
+                    val x2 = (i + 1) * spaceOneStepX
+                    val y2 = size.height - stepY - spacingY - (rightRatio * height).toFloat()
+                    if (i == 0) {
+                        moveTo(x1, y1)
+                    }
+                    lastX = (x1 + x2) / 2f
+                    quadraticBezierTo(
+                        x1, y1, lastX, (y1 + y2) / 2f
+                    )
                 }
-                lastX = (x1 + x2) / 2f
-                quadraticBezierTo(
-                    x1, y1, lastX, (y1 + y2) / 2f
+            }
+            val fillPath = android.graphics.Path(strokePath.asAndroidPath()).asComposePath().apply {
+                lineTo(lastX, size.height - spacingY)
+                lineTo(0f, size.height - spacingY)
+                close()
+            }
+            drawPath(
+                path = fillPath, brush = Brush.verticalGradient(
+                    colors = listOf(
+                        graphColor,
+                        transparentGraphColor,
+                    ), endY = size.height - spacingY
+                )
+            )
+            drawPath(
+                path = strokePath, color = Color(0xFF_5EDE99), style = Stroke(
+                    width = 3.dp.toPx(), cap = StrokeCap.Round
+                )
+            )
+
+            xMax = upperIndex * spaceOneStepX
+            yMax = size.height - stepY - spacingY - usedLine * stepY
+
+            val radiusPx = 6f * density.density
+            drawCircle(
+                color = maxColor, radiusPx, Offset(xMax, yMax)
+            )
+
+        }
+
+        if (xMax != -1f && yMax != -1f)
+
+            Box(
+                modifier = Modifier
+                    .offset(
+                        x = (xMax / density.density - 30).dp, (yMax / density.density - 30).dp
+                    )
+                    .background(
+                        shape = RoundedCornerShape(10.dp),
+                        color = MaterialTheme.colorScheme.tertiary
+                    )
+                    .padding(4.dp),
+            ) {
+                Text(
+                    text = viewModel.getUpperValue(upperValue),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onPrimary
                 )
             }
-        }
-        val fillPath = android.graphics.Path(strokePath.asAndroidPath()).asComposePath().apply {
-            lineTo(lastX, size.height - spacingY)
-            lineTo(0f, size.height - spacingY)
-            close()
-        }
-        drawPath(
-            path = fillPath, brush = Brush.verticalGradient(
-                colors = listOf(
-                    graphColor,
-                    transparentGraphColor,
-                ), endY = size.height - spacingY
-            )
-        )
-        drawPath(
-            path = strokePath, color = Color(0xFF_5EDE99), style = Stroke(
-                width = 3.dp.toPx(), cap = StrokeCap.Round
-            )
-        )
-
-        xMax = upperIndex * spaceOneStepX
-        yMax = size.height - stepY - spacingY - usedLine * stepY
-
-        val radiusPx = 6f * density.density
-        drawCircle(
-            color = maxColor, radiusPx, Offset(xMax, yMax)
-        )
-
     }
-
-    if (xMax != -1f && yMax != -1f)
-
-        Box(
-            modifier = Modifier
-                .offset(
-                    x = (xMax / density.density - 30).dp, (yMax / density.density - 191 - 30).dp
-                )
-                .background(
-                    shape = RoundedCornerShape(10.dp), color = MaterialTheme.colorScheme.tertiary
-                )
-                .padding(4.dp),
-        ) {
-            Text(
-                text = "$${"%.2f".format(upperValue)}",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onPrimary
-            )
-        }
 }
 
 private fun DrawScope.printDottedLine(

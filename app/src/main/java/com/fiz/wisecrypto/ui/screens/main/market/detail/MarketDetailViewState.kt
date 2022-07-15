@@ -1,13 +1,12 @@
-package com.fiz.wisecrypto.ui.screens.main.home.detail
+package com.fiz.wisecrypto.ui.screens.main.market.detail
 
 import com.fiz.wisecrypto.domain.models.History
 import com.fiz.wisecrypto.ui.screens.main.models.ActiveUi
-import org.threeten.bp.LocalDateTime
 
-data class HomeDetailViewState(
+data class MarketDetailViewState(
     val name: String = "",
     val isWatchList: Boolean = false,
-    val priceOne: String = "",
+    val priceOne: String? = null,
     val abbreviated: String = "",
     val pricePortfolioIncreased: Boolean = true,
     val changePercentagePricePortfolio: String = "",

@@ -4,7 +4,7 @@ import com.fiz.wisecrypto.data.data_source.remote.CoingeckoApi
 import com.fiz.wisecrypto.domain.models.Coin
 import com.fiz.wisecrypto.domain.models.CoinFull
 import com.fiz.wisecrypto.domain.models.CoinMarketChartRange
-import com.fiz.wisecrypto.ui.screens.main.home.detail.PeriodFilterChip
+import com.fiz.wisecrypto.ui.screens.main.market.detail.PeriodFilterChip
 import com.fiz.wisecrypto.util.Resource
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -20,8 +20,6 @@ class CoinRepositoryImpl @Inject constructor(
     private val coingeckoApi: CoingeckoApi,
     private val dispatcher: CoroutineDispatcher = Dispatchers.Default
 ) {
-
-    val dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
 
     suspend fun getCoins(): Resource<List<Coin>> {
         return withContext(dispatcher) {

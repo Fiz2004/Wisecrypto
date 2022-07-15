@@ -1,4 +1,4 @@
-package com.fiz.wisecrypto.ui.screens.main.home.detail.components
+package com.fiz.wisecrypto.ui.screens.main.market.detail.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Divider

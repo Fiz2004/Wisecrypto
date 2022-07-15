@@ -1,7 +1,11 @@
 package com.fiz.wisecrypto.ui.screens.main
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -15,7 +19,8 @@ import com.fiz.wisecrypto.ui.screens.main.components.MainBottomBar
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
-    moveReturn: () -> Unit
+    moveReturn: () -> Unit,
+    state: LazyListState = rememberLazyListState(),
 ) {
     val navController = rememberNavController()
     val backstackEntry by navController.currentBackStackEntryAsState()
@@ -26,7 +31,10 @@ fun MainScreen(
         currentScreen?.route == NamesMainScreen.Profile.name
     )
         Scaffold(
-            modifier = Modifier.navigationBarsPadding(),
+            modifier = Modifier
+                .background(color = MaterialTheme.colorScheme.surface)
+                .statusBarsPadding()
+                .navigationBarsPadding(),
             bottomBar = {
                 MainBottomBar(navController)
             },
@@ -35,15 +43,23 @@ fun MainScreen(
             MainNavHost(
                 navController = navController,
                 moveReturn = moveReturn,
-                modifier = Modifier.padding(innerPadding),
+                modifier = Modifier
+                    .padding(innerPadding),
+                state = state
             )
         }
     else {
         MainNavHost(
+            modifier = Modifier
+                .background(color = MaterialTheme.colorScheme.surface)
+                .statusBarsPadding()
+                .navigationBarsPadding(),
             navController = navController,
             moveReturn = moveReturn,
-            modifier = Modifier,
+            state = state
         )
     }
 }
+
+
 

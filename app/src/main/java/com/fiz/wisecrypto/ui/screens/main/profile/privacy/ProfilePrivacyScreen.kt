@@ -11,7 +11,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fiz.wisecrypto.R
 import com.fiz.wisecrypto.ui.components.TextFieldWithHeader
 import com.fiz.wisecrypto.ui.components.WiseCryptoButton
-import com.fiz.wisecrypto.ui.screens.main.components.MainColumnWithoutBottomBar
+import com.fiz.wisecrypto.ui.screens.main.components.MainColumn
 
 
 @Composable
@@ -39,7 +39,7 @@ fun ProfilePrivacyScreen(
         }
     }
 
-    MainColumnWithoutBottomBar(
+    MainColumn(
         textToolbar = stringResource(R.string.privacy_title),
         onClickBackButton = { viewModel.onEvent(ProfilePrivacyEvent.BackButtonClicked) }
     ) {

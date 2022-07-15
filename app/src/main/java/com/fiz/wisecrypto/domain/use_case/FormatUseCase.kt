@@ -26,6 +26,10 @@ class FormatUseCase @Inject constructor() {
         return "%.2f".format(balance)
     }
 
+    fun getFormatCoin(value: Double): String {
+        return "%.6f".format(value)
+    }
+
     fun getFormatOverview(price: Double?): String {
         val currency = "\$"
         if (price == null)

@@ -9,6 +9,8 @@
     <!--    Errors-->
     <string name="error_network">Ошибка при загрузке данных из сети. Код ошибки: %1$s</string>
     <string name="error_network_default">Ошибка при загрузке данных из сети</string>
+    <string name="error_edit_value_coin">Ошибка не допустимое значение</string>
+    <string name="error_sell">Ошибка продажа не удалась</string>
 
     <!--    Log In-->
     <string name="login_password_title">Пароль</string>
@@ -82,12 +84,14 @@
 
     <!--    Market-->
     <string name="market_search_hint">Поиск…</string>
-    <string name="market_favorities">Избранное</string>
-    <string name="market_fiat">Рынки FIAT</string>
-    <string name="market_etf">Рынки ETF</string>
-    <string name="market_bnb">Рынки BNB</string>
-    <string name="market_btc">Рынки BTC</string>
-    <string name="market_alts">Рынки ALTS</string>
+    <string-array name="market_filters">
+        <item>Избранное</item>
+        <item>Рынки FIAT</item>
+        <item>Рынки ETF</item>
+        <item>Рынки BNB</item>
+        <item>Рынки BTC</item>
+        <item>Рынки ALTS</item>
+    </string-array>
 
     <!--    Profile-->
     <string name="profile_list_transactions_title">История операций</string>
@@ -161,9 +165,38 @@
     <string name="detail_market_cap_change">Рын-я кап-я 24ч</string>
     <string name="detail_total_volume_change">Объем торгов 24ч</string>
     <string name="detail_period_day">День</string>
-    <string name="detail_period_week">Неделю</string>
+    <string name="detail_period_week">Неделя</string>
     <string name="detail_period_month">Месяц</string>
     <string name="detail_period_year">Год</string>
+    <string-array name="month_3chars">
+        <item>Янв</item>
+        <item>Фвр</item>
+        <item>Мрт</item>
+        <item>Апр</item>
+        <item>Май</item>
+        <item>Июнь</item>
+        <item>Июль</item>
+        <item>Авг</item>
+        <item>Снт</item>
+        <item>Окт</item>
+        <item>Нбр</item>
+        <item>Дкб</item>
+    </string-array>
+    <string-array name="day_of_week_2chars">
+        <item>Пн</item>
+        <item>Вт</item>
+        <item>Ср</item>
+        <item>Чт</item>
+        <item>Пт</item>
+        <item>Сб</item>
+        <item>Вс</item>
+    </string-array>
 
+    <!--    Sell-->
+    <string name="sell_toolbar">Продать</string>
+    <string name="sell_sell_all">Продать Все</string>
+    <string name="sell_one_coin_title">Стоимость %1$s</string>
+    <string name="sell_one_coin">%1$s %2$s</string>
+    <string name="sell_alert">Результаты продаж будут отправлены на баланс этого приложения</string>
 
 </resources>

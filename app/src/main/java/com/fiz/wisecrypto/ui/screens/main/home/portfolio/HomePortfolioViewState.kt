@@ -7,6 +7,6 @@ data class HomePortfolioViewState(
     val totalReturn: String = "",
     val pricePortfolioIncreased: Boolean = true,
     val changePercentagePricePortfolio: String = "",
-    val portfolio: List<ActiveUi> = emptyList(),
+    val portfolio: List<ActiveUi>? = null,
     val isLoading: Boolean = false
 )

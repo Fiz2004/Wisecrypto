@@ -16,7 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fiz.wisecrypto.R
-import com.fiz.wisecrypto.ui.screens.main.components.MainColumnWithBottomBar
+import com.fiz.wisecrypto.ui.screens.main.components.MainColumn
 import com.fiz.wisecrypto.ui.screens.main.profile.main.components.BalanceInfo
 import com.fiz.wisecrypto.ui.screens.main.profile.main.components.ExitDialog
 import com.fiz.wisecrypto.ui.screens.main.profile.main.components.ProfileMenuItem
@@ -79,7 +79,7 @@ fun ProfileScreen(
         }
     }
 
-    MainColumnWithBottomBar {
+    MainColumn {
         UserInfoLarge(
             fullName = viewState.fullName,
             onClickChangeAvatar = { viewModel.onEvent(ProfileEvent.ChangeAvatarClicked) }

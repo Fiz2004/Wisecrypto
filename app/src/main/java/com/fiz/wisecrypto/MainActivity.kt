@@ -3,14 +3,19 @@ package com.fiz.wisecrypto
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.core.view.WindowCompat
+import androidx.navigation.NavDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.fiz.wisecrypto.ui.screens.AppNavHost
@@ -29,40 +34,15 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val navController = rememberNavController()
-
             val backstackEntry by navController.currentBackStackEntryAsState()
             val currentScreen = backstackEntry?.destination
 
-            val useDarkIcons = MaterialTheme.colorScheme.isLight()
-            val systemUiController = rememberSystemUiController()
-
-            SideEffect {
-
-                when (currentScreen?.route) {
-                    null,
-                    NamesScreen.Splash.name,
-                    NamesScreen.SignIn.name,
-                    NamesScreen.SignUp.name,
-                    NamesScreen.SignUp2.name,
-                    -> {
-                        systemUiController.isStatusBarVisible = false
-                    }
-                    else -> {
-                        systemUiController.isStatusBarVisible = true
-                    }
-                }
-
-                systemUiController.setSystemBarsColor(
-                    color = Color.Transparent,
-                    darkIcons = useDarkIcons
-                )
-            }
-
+            StatusBarVisibleAndColor(currentScreen)
 
             WisecryptoTheme {
                 Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    modifier = Modifier
+                        .fillMaxSize(),
                 ) {
                     AppNavHost(
                         navController = navController,
@@ -70,5 +50,33 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun StatusBarVisibleAndColor(currentScreen: NavDestination?) {
+    val useDarkIcons = MaterialTheme.colorScheme.isLight()
+    val systemUiController = rememberSystemUiController()
+
+    SideEffect {
+
+        when (currentScreen?.route) {
+            null,
+            NamesScreen.Splash.name,
+            NamesScreen.SignIn.name,
+            NamesScreen.SignUp.name,
+            NamesScreen.SignUp2.name,
+            -> {
+                systemUiController.isStatusBarVisible = false
+            }
+            else -> {
+                systemUiController.isStatusBarVisible = true
+            }
+        }
+
+        systemUiController.setSystemBarsColor(
+            color = Color.Transparent,
+            darkIcons = useDarkIcons
+        )
     }
 }

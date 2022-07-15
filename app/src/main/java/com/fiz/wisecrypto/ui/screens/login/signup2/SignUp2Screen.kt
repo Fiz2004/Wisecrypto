@@ -68,6 +68,7 @@ fun SignUp2Screen(
         modifier = Modifier
             .fillMaxSize()
             .background(color = MaterialTheme.colorScheme.surface)
+            .navigationBarsPadding()
             .padding(horizontal = 16.dp)
             .padding(top = 16.dp)
     ) {

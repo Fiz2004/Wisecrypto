@@ -1,21 +1,27 @@
 package com.fiz.wisecrypto.ui.screens.main
 
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringArrayResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.fiz.wisecrypto.ui.screens.main.home.detail.HomeDetailScreen
-import com.fiz.wisecrypto.ui.screens.main.home.detail.HomeDetailViewModel
+import com.fiz.wisecrypto.R
 import com.fiz.wisecrypto.ui.screens.main.home.main.HomeScreen
 import com.fiz.wisecrypto.ui.screens.main.home.main.HomeViewModel
 import com.fiz.wisecrypto.ui.screens.main.home.notification.HomeNotificationScreen
 import com.fiz.wisecrypto.ui.screens.main.home.notification.HomeNotificationViewModel
 import com.fiz.wisecrypto.ui.screens.main.home.portfolio.HomePortfolioScreen
 import com.fiz.wisecrypto.ui.screens.main.home.portfolio.HomePortfolioViewModel
-import com.fiz.wisecrypto.ui.screens.main.market.MarketScreen
-import com.fiz.wisecrypto.ui.screens.main.market.MarketViewModel
+import com.fiz.wisecrypto.ui.screens.main.market.detail.MarketDetailScreen
+import com.fiz.wisecrypto.ui.screens.main.market.detail.MarketDetailViewModel
+import com.fiz.wisecrypto.ui.screens.main.market.main.MarketMainScreen
+import com.fiz.wisecrypto.ui.screens.main.market.main.MarketViewModel
+import com.fiz.wisecrypto.ui.screens.main.market.sell.MarketSellScreen
+import com.fiz.wisecrypto.ui.screens.main.market.sell.MarketSellViewModel
 import com.fiz.wisecrypto.ui.screens.main.profile.list_transactions.ProfileListTransactionsScreen
 import com.fiz.wisecrypto.ui.screens.main.profile.list_transactions.ProfileListTransactionsViewModel
 import com.fiz.wisecrypto.ui.screens.main.profile.main.ProfileScreen
@@ -32,7 +38,9 @@ fun MainNavHost(
     navController: NavHostController,
     moveReturn: () -> Unit,
     modifier: Modifier = Modifier,
+    state: LazyListState = rememberLazyListState(),
 ) {
+
     NavHost(
         navController = navController,
         startDestination = NamesMainScreen.Home.name,
@@ -45,7 +53,7 @@ fun MainNavHost(
                 viewModel,
                 moveNotificationScreen = { navController.navigate(NamesHomeScreen.Notification.name) },
                 moveHomePortfolioScreen = { navController.navigate(NamesHomeScreen.Portfolio.name) },
-                moveHomeDetailScreen = { id -> navController.navigate(NamesHomeScreen.Detail.name + "/$id") }
+                moveMarketDetailScreen = { id -> navController.navigate(NamesMarketScreen.Detail.name + "/$id") }
             )
         }
 
@@ -64,27 +72,47 @@ fun MainNavHost(
             HomePortfolioScreen(
                 viewModel,
                 moveHomeMainScreen = { navController.popBackStack() },
-                moveHomeDetailScreen = { id -> navController.navigate(NamesHomeScreen.Detail.name + "/$id") }
+                moveMarketDetailScreen = { id -> navController.navigate(NamesMarketScreen.Detail.name + "/$id") }
             )
         }
 
-        composable(NamesHomeScreen.Detail.name + "/{id}") {
-            val viewModel = hiltViewModel<HomeDetailViewModel>()
+        composable(NamesMarketScreen.Detail.name + "/{id}") {
+            val viewModel = hiltViewModel<MarketDetailViewModel>()
             val id = it.arguments?.getString("id") ?: return@composable
+            viewModel.idCoin = id
+            viewModel.monthNames = stringArrayResource(id = R.array.month_3chars).toList()
+            viewModel.daysNames = stringArrayResource(id = R.array.day_of_week_2chars).toList()
 
-            HomeDetailScreen(
+            MarketDetailScreen(
                 viewModel,
-                id,
-                moveHomeMainScreen = { navController.popBackStack() },
+                moveReturnScreen = { navController.popBackStack() },
+                moveMarketSellScreen = { navController.navigate(NamesMarketScreen.Sell.name + "/$id") },
+                moveMarketBuyScreen = { navController.navigate(NamesMarketScreen.Buy.name + "/$id") }
             )
+        }
+
+        composable(NamesMarketScreen.Sell.name + "/{id}") {
+            val viewModel = hiltViewModel<MarketSellViewModel>()
+            val id = it.arguments?.getString("id") ?: return@composable
+            viewModel.idCoin = id
+
+            MarketSellScreen(
+                viewModel,
+                moveReturn = { navController.popBackStack() },
+            )
+        }
+
+        composable(NamesMarketScreen.Buy.name + "/{id}") {
+            //TODO
         }
 
         composable(NamesMainScreen.Market.name) {
             val viewModel = hiltViewModel<MarketViewModel>()
 
-            MarketScreen(
+            MarketMainScreen(
                 viewModel,
-                moveHomeDetailScreen = { id -> navController.navigate(NamesHomeScreen.Detail.name + "/$id") }
+                state = state,
+                moveMarketDetailScreen = { id -> navController.navigate(NamesMarketScreen.Detail.name + "/$id") }
             )
         }
 
@@ -146,7 +174,12 @@ fun MainNavHost(
 enum class NamesHomeScreen {
     Notification,
     Portfolio,
-    Detail
+}
+
+enum class NamesMarketScreen {
+    Detail,
+    Sell,
+    Buy
 }
 
 enum class NamesProfileScreen {

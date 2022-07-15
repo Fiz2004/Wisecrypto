@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -21,18 +22,20 @@ import com.fiz.wisecrypto.ui.screens.main.home.notification.models.StatusPortfol
 import com.fiz.wisecrypto.ui.screens.main.home.notification.models.TypeNotification
 import com.fiz.wisecrypto.ui.theme.*
 import org.threeten.bp.format.DateTimeFormatter
+import kotlin.math.min
 
 @Composable
 fun NotificationsList(notifications: List<Notification>) {
-    LazyColumn {
-
+    val height = LocalConfiguration.current.screenHeightDp
+    LazyColumn(
+        modifier = Modifier.height(height.dp)
+    ) {
         notifications.forEach { notification ->
             item {
                 NotificationItem(notification)
                 Spacer(modifier = Modifier.height(8.dp))
             }
         }
-
     }
 }
 

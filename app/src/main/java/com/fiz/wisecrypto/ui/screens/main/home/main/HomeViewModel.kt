@@ -3,6 +3,7 @@ package com.fiz.wisecrypto.ui.screens.main.home.main
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fiz.wisecrypto.data.repositories.CoinRepositoryImpl
 import com.fiz.wisecrypto.domain.models.Active
@@ -10,11 +11,13 @@ import com.fiz.wisecrypto.domain.use_case.CurrentUserUseCase
 import com.fiz.wisecrypto.domain.use_case.FormatUseCase
 import com.fiz.wisecrypto.domain.use_case.PortfolioUseCase
 import com.fiz.wisecrypto.ui.util.BaseViewModel
+import com.fiz.wisecrypto.ui.util.LifeCycleEventable
+import com.fiz.wisecrypto.util.Consts.TIME_REFRESH_NETWORK_MS
 import com.fiz.wisecrypto.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -41,7 +44,7 @@ class HomeViewModel @Inject constructor(
                     user ?: return@collectLatest
 
                     val fullName = user.fullName
-                    val balanceUsd = user.balance
+                    val balanceUsd = (user.balance) * coinRepository.getCoefCurrentToUsd()
                     val formatBalanceUsd = formatUseCase.getFormatBalanceUsd(balanceUsd)
 
                     actives = user.actives

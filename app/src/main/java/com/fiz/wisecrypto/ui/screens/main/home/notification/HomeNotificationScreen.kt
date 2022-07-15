@@ -2,10 +2,11 @@ package com.fiz.wisecrypto.ui.screens.main.home.notification
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fiz.wisecrypto.R
-import com.fiz.wisecrypto.ui.screens.main.components.MainColumnWithoutBottomBar
+import com.fiz.wisecrypto.ui.screens.main.components.MainColumn
 import com.fiz.wisecrypto.ui.screens.main.home.notification.components.NotificationsList
 
 @Composable
@@ -13,10 +14,23 @@ fun HomeNotificationScreen(
     viewModel: HomeNotificationViewModel = viewModel(),
     moveHomeMain: () -> Unit
 ) {
+    ReactEffect(viewModel, moveHomeMain)
 
     val viewState = viewModel.viewState
-    val viewEffect = viewModel.viewEffect
+    MainColumn(
+        textToolbar = stringResource(R.string.notification_notifications),
+        onClickBackButton = { viewModel.onEvent(HomeNotificationEvent.BackButtonClicked) }
+    ) {
+        NotificationsList(viewState.notifications)
+    }
+}
 
+@Composable
+private fun ReactEffect(
+    viewModel: HomeNotificationViewModel,
+    moveHomeMain: () -> Unit
+) {
+    val viewEffect = viewModel.viewEffect
     LaunchedEffect(Unit) {
         viewEffect.collect { effect ->
             when (effect) {
@@ -26,14 +40,5 @@ fun HomeNotificationScreen(
             }
         }
     }
-
-    MainColumnWithoutBottomBar(
-        textToolbar = stringResource(R.string.notification_notifications),
-        onClickBackButton = { viewModel.onEvent(HomeNotificationEvent.BackButtonClicked) }
-    ) {
-        NotificationsList(viewState.notifications)
-    }
 }
-
-
 

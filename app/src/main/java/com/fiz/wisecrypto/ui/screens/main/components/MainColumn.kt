@@ -3,19 +3,47 @@ package com.fiz.wisecrypto.ui.screens.main.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.fiz.wisecrypto.R
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
 @Composable
-fun MainColumnWithoutBottomBar(
-    textToolbar: String,
+fun LoadingContent(
+    empty: Boolean,
+    emptyContent: @Composable () -> Unit,
+    loading: Boolean,
+    onRefresh: () -> Unit,
+    content: @Composable () -> Unit
+) {
+    if (empty) {
+        emptyContent()
+    } else {
+        SwipeRefresh(
+            modifier = Modifier.fillMaxSize(),
+            state = rememberSwipeRefreshState(loading),
+            onRefresh = onRefresh,
+            content = content,
+        )
+    }
+}
+
+@Composable
+fun MainColumn(
+    textToolbar: String = "",
     isShowAddWatchList: Boolean = false,
     isValueAddWatchList: Boolean = false,
     onClickBackButton: () -> Unit = {},
@@ -28,40 +56,17 @@ fun MainColumnWithoutBottomBar(
             .background(color = MaterialTheme.colorScheme.surface)
             .padding(horizontal = 16.dp)
     ) {
-        TopSpacer()
-        Toolbar(
-            title = textToolbar,
-            isShowAddWatchList = isShowAddWatchList,
-            isValueAddWatchList = isValueAddWatchList,
-            onClickBackButton = onClickBackButton,
-            onClickAddWatchList = onClickAddWatchList
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        content()
-        NavigationBar()
-    }
-}
-
-@Composable
-fun MainColumnWithBottomBar(content: @Composable ColumnScope.() -> Unit) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = MaterialTheme.colorScheme.surface)
-            .padding(horizontal = 16.dp)
-    ) {
-        TopSpacer()
+        if (textToolbar != "")
+            Toolbar(
+                title = textToolbar,
+                isShowAddWatchList = isShowAddWatchList,
+                isValueAddWatchList = isValueAddWatchList,
+                onClickBackButton = onClickBackButton,
+                onClickAddWatchList = onClickAddWatchList
+            )
         Spacer(modifier = Modifier.height(16.dp))
         content()
     }
-}
-
-@Composable
-fun TopSpacer() {
-    Spacer(
-        modifier = Modifier
-            .windowInsetsTopHeight(WindowInsets.statusBars)
-    )
 }
 
 @Composable
@@ -74,10 +79,8 @@ fun Toolbar(
 ) {
 
     val iconAddWatchList = if (isValueAddWatchList)
-//        Icons.Filled.Star
         R.drawable.detail_ic_star_full
     else
-//    Icons.Default.Star
         R.drawable.detail_ic_star_empty
 
     Row(

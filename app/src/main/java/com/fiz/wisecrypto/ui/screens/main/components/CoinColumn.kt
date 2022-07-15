@@ -3,7 +3,6 @@ package com.fiz.wisecrypto.ui.screens.main.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -16,6 +15,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.fiz.wisecrypto.R
 import com.fiz.wisecrypto.domain.models.Coin
+import com.fiz.wisecrypto.ui.components.IconCoin
 import com.fiz.wisecrypto.ui.screens.main.home.main.components.RelativeLabel
 import com.fiz.wisecrypto.ui.screens.main.models.toCoinUi
 import com.fiz.wisecrypto.ui.theme.MulishBold
@@ -23,19 +23,18 @@ import com.fiz.wisecrypto.ui.theme.MulishRegular
 import com.skydoves.landscapist.glide.GlideImage
 
 @Composable
-fun CoinColumn(coins: List<Coin>, moveHomeDetailScreen: (String) -> Unit) {
-    LazyColumn {
-        coins.forEach {
-            item {
-                CoinItem(it, moveHomeDetailScreen)
-            }
-        }
+fun CoinColumn(
+    coins: List<Coin>,
+    moveHomeDetailScreen: (String) -> Unit
+) {
+    coins.forEach {
+        CoinItem(it, moveHomeDetailScreen)
     }
 }
 
 
 @Composable
-private fun CoinItem(coin: Coin, moveHomeDetailScreen: (String) -> Unit) {
+fun CoinItem(coin: Coin, moveHomeDetailScreen: (String) -> Unit) {
 
     val coinUi = coin.toCoinUi()
 
@@ -50,22 +49,7 @@ private fun CoinItem(coin: Coin, moveHomeDetailScreen: (String) -> Unit) {
             .clickable { moveHomeDetailScreen(coin.id) },
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Box(
-            modifier = Modifier
-                .size(64.dp)
-                .clip(shape = RoundedCornerShape(10.dp)),
-            contentAlignment = Alignment.Center
-        ) {
-            GlideImage(
-                modifier = Modifier
-                    .size(40.dp),
-                imageModel = coinUi.icon,
-                contentScale = ContentScale.Crop,
-                placeHolder = painterResource(id = R.drawable.placeholder_loading),
-                error = painterResource(id = R.drawable.placeholder_error),
-                contentDescription = null
-            )
-        }
+        IconCoin(iconUrl = coinUi.icon)
         Spacer(modifier = Modifier.width(16.dp))
         Column {
             Text(

@@ -1,4 +1,4 @@
-package com.fiz.wisecrypto.ui.screens.main.home.detail.components
+package com.fiz.wisecrypto.ui.screens.main.market.detail.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -14,6 +14,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.fiz.wisecrypto.R
+import com.fiz.wisecrypto.ui.components.IconCoin
 import com.fiz.wisecrypto.ui.screens.main.models.ActiveUi
 import com.fiz.wisecrypto.ui.theme.hint
 import com.skydoves.landscapist.glide.GlideImage
@@ -54,25 +55,7 @@ fun YourActiveItemDetailInfo(active: ActiveUi) {
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-
-            Box(
-                modifier = Modifier
-                    .size(40.dp)
-                    .background(color = MaterialTheme.colorScheme.surface)
-                    .clip(shape = RoundedCornerShape(10.dp)),
-                contentAlignment = Alignment.Center
-            ) {
-                GlideImage(
-                    modifier = Modifier
-                        .size(32.dp),
-                    imageModel = active.icon,
-                    contentScale = ContentScale.Crop,
-                    placeHolder = painterResource(id = R.drawable.placeholder_loading),
-                    error = painterResource(id = R.drawable.placeholder_error),
-                    contentDescription = null
-                )
-            }
-
+            IconCoin(iconUrl = active.icon)
             Spacer(modifier = Modifier.width(8.dp))
 
             Column {

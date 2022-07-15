@@ -5,8 +5,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fiz.wisecrypto.R
-import com.fiz.wisecrypto.ui.screens.main.components.MainColumnWithoutBottomBar
-import com.fiz.wisecrypto.ui.screens.main.market.components.FilterRow
+import com.fiz.wisecrypto.ui.screens.main.components.MainColumn
+import com.fiz.wisecrypto.ui.screens.main.market.main.components.FilterRow
 import com.fiz.wisecrypto.ui.screens.main.profile.list_transactions.components.TransactionList
 
 
@@ -36,7 +36,7 @@ fun ProfileListTransactionsScreen(
         }
     }
 
-    MainColumnWithoutBottomBar(
+    MainColumn(
         textToolbar = stringResource(R.string.list_transactions_title),
         onClickBackButton = { viewModel.onEvent(ProfileListTransactionsEvent.BackButtonClicked) }
     ) {

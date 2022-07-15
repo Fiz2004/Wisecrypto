@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fiz.wisecrypto.R
 import com.fiz.wisecrypto.ui.components.WiseCryptoButton
-import com.fiz.wisecrypto.ui.screens.main.components.MainColumnWithoutBottomBar
+import com.fiz.wisecrypto.ui.screens.main.components.MainColumn
 import com.fiz.wisecrypto.ui.theme.Red
 
 @Composable
@@ -49,7 +49,7 @@ fun ProfilePaymentScreen(
         }
     }
 
-    MainColumnWithoutBottomBar(
+    MainColumn(
         textToolbar = stringResource(R.string.payment_title),
         onClickBackButton = { viewModel.onEvent(ProfilePaymentEvent.BackButtonClicked) }
     ) {
