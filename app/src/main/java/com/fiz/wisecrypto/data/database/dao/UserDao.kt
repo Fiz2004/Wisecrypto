@@ -28,6 +28,12 @@ interface UserDao {
     @Query("UPDATE UserEntity SET password=:password WHERE email =:email")
     suspend fun changePassword(email: String, password: String)
 
+    @Query("UPDATE ActiveEntity SET count=:count WHERE id =:id")
+    suspend fun saveActives(id: String, count: Double)
+
+    @Query("UPDATE UserEntity SET balance=:balance WHERE email =:email")
+    suspend fun saveBalance(email: String, balance: Double)
+
     @Query("UPDATE UserEntity SET watchList=:watchList WHERE email =:email")
     suspend fun changeWatchList(email: String, watchList: List<String>)
 
@@ -48,6 +54,23 @@ interface UserDao {
 
     @Delete
     suspend fun delete(userEntity: UserEntity)
+
+    @Transaction
+    suspend fun saveActivesAndSaveBalance(
+        email: String,
+        activeId: String,
+        newValueActiveCount: Double,
+        balance: Double
+    ) {
+        if (newValueActiveCount == 0.0)
+            deleteActives(activeId)
+        else
+            saveActives(activeId, newValueActiveCount)
+        saveBalance(email, balance)
+    }
+
+    @Query("DELETE FROM ActiveEntity WHERE id =:id")
+    suspend fun deleteActives(id: String)
 
     @Query("DELETE FROM UserEntity")
     suspend fun deleteAll()

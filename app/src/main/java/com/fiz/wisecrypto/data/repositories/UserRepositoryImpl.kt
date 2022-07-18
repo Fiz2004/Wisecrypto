@@ -24,6 +24,7 @@ class UserRepositoryImpl @Inject constructor(
         userName: String,
         email: String,
         password: String,
+        balance: Double,
         watchList: List<String> = listOf(
             "bitcoin",
             "ethereum",
@@ -54,6 +55,7 @@ class UserRepositoryImpl @Inject constructor(
                     email = email.trim().lowercase(),
                     password = password.trim().lowercase(),
                     watchList = watchList,
+                    balance = balance,
                     actives = portfolio.map { it.toActiveEntity(email.trim().lowercase()) }
                 )
                 userLocalDataSource.saveUser(userEntity)
@@ -125,6 +127,18 @@ class UserRepositoryImpl @Inject constructor(
             val newWatchList = user.watchList.toMutableList()
             newWatchList.remove(name)
             userLocalDataSource.changeWatchList(checkEmail, newWatchList)
+        }
+    }
+
+    suspend fun sellActive(email: String, idCoin: String, count: Double, price: Double): Boolean {
+        return withContext(dispatcher) {
+            val checkEmail = email.trim().lowercase()
+            val user = userLocalDataSource.getUser(checkEmail) ?: return@withContext false
+            val newActives = user.actives.toMutableList()
+            val active = newActives.find { it.id == idCoin } ?: return@withContext false
+            val newValue = active.count - count
+            val newBalance = user.balance + price
+            userLocalDataSource.saveActivesAndBalance(checkEmail, idCoin, newValue, newBalance)
         }
     }
 }

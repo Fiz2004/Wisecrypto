@@ -97,4 +97,20 @@ class UserLocalDataSourceImpl @Inject constructor(
             }
         }
     }
+
+    suspend fun saveActivesAndBalance(
+        email: String,
+        activeId: String,
+        newValueActiveCount: Double,
+        balance: Double
+    ): Boolean {
+        return withContext(dispatcher) {
+            try {
+                userDao.saveActivesAndSaveBalance(email, activeId, newValueActiveCount, balance)
+                true
+            } catch (e: Exception) {
+                false
+            }
+        }
+    }
 }
