@@ -1,6 +1,6 @@
 package com.fiz.wisecrypto.ui.screens.main.profile.list_transactions
 
-import com.fiz.wisecrypto.ui.screens.main.profile.list_transactions.models.Transaction
+import com.fiz.wisecrypto.domain.models.Transaction
 
 data class ProfileListTransactionsViewState(
     val fullName: String = "",

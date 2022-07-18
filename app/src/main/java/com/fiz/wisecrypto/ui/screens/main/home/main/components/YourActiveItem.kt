@@ -31,8 +31,8 @@ fun YourActiveItem(
                 color = MaterialTheme.colorScheme.onPrimary,
                 shape = RoundedCornerShape(10.dp)
             )
-            .padding(16.dp)
             .clickable { moveHomeDetailScreen(active.id) }
+            .padding(16.dp)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically

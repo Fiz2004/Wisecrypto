@@ -2,7 +2,9 @@ package com.fiz.wisecrypto.data.data_source
 
 import com.fiz.wisecrypto.data.database.dao.UserDao
 import com.fiz.wisecrypto.data.entity.ActiveEntity
+import com.fiz.wisecrypto.data.entity.TransactionEntity
 import com.fiz.wisecrypto.data.entity.UserEntity
+import com.fiz.wisecrypto.domain.models.StatusTransaction
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -56,7 +58,10 @@ class UserLocalDataSourceImpl @Inject constructor(
         return flow {
             try {
                 emitAll(userDao.observeUserByEmail(checkEmail).map {
-                    it.copy(actives = userDao.getActives(checkEmail))
+                    it.copy(
+                        actives = userDao.getActives(checkEmail),
+                        transactions = userDao.getTransactions(checkEmail)
+                    )
                 })
             } catch (e: Exception) {
                 emit(null)
@@ -102,13 +107,16 @@ class UserLocalDataSourceImpl @Inject constructor(
     suspend fun saveActivesAndBalance(
         email: String,
         actives: List<ActiveEntity>,
-        balance: Double
+        balance: Double,
+        transactionEntity: TransactionEntity
     ): Boolean {
         return withContext(dispatcher) {
             try {
-                userDao.saveActivesAndSaveBalance(email, actives, balance)
+                userDao.saveActivesAndSaveBalance(email, actives, balance, transactionEntity)
+                userDao.update(transactionEntity.copy(status = StatusTransaction.Success))
                 true
             } catch (e: Exception) {
+                userDao.update(transactionEntity.copy(status = StatusTransaction.Fail))
                 false
             }
         }

@@ -2,17 +2,22 @@ package com.fiz.wisecrypto.data.repositories
 
 import com.fiz.wisecrypto.data.data_source.UserLocalDataSourceImpl
 import com.fiz.wisecrypto.data.entity.ActiveEntity
+import com.fiz.wisecrypto.data.entity.TransactionEntity
 import com.fiz.wisecrypto.data.entity.UserEntity
 import com.fiz.wisecrypto.data.entity.toActiveEntity
 import com.fiz.wisecrypto.domain.models.Active
+import com.fiz.wisecrypto.domain.models.StatusTransaction
+import com.fiz.wisecrypto.domain.models.TypeTransaction
 import com.fiz.wisecrypto.domain.models.User
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
+import org.threeten.bp.LocalDateTime
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.random.Random
 
 @Singleton
 class UserRepositoryImpl @Inject constructor(
@@ -142,7 +147,20 @@ class UserRepositoryImpl @Inject constructor(
             active.count = newValue
             if (active.count == 0.0)
                 newActives.remove(active)
-            userLocalDataSource.saveActivesAndBalance(checkEmail, newActives, newBalance)
+            val transactionEntity = TransactionEntity(
+                status = StatusTransaction.Process,
+                type = TypeTransaction.Sell(count, price),
+                textDescription = "$count $idCoin -> ${price}$",
+                id = "TS-" + Random.nextInt(10000).toString(),
+                emailId = checkEmail,
+                data = LocalDateTime.now()
+            )
+            userLocalDataSource.saveActivesAndBalance(
+                checkEmail,
+                newActives,
+                newBalance,
+                transactionEntity
+            )
         }
     }
 
@@ -172,7 +190,20 @@ class UserRepositoryImpl @Inject constructor(
                 val newValue = active.count + valueCoin
                 active.count = newValue
             }
-            userLocalDataSource.saveActivesAndBalance(checkEmail, newActives, newBalance)
+            val transactionEntity = TransactionEntity(
+                status = StatusTransaction.Process,
+                type = TypeTransaction.Buy(currency, valueCoin),
+                textDescription = "${currency}$ -> $valueCoin $idCoin",
+                id = "TS-" + Random.nextInt(10000).toString(),
+                emailId = checkEmail,
+                data = LocalDateTime.now()
+            )
+            userLocalDataSource.saveActivesAndBalance(
+                checkEmail,
+                newActives,
+                newBalance,
+                transactionEntity
+            )
         }
     }
 }

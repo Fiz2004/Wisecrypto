@@ -2,6 +2,7 @@ package com.fiz.wisecrypto.data.database.dao
 
 import androidx.room.*
 import com.fiz.wisecrypto.data.entity.ActiveEntity
+import com.fiz.wisecrypto.data.entity.TransactionEntity
 import com.fiz.wisecrypto.data.entity.UserEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -18,6 +19,9 @@ interface UserDao {
 
     @Query("SELECT * FROM ActiveEntity WHERE emailId =:emailId")
     suspend fun getActives(emailId: String): List<ActiveEntity>
+
+    @Query("SELECT * FROM TransactionEntity WHERE emailId =:emailId")
+    suspend fun getTransactions(emailId: String): List<TransactionEntity>
 
     @Query("SELECT EXISTS (SELECT* FROM UserEntity WHERE (email =:email AND password =:password))")
     suspend fun isValidateEmailPassword(email: String, password: String): Boolean
@@ -46,8 +50,14 @@ interface UserDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertActives(actives: List<ActiveEntity>)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertTransactions(transactions: List<TransactionEntity>)
+
     @Update
     suspend fun update(userEntity: UserEntity)
+
+    @Update
+    suspend fun update(transactionEntity: TransactionEntity)
 
     @Update
     suspend fun updateAll(userEntity: List<UserEntity>)
@@ -59,15 +69,20 @@ interface UserDao {
     suspend fun saveActivesAndSaveBalance(
         email: String,
         actives: List<ActiveEntity>,
-        balance: Double
+        balance: Double,
+        transactionEntity: TransactionEntity
     ) {
         deleteActives()
         insertActives(actives)
+        insertTransactions(listOf(transactionEntity))
         saveBalance(email, balance)
     }
 
     @Query("DELETE FROM ActiveEntity")
     suspend fun deleteActives()
+
+    @Query("DELETE FROM TransactionEntity")
+    suspend fun deleteTransactions()
 
     @Query("DELETE FROM UserEntity")
     suspend fun deleteAll()

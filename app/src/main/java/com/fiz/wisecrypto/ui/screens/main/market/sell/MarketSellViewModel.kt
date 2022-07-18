@@ -11,6 +11,7 @@ import com.fiz.wisecrypto.domain.use_case.FormatUseCase
 import com.fiz.wisecrypto.ui.util.BaseViewModel
 import com.fiz.wisecrypto.ui.util.ERROR_SELL
 import com.fiz.wisecrypto.ui.util.ERROR_TEXT_FIELD
+import com.fiz.wisecrypto.ui.util.toDouble2
 import com.fiz.wisecrypto.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -90,14 +91,14 @@ class MarketSellViewModel @Inject constructor(
 
             try {
                 val coin = viewState.coinForSell
-                if (coin.toDouble() > viewState.valueActiveCoin.toDouble())
+                if (coin.toDouble2() > viewState.valueActiveCoin.toDouble2())
                     throw Exception("No money")
 
                 if (userRepository.sellActive(
                         email ?: return@launch,
                         idCoin ?: return@launch,
-                        coin.toDouble(),
-                        viewState.valueCurrency.toDouble()
+                        coin.toDouble2(),
+                        viewState.valueCurrency.toDouble2()
                     )
                 )
                     viewEffect.emit(MarketSellViewEffect.MoveReturn)
@@ -134,7 +135,9 @@ class MarketSellViewModel @Inject constructor(
                 val coin = result.data ?: return
                 viewState = viewState.copy(
                     icon = coin.image,
-                    valueCurrency = formatUseCase.getFormatBalance(coin.currentPrice * viewState.coinForSell.toDouble()),
+                    valueCurrency = formatUseCase.getFormatBalance(
+                        coin.currentPrice * viewState.coinForSell.toDouble2()
+                    ),
                     nameCoin = coin.name,
                     symbolCoin = coin.symbol.uppercase()
                 )

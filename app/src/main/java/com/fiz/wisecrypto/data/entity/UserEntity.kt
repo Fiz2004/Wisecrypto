@@ -16,7 +16,9 @@ data class UserEntity(
     var balance: Double = 0.0,
     var watchList: List<String> = listOf(),
     @Ignore
-    var actives: List<ActiveEntity> = listOf()
+    var actives: List<ActiveEntity> = listOf(),
+    @Ignore
+    var transactions: List<TransactionEntity> = listOf()
 ) {
     fun toUser(): User {
         return User(
@@ -26,7 +28,8 @@ data class UserEntity(
             fullName = fullName,
             balance = balance,
             watchList = watchList,
-            actives = actives.map { it.toActive() }
+            actives = actives.map { it.toActive() },
+            transactions = transactions.map { it.toTransaction() }
         )
     }
 }

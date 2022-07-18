@@ -4,6 +4,13 @@ import android.content.Context
 import android.widget.Toast
 import com.fiz.wisecrypto.R
 
+fun String.toDouble2(): Double {
+    return this.replace(
+        ",",
+        "."
+    ).toDouble()
+}
+
 fun showError(
     context: Context,
     message: String?

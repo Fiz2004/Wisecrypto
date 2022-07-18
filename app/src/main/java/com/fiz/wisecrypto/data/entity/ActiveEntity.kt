@@ -31,8 +31,6 @@ data class ActiveEntity(
             priceForBuy = priceForBuy
         )
     }
-
-
 }
 
 fun Active.toActiveEntity(email: String): ActiveEntity {
