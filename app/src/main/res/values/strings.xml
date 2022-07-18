@@ -107,7 +107,7 @@
     <string name="profile_exit_description">Закройте приложение</string>
     <string name="profile_current_balance">Текущий баланс</string>
     <string name="profile_pull">Отправить</string>
-    <string name="profile_add">Добавить</string>
+    <string name="profile_add">Пополнить</string>
     <string name="profile_current_balance_value">"= %1$s рублей"</string>
     <string name="profile_confirm_exit">Вы уверены, что хотите выйти?</string>
     <string name="profile_exit">Выход</string>
@@ -198,5 +198,16 @@
     <string name="sell_one_coin_title">Стоимость %1$s</string>
     <string name="sell_one_coin">%1$s %2$s</string>
     <string name="sell_alert">Результаты продаж будут отправлены на баланс этого приложения</string>
+    <string name="sell_sell">Продать</string>
+
+    <!--    Buy-->
+    <string name="buy_toolbar">Купить</string>
+    <string name="buy_buy">Купить</string>
+    <string name="buy_alert">Покупки уменьшат баланс в этом приложении убедитесь, что ваш баланс достаточен</string>
+    <string name="buy_add">Пополнить</string>
+    <string name="buy_one_currency_title">Стоимость %1$s</string>
+    <string name="buy_one_currency">%1$s%2$s</string>
+    <string name="buy_one_coin_title">Количество %1$s</string>
+    <string name="buy_one_coin">%1$s %2$s</string>
 
 </resources>

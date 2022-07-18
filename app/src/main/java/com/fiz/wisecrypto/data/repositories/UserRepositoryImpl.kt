@@ -1,6 +1,7 @@
 package com.fiz.wisecrypto.data.repositories
 
 import com.fiz.wisecrypto.data.data_source.UserLocalDataSourceImpl
+import com.fiz.wisecrypto.data.entity.ActiveEntity
 import com.fiz.wisecrypto.data.entity.UserEntity
 import com.fiz.wisecrypto.data.entity.toActiveEntity
 import com.fiz.wisecrypto.domain.models.Active
@@ -138,7 +139,40 @@ class UserRepositoryImpl @Inject constructor(
             val active = newActives.find { it.id == idCoin } ?: return@withContext false
             val newValue = active.count - count
             val newBalance = user.balance + price
-            userLocalDataSource.saveActivesAndBalance(checkEmail, idCoin, newValue, newBalance)
+            active.count = newValue
+            if (active.count == 0.0)
+                newActives.remove(active)
+            userLocalDataSource.saveActivesAndBalance(checkEmail, newActives, newBalance)
+        }
+    }
+
+    suspend fun buyActive(
+        email: String,
+        idCoin: String,
+        currency: Double,
+        valueCoin: Double
+    ): Boolean {
+        return withContext(dispatcher) {
+            val checkEmail = email.trim().lowercase()
+            val user = userLocalDataSource.getUser(checkEmail) ?: return@withContext false
+            val newActives = user.actives.toMutableList()
+            val active = newActives.find { it.id == idCoin }
+            val newBalance = user.balance - currency
+            if (active == null) {
+                val newValue = valueCoin
+                newActives.add(
+                    ActiveEntity(
+                        id = idCoin,
+                        count = newValue,
+                        emailId = email,
+                        priceForBuy = currency / valueCoin
+                    )
+                )
+            } else {
+                val newValue = active.count + valueCoin
+                active.count = newValue
+            }
+            userLocalDataSource.saveActivesAndBalance(checkEmail, newActives, newBalance)
         }
     }
 }

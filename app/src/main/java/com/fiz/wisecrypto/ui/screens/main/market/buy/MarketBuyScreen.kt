@@ -1,5 +1,6 @@
-package com.fiz.wisecrypto.ui.screens.main.market.sell
+package com.fiz.wisecrypto.ui.screens.main.market.buy
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -19,7 +20,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fiz.wisecrypto.R
-import com.fiz.wisecrypto.ui.components.IconCoin
 import com.fiz.wisecrypto.ui.components.TextFieldWithHeader
 import com.fiz.wisecrypto.ui.components.Title
 import com.fiz.wisecrypto.ui.components.WiseCryptoButton
@@ -32,43 +32,64 @@ import com.fiz.wisecrypto.ui.util.LifeCycleEffect
 import com.fiz.wisecrypto.ui.util.showError
 
 @Composable
-fun MarketSellScreen(
-    viewModel: MarketSellViewModel = viewModel(),
+fun MarketBuyScreen(
+    viewModel: MarketBuyViewModel = viewModel(),
     state: LazyListState = rememberLazyListState(),
     moveReturn: () -> Unit,
+    moveAddBalanceScreen: () -> Unit = {}
 ) {
     LifeCycleEffect(viewModel)
-    ReactEffect(viewModel, moveReturn)
+    ReactEffect(viewModel, moveReturn, moveAddBalanceScreen)
 
     val viewState = viewModel.viewState
 
     Box {
         MainColumn(
-            textToolbar = stringResource(R.string.sell_toolbar),
-            onClickBackButton = { viewModel.onEvent(MarketSellEvent.BackButtonClicked) }
+            textToolbar = stringResource(R.string.buy_toolbar),
+            onClickBackButton = { viewModel.onEvent(MarketBuyEvent.BackButtonClicked) }
         ) {
-            Row(
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(
-                        color = MaterialTheme.colorScheme.onPrimary,
-                        shape = RoundedCornerShape(10.dp)
-                    )
-                    .padding(16.dp),
-                verticalAlignment = Alignment.CenterVertically
+                    .height(112.dp)
+                    .background(color = MaterialTheme.colorScheme.onPrimary)
             ) {
-                IconCoin(iconUrl = viewState.icon)
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = viewState.valueActiveCoin + " " + viewState.symbolCoin,
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                Image(
+                    modifier = Modifier.fillMaxSize(),
+                    painter = painterResource(id = R.drawable.background_balance),
+                    contentDescription = null
                 )
-                Spacer(modifier = Modifier.weight(1f))
-                ActionButton(
-                    text = R.string.sell_sell_all,
-                    onClick = { viewModel.onEvent(MarketSellEvent.SellAllButtonClicked) }
-                )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(
+                            color = MaterialTheme.colorScheme.onPrimary,
+                            shape = RoundedCornerShape(10.dp)
+                        )
+                        .padding(
+                            vertical = 26.dp,
+                            horizontal = 24.dp
+                        ),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column {
+                        Text(
+                            text = stringResource(R.string.home_your_balance),
+                            style = MaterialTheme.typography.displayMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Text(
+                            text = "$${viewState.valueBalance}",
+                            style = MaterialTheme.typography.displayLarge,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                    Spacer(modifier = Modifier.weight(1f))
+                    ActionButton(
+                        text = R.string.buy_add,
+                        onClick = { viewModel.onEvent(MarketBuyEvent.AddBalanceClicked) }
+                    )
+                }
             }
 
             LazyColumn(state = state) {
@@ -77,19 +98,25 @@ fun MarketSellScreen(
                         Spacer(modifier = Modifier.height(24.dp))
                         TextFieldWithHeader(
                             textHeader = stringResource(
-                                id = R.string.sell_one_coin_title,
-                                viewState.nameCoin
+                                id = R.string.buy_one_currency_title,
+                                viewState.nameCurrency
                             ),
                             text = stringResource(
-                                id = R.string.sell_one_coin,
-                                viewState.coinForSell,
-                                viewState.symbolCoin
+                                id = R.string.buy_one_currency,
+                                viewState.symbolCurrency,
+                                viewState.currencyForBuy
                             ),
-                            onValueChange = { viewModel.onEvent(MarketSellEvent.ValueCoinChanged(it)) },
+                            onValueChange = {
+                                viewModel.onEvent(
+                                    MarketBuyEvent.ValueCurrencyChanged(
+                                        it
+                                    )
+                                )
+                            },
                             textHint = stringResource(
-                                id = R.string.sell_one_coin,
-                                viewState.coinForSell,
-                                viewState.symbolCoin
+                                id = R.string.buy_one_currency,
+                                viewState.symbolCurrency,
+                                viewState.currencyForBuy
                             )
                         )
                     }
@@ -97,7 +124,7 @@ fun MarketSellScreen(
                 item {
                     Column {
                         Spacer(modifier = Modifier.height(18.dp))
-                        Title(text = R.string.sell_one_coin_title, viewState.nameCurrency)
+                        Title(text = R.string.buy_one_coin_title, viewState.nameCoin)
                         Text(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -109,8 +136,8 @@ fun MarketSellScreen(
                                 .padding(horizontal = 16.dp),
                             text = stringResource(
                                 id = R.string.sell_one_coin,
-                                viewState.symbolCurrency,
-                                viewState.valueCurrency
+                                viewState.valueCoin,
+                                viewState.symbolCoin
                             ),
                             style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -140,7 +167,7 @@ fun MarketSellScreen(
                         Text(
                             modifier = Modifier
                                 .fillMaxWidth(),
-                            text = stringResource(R.string.sell_alert),
+                            text = stringResource(R.string.buy_alert),
                             style = MaterialTheme.typography.bodyMedium2,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -158,9 +185,9 @@ fun MarketSellScreen(
         ) {
             WiseCryptoButton(
                 modifier = Modifier.fillMaxWidth(),
-                text = R.string.sell_sell,
-                color = MaterialTheme.colorScheme.secondary,
-                onClick = { viewModel.onEvent(MarketSellEvent.SellButtonClicked) }
+                text = R.string.buy_buy,
+                color = MaterialTheme.colorScheme.primary,
+                onClick = { viewModel.onEvent(MarketBuyEvent.BuyButtonClicked) }
             )
         }
     }
@@ -169,8 +196,9 @@ fun MarketSellScreen(
 
 @Composable
 private fun ReactEffect(
-    viewModel: MarketSellViewModel,
-    moveReturn: () -> Unit
+    viewModel: MarketBuyViewModel,
+    moveReturn: () -> Unit,
+    moveAddBalanceScreen: () -> Unit
 ) {
     val viewEffect = viewModel.viewEffect
     val context = LocalContext.current
@@ -178,8 +206,9 @@ private fun ReactEffect(
     LaunchedEffect(Unit) {
         viewEffect.collect { effect ->
             when (effect) {
-                MarketSellViewEffect.MoveReturn -> moveReturn()
-                is MarketSellViewEffect.ShowError -> showError(context, effect.message)
+                MarketBuyViewEffect.MoveReturn -> moveReturn()
+                is MarketBuyViewEffect.ShowError -> showError(context, effect.message)
+                MarketBuyViewEffect.AddBalanceClicked -> moveAddBalanceScreen()
             }
         }
     }

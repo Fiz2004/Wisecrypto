@@ -1,6 +1,7 @@
 package com.fiz.wisecrypto.data.data_source
 
 import com.fiz.wisecrypto.data.database.dao.UserDao
+import com.fiz.wisecrypto.data.entity.ActiveEntity
 import com.fiz.wisecrypto.data.entity.UserEntity
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -100,13 +101,12 @@ class UserLocalDataSourceImpl @Inject constructor(
 
     suspend fun saveActivesAndBalance(
         email: String,
-        activeId: String,
-        newValueActiveCount: Double,
+        actives: List<ActiveEntity>,
         balance: Double
     ): Boolean {
         return withContext(dispatcher) {
             try {
-                userDao.saveActivesAndSaveBalance(email, activeId, newValueActiveCount, balance)
+                userDao.saveActivesAndSaveBalance(email, actives, balance)
                 true
             } catch (e: Exception) {
                 false

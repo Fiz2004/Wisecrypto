@@ -58,19 +58,16 @@ interface UserDao {
     @Transaction
     suspend fun saveActivesAndSaveBalance(
         email: String,
-        activeId: String,
-        newValueActiveCount: Double,
+        actives: List<ActiveEntity>,
         balance: Double
     ) {
-        if (newValueActiveCount == 0.0)
-            deleteActives(activeId)
-        else
-            saveActives(activeId, newValueActiveCount)
+        deleteActives()
+        insertActives(actives)
         saveBalance(email, balance)
     }
 
-    @Query("DELETE FROM ActiveEntity WHERE id =:id")
-    suspend fun deleteActives(id: String)
+    @Query("DELETE FROM ActiveEntity")
+    suspend fun deleteActives()
 
     @Query("DELETE FROM UserEntity")
     suspend fun deleteAll()

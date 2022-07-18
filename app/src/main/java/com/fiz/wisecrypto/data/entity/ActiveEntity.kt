@@ -21,7 +21,7 @@ data class ActiveEntity(
     @PrimaryKey
     val id: String = "",
     val emailId: String = "",
-    val count: Double = 0.0,
+    var count: Double = 0.0,
     val priceForBuy: Double = 0.0
 ) {
     fun toActive(): Active {

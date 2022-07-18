@@ -16,6 +16,8 @@ import com.fiz.wisecrypto.ui.screens.main.home.notification.HomeNotificationScre
 import com.fiz.wisecrypto.ui.screens.main.home.notification.HomeNotificationViewModel
 import com.fiz.wisecrypto.ui.screens.main.home.portfolio.HomePortfolioScreen
 import com.fiz.wisecrypto.ui.screens.main.home.portfolio.HomePortfolioViewModel
+import com.fiz.wisecrypto.ui.screens.main.market.buy.MarketBuyScreen
+import com.fiz.wisecrypto.ui.screens.main.market.buy.MarketBuyViewModel
 import com.fiz.wisecrypto.ui.screens.main.market.detail.MarketDetailScreen
 import com.fiz.wisecrypto.ui.screens.main.market.detail.MarketDetailViewModel
 import com.fiz.wisecrypto.ui.screens.main.market.main.MarketMainScreen
@@ -103,7 +105,14 @@ fun MainNavHost(
         }
 
         composable(NamesMarketScreen.Buy.name + "/{id}") {
-            //TODO
+            val viewModel = hiltViewModel<MarketBuyViewModel>()
+            val id = it.arguments?.getString("id") ?: return@composable
+            viewModel.idCoin = id
+
+            MarketBuyScreen(
+                viewModel,
+                moveReturn = { navController.popBackStack() },
+            )
         }
 
         composable(NamesMainScreen.Market.name) {
