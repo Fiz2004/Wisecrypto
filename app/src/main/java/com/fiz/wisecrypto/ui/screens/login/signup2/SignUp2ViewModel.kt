@@ -90,6 +90,7 @@ class SignUp2ViewModel @Inject constructor(private val userRepository: UserRepos
                         fullName = fullName,
                         numberPhone = numberPhone,
                         userName = userName,
+                        balance = 0.0,
                         email = viewState.email,
                         password = viewState.password,
                     )
