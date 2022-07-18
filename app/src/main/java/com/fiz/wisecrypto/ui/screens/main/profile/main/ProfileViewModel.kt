@@ -35,10 +35,10 @@ class ProfileViewModel @Inject constructor(
                 .collectLatest { user ->
                     user ?: return@collectLatest
 
-                    val balance = user.balance
+                    val balance = user.balance / coinRepository.getCoefCurrentToUsd()
                     val formatBalance = formatUseCase.getFormatBalance(balance)
 
-                    val balanceUsd = (user.balance) * coinRepository.getCoefCurrentToUsd()
+                    val balanceUsd = user.balance
                     val formatBalanceUsd = formatUseCase.getFormatBalanceUsd(balanceUsd)
                     viewState = viewState.copy(
                         fullName = user.fullName,

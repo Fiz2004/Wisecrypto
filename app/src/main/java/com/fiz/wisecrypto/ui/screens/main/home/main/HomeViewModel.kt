@@ -3,19 +3,18 @@ package com.fiz.wisecrypto.ui.screens.main.home.main
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fiz.wisecrypto.data.repositories.CoinRepositoryImpl
 import com.fiz.wisecrypto.domain.models.Active
 import com.fiz.wisecrypto.domain.use_case.CurrentUserUseCase
 import com.fiz.wisecrypto.domain.use_case.FormatUseCase
 import com.fiz.wisecrypto.domain.use_case.PortfolioUseCase
-import com.fiz.wisecrypto.util.Consts.TIME_REFRESH_NETWORK_MS
+import com.fiz.wisecrypto.ui.util.BaseViewModel
 import com.fiz.wisecrypto.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -25,14 +24,12 @@ class HomeViewModel @Inject constructor(
     private val portfolioUseCase: PortfolioUseCase,
     private val coinRepository: CoinRepositoryImpl,
 
-    ) : ViewModel() {
-    var viewState by mutableStateOf(HomeViewState())
+    ) : BaseViewModel(){
+    var viewState by mutableStateOf(HomeViewState(isLoading = true))
         private set
 
     var viewEffect = MutableSharedFlow<HomeViewEffect>()
         private set
-
-    private var jobRefresh: Job? = null
 
     var actives: List<Active> = listOf()
     var watchlist: List<String> = listOf()
@@ -44,7 +41,7 @@ class HomeViewModel @Inject constructor(
                     user ?: return@collectLatest
 
                     val fullName = user.fullName
-                    val balanceUsd = (user.balance) * coinRepository.getCoefCurrentToUsd()
+                    val balanceUsd = user.balance
                     val formatBalanceUsd = formatUseCase.getFormatBalanceUsd(balanceUsd)
 
                     actives = user.actives
@@ -60,6 +57,7 @@ class HomeViewModel @Inject constructor(
 
     fun onEvent(event: HomeEvent) {
         when (event) {
+            HomeEvent.OnRefresh -> onRefresh()
             HomeEvent.Started -> started()
             HomeEvent.Stopped -> stopped()
             HomeEvent.NotificationClicked -> notificationClicked()
@@ -80,17 +78,13 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun started() {
-        if (jobRefresh == null)
-            jobRefresh = viewModelScope.launch(Dispatchers.Default) {
-                while (isActive) {
-                    refreshState()
-                    delay(TIME_REFRESH_NETWORK_MS.toLong())
-                }
-            }
+    private fun notificationClicked() {
+        viewModelScope.launch {
+            viewEffect.emit(HomeViewEffect.MoveNotificationScreen)
+        }
     }
 
-    private suspend fun refreshState() {
+    override suspend fun refresh() {
         viewState = viewState.copy(isLoading = true)
 
         when (val result = coinRepository.getCoins()) {
@@ -117,19 +111,6 @@ class HomeViewModel @Inject constructor(
         }
 
         viewState = viewState.copy(isLoading = false)
-    }
-
-    private fun stopped() {
-        viewModelScope.launch {
-            jobRefresh?.cancelAndJoin()
-            jobRefresh = null
-        }
-    }
-
-    private fun notificationClicked() {
-        viewModelScope.launch {
-            viewEffect.emit(HomeViewEffect.MoveNotificationScreen)
-        }
     }
 }
 
