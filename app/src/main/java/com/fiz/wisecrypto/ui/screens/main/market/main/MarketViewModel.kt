@@ -63,7 +63,7 @@ class MarketViewModel @Inject constructor(
             when (val result = coinRepository.getCoins()) {
                 is Resource.Success -> {
                     coins = result.data
-                    viewState = viewState.copy(coins = filterCoins())
+                    viewState = viewState.copy(coins = getNewFilterCoins())
                 }
                 is Resource.Error -> viewEffect.emit(MarketViewEffect.ShowError(result.message))
             }
@@ -71,30 +71,31 @@ class MarketViewModel @Inject constructor(
         }
     }
 
-    private fun filterCoins(): List<Coin> {
+    private suspend fun getNewFilterCoins(): List<Coin> {
         val watchlist = user?.watchList ?: listOf()
         val checkValue = viewState.searchText.lowercase()
 
-        var newCoins = coins?.filter {
+        val newCoins = coins?.filter {
             it.name.lowercase().contains(checkValue)
                     || it.market.lowercase().contains(checkValue)
                     || it.symbol.lowercase().contains(checkValue)
         } ?: listOf()
 
-        newCoins = when (viewState.selectedChipNumber) {
+        val result = when (viewState.selectedChipNumber) {
             0 -> currentUserUseCase.getCoinsWatchList(watchlist, newCoins)
             else -> newCoins
         }
-
-        return newCoins
+        return result
     }
 
     private fun marketChipClicked(index: Int) {
         viewModelScope.launch {
             viewState = viewState.copy(isLoading = true)
-            val coins = filterCoins()
             viewState = viewState
-                .copy(selectedChipNumber = index, coins = coins)
+                .copy(selectedChipNumber = index)
+            val newCoins = getNewFilterCoins()
+            viewState = viewState
+                .copy(coins = newCoins)
             viewState = viewState.copy(isLoading = false)
         }
     }
@@ -102,9 +103,11 @@ class MarketViewModel @Inject constructor(
     private fun searchTextChanged(value: String) {
         viewModelScope.launch {
             viewState = viewState.copy(isLoading = true)
-            val coins = filterCoins()
             viewState = viewState
-                .copy(searchText = value, coins = coins)
+                .copy(searchText = value)
+            val newCoins = getNewFilterCoins()
+            viewState = viewState
+                .copy(coins = newCoins)
             viewState = viewState.copy(isLoading = false)
         }
     }
