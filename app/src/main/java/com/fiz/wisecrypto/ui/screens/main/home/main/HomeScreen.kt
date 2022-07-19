@@ -14,7 +14,7 @@ import com.fiz.wisecrypto.ui.screens.main.home.main.components.UserInfo
 import com.fiz.wisecrypto.ui.screens.main.home.main.components.WatchList
 import com.fiz.wisecrypto.ui.screens.main.home.main.components.YourActive
 import com.fiz.wisecrypto.ui.util.LifeCycleEffect
-import com.fiz.wisecrypto.ui.util.showError
+import com.fiz.wisecrypto.util.showError
 
 @Composable
 fun HomeScreen(
@@ -40,10 +40,10 @@ fun HomeScreen(
                 onClickIconButton = { viewModel.onEvent(HomeEvent.NotificationClicked) }
             )
             PortfolioInfo(
-                viewState.pricePortfolio,
-                viewState.pricePortfolioIncreased,
-                viewState.changePercentageBalance,
-                viewState.balance
+                balancePortfolio = viewState.balancePortfolio,
+                isPricePortfolioIncreased = viewState.isPricePortfolioIncreased,
+                percentageChangedBalance = viewState.percentageChangedBalance,
+                balanceCurrency = viewState.balanceCurrency
             )
             LazyColumn {
                 item {

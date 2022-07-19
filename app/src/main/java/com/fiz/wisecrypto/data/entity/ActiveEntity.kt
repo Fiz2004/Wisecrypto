@@ -21,11 +21,11 @@ data class ActiveEntity(
     @PrimaryKey
     val id: String = "",
     val emailId: String = "",
-    var count: Double = 0.0,
+    var count: Long = 0,
     val priceForBuy: Double = 0.0
 ) {
     fun toActive(): Active {
-        return Active(
+        return Active.create(
             id = id,
             count = count,
             priceForBuy = priceForBuy
@@ -37,7 +37,7 @@ fun Active.toActiveEntity(email: String): ActiveEntity {
     return ActiveEntity(
         id = id,
         emailId = email,
-        count = count,
+        count = countEntity,
         priceForBuy = priceForBuy
     )
 }

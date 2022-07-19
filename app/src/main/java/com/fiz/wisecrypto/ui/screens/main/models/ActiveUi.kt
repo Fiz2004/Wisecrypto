@@ -18,9 +18,9 @@ data class ActiveUi(
 fun Active.toActiveUi(coins: List<Coin>): ActiveUi {
     val current = coins.first { it.id == id }
     val divided = current.currentPrice / priceForBuy * 100
-    val changed = count * (current.currentPrice - priceForBuy)
+    val changed = countUi * (current.currentPrice - priceForBuy)
     val percent = if (divided > 0) divided - 100 else 100 - divided
-    val portfolio = count * (current.currentPrice)
+    val portfolio = countUi * (current.currentPrice)
     val changeValue = if (changed > 0)
         "+ $${"%.1f".format(changed)}"
     else
@@ -31,7 +31,7 @@ fun Active.toActiveUi(coins: List<Coin>): ActiveUi {
         name = current.name,
         icon = current.icon,
         portfolio = "\$${"%.2f".format(portfolio)}",
-        equivalent = "${"%.4f".format(count)} ${current.symbol.uppercase()}",
+        equivalent = "${"%.4f".format(countUi)} ${current.symbol.uppercase()}",
         pricePortfolioIncreased = percent > 0.0,
         changePercentage = "${"%.1f".format(percent)}%",
         changeValue = changeValue

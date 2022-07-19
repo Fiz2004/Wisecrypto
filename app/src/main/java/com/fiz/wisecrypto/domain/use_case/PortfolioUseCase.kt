@@ -29,22 +29,22 @@ class PortfolioUseCase @Inject constructor(
         val formatTotalReturn = formatUseCase.getFormatTotalReturn(totalReturn)
         return PortfolioUI(
             actives = actives.map { it.toActiveUi(coins) },
-            pricePortfolio = formatPricePortfolio,
-            pricePortfolioIncreased = changePercentagePricePortfolio >= 0.0,
-            changePercentagePricePortfolio = formatChangePercentagePricePortfolio,
+            balancePortfolio = formatPricePortfolio,
+            isPricePortfolioIncreased = changePercentagePricePortfolio >= 0.0,
+            percentageChangedBalance = formatChangePercentagePricePortfolio,
             totalReturn = formatTotalReturn
         )
     }
 
     private fun getPricePortfolio(actives: List<Active>, coins: List<Coin>): Double {
         return actives.fold(0.0) { acc, active ->
-            acc + active.count * (coins.first { it.id == active.id }.currentPrice)
+            acc + (active.countUi) * (coins.first { it.id == active.id }.currentPrice)
         }
     }
 
     private fun getPricePortfolioForBuy(portfolio: List<Active>): Double {
         return portfolio.fold(0.0) { acc, active ->
-            acc + active.count * active.priceForBuy
+            acc + active.countUi * active.priceForBuy
         }
     }
 
@@ -52,6 +52,8 @@ class PortfolioUseCase @Inject constructor(
         portfolio: List<Active>,
         coins: List<Coin>
     ): Double {
+        if (portfolio.isEmpty())
+            return 0.0
         val divided = getPricePortfolio(portfolio, coins) / getPricePortfolioForBuy(portfolio) * 100
         val changePercentageBalance = if (divided > 0) divided - 100 else 100 - divided
         return changePercentageBalance

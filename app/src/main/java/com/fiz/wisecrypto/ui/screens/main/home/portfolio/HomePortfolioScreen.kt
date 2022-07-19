@@ -16,7 +16,7 @@ import com.fiz.wisecrypto.ui.screens.main.components.MainColumn
 import com.fiz.wisecrypto.ui.screens.main.home.portfolio.components.PortfolioInfoWithTotalReturn
 import com.fiz.wisecrypto.ui.screens.main.home.portfolio.components.YourActiveFullInfo
 import com.fiz.wisecrypto.ui.util.LifeCycleEffect
-import com.fiz.wisecrypto.ui.util.showError
+import com.fiz.wisecrypto.util.showError
 
 @Composable
 fun HomePortfolioScreen(
@@ -39,10 +39,10 @@ fun HomePortfolioScreen(
             onClickBackButton = { viewModel.onEvent(HomePortfolioEvent.BackButtonClicked) }
         ) {
             PortfolioInfoWithTotalReturn(
-                viewState.pricePortfolio,
-                viewState.totalReturn,
-                viewState.pricePortfolioIncreased,
-                viewState.changePercentagePricePortfolio
+                balancePortfolio = viewState.balancePortfolio,
+                totalReturn = viewState.totalReturn,
+                isPricePortfolioIncreased = viewState.isPricePortfolioIncreased,
+                percentageChangedBalance = viewState.percentageChangedBalance
             )
             Spacer(modifier = Modifier.height(24.dp))
             YourActiveFullInfo(viewState.portfolio ?: emptyList(),

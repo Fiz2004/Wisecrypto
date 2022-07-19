@@ -23,8 +23,7 @@ class UserLocalDataSourceImpl @Inject constructor(
     suspend fun saveUser(userEntity: UserEntity): Boolean {
         return withContext(dispatcher) {
             try {
-                userDao.insert(userEntity)
-                userDao.insertActives(userEntity.actives)
+                userDao.saveUser(userEntity)
                 true
             } catch (e: Exception) {
                 false
@@ -48,6 +47,7 @@ class UserLocalDataSourceImpl @Inject constructor(
                 userDao
                     .getUserByEmail(checkEmail)
                     .copy(actives = userDao.getActives(checkEmail))
+                    .copy(transactions = userDao.getTransactions(checkEmail))
             } catch (e: Exception) {
                 null
             }

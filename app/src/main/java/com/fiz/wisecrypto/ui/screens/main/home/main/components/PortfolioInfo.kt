@@ -21,9 +21,9 @@ import com.fiz.wisecrypto.ui.screens.main.home.components.BigRelativeLabel
 @Composable
 fun PortfolioInfo(
     balancePortfolio: String,
-    pricePortfolioIncreased: Boolean,
-    changePercentageBalance: String,
-    balance: String
+    isPricePortfolioIncreased: Boolean,
+    percentageChangedBalance: String,
+    balanceCurrency: String
 ) {
     LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         item {
@@ -65,11 +65,12 @@ fun PortfolioInfo(
                         )
                     }
                     Spacer(modifier = Modifier.weight(1f))
-                    BigRelativeLabel(
-                        inverse = true,
-                        increased = pricePortfolioIncreased,
-                        value = changePercentageBalance
-                    )
+                    if (percentageChangedBalance != "0.0%")
+                        BigRelativeLabel(
+                            inverse = true,
+                            increased = isPricePortfolioIncreased,
+                            value = percentageChangedBalance
+                        )
                 }
             }
         }
@@ -98,7 +99,7 @@ fun PortfolioInfo(
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                         Text(
-                            text = "$$balance",
+                            text = "$$balanceCurrency",
                             style = MaterialTheme.typography.displayLarge,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )

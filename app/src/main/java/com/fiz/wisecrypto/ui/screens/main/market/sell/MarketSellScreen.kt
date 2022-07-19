@@ -29,7 +29,7 @@ import com.fiz.wisecrypto.ui.theme.Gray3
 import com.fiz.wisecrypto.ui.theme.Gray4
 import com.fiz.wisecrypto.ui.theme.bodyMedium2
 import com.fiz.wisecrypto.ui.util.LifeCycleEffect
-import com.fiz.wisecrypto.ui.util.showError
+import com.fiz.wisecrypto.util.showError
 
 @Composable
 fun MarketSellScreen(

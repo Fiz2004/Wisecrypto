@@ -9,10 +9,10 @@ import com.fiz.wisecrypto.data.repositories.UserRepositoryImpl
 import com.fiz.wisecrypto.domain.use_case.CurrentUserUseCase
 import com.fiz.wisecrypto.domain.use_case.FormatUseCase
 import com.fiz.wisecrypto.ui.util.BaseViewModel
-import com.fiz.wisecrypto.ui.util.ERROR_SELL
-import com.fiz.wisecrypto.ui.util.ERROR_TEXT_FIELD
-import com.fiz.wisecrypto.ui.util.toDouble2
+import com.fiz.wisecrypto.util.ERROR_SELL
+import com.fiz.wisecrypto.util.ERROR_TEXT_FIELD
 import com.fiz.wisecrypto.util.Resource
+import com.fiz.wisecrypto.util.toDouble2
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -43,8 +43,8 @@ class MarketSellViewModel @Inject constructor(
                     email = user.email
                     val active = user.actives.find { it.id == idCoin } ?: return@collectLatest
                     viewState = viewState.copy(
-                        valueActiveCoin = formatUseCase.getFormatCoin(active.count),
-                        coinForSell = formatUseCase.getFormatCoin(active.count)
+                        valueActiveCoin = formatUseCase.getFormatCoin(active.countUi),
+                        coinForSell = formatUseCase.getFormatCoin(active.countUi)
                     )
                     refresh()
                 }
@@ -88,7 +88,6 @@ class MarketSellViewModel @Inject constructor(
 
     private fun sellButtonClicked() {
         viewModelScope.launch {
-
             try {
                 val coin = viewState.coinForSell
                 if (coin.toDouble2() > viewState.valueActiveCoin.toDouble2())

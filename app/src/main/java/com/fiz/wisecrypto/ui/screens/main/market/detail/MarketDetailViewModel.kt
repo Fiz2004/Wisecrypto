@@ -1,5 +1,6 @@
 package com.fiz.wisecrypto.ui.screens.main.market.detail
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -54,7 +55,7 @@ class MarketDetailViewModel @Inject constructor(
                     viewState = viewState.copy(
                         isWatchList = user.watchList.contains(idCoin)
                     )
-                    refresh()
+                    started()
                 }
         }
     }
@@ -114,6 +115,7 @@ class MarketDetailViewModel @Inject constructor(
     override suspend fun refresh() {
         idCoin?.let {
             viewState = viewState.copy(isLoading = true)
+            Log.i("REST", "Zapros")
             val coinHistoryDayResponse =
                 viewModelScope.async { coinRepository.getCoinHistory(it, PeriodFilterChip.Day) }
             val coinHistoryResponse = viewModelScope.async {

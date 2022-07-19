@@ -1,8 +1,47 @@
 package com.fiz.wisecrypto.domain.models
 
-data class Active(
+class Active private constructor(
     val id: String = "",
-    val count: Double = 0.0,
-    val priceForBuy: Double = 0.0
-)
+    private var count: Long = 0,
+    var priceForBuy: Double = 0.0
+) {
+    val countUi
+        get() = count / COIN_ACCURACY
+
+    val countEntity
+        get() = count
+
+    val isEmpty
+        get() = count == 0L
+
+    fun sell(count: Double) {
+        this.count -= (count * COIN_ACCURACY).toLong()
+    }
+
+    fun buy(count: Double, price: Double) {
+        this.count += (count * COIN_ACCURACY).toLong()
+        priceForBuy = (priceForBuy + count * price) / countUi
+    }
+
+    companion object {
+        private const val COIN_ACCURACY = 1E6
+
+        fun create(id: String, count: Double, priceForBuy: Double): Active {
+            return Active(
+                id = id,
+                count = (count * COIN_ACCURACY).toLong(),
+                priceForBuy = priceForBuy
+            )
+        }
+
+        fun create(id: String, count: Long, priceForBuy: Double): Active {
+            return Active(
+                id = id,
+                count = count,
+                priceForBuy = priceForBuy
+            )
+        }
+
+    }
+}
 

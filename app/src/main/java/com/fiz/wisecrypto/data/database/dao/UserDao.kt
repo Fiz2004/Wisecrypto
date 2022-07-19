@@ -17,6 +17,12 @@ interface UserDao {
     @Query("SELECT * FROM UserEntity WHERE email =:email")
     suspend fun getUserByEmail(email: String): UserEntity
 
+    @Transaction
+    suspend fun saveUser(userEntity: UserEntity) {
+        insert(userEntity)
+        insertActives(userEntity.actives)
+    }
+
     @Query("SELECT * FROM ActiveEntity WHERE emailId =:emailId")
     suspend fun getActives(emailId: String): List<ActiveEntity>
 

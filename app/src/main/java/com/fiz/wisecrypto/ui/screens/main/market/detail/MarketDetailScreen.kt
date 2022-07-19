@@ -17,7 +17,7 @@ import com.fiz.wisecrypto.ui.screens.main.market.detail.components.Overview
 import com.fiz.wisecrypto.ui.screens.main.market.detail.components.Statistics
 import com.fiz.wisecrypto.ui.screens.main.market.detail.components.YourActiveDetail
 import com.fiz.wisecrypto.ui.util.LifeCycleEffect
-import com.fiz.wisecrypto.ui.util.showError
+import com.fiz.wisecrypto.util.showError
 
 // TODO Сдлеать возврат при неудачной загрузке предыдущего выбора
 

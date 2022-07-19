@@ -17,7 +17,7 @@ import com.fiz.wisecrypto.ui.screens.main.components.MainColumn
 import com.fiz.wisecrypto.ui.screens.main.market.main.components.FilterRow
 import com.fiz.wisecrypto.ui.screens.main.market.main.components.FindTextField
 import com.fiz.wisecrypto.ui.util.LifeCycleEffect
-import com.fiz.wisecrypto.ui.util.showError
+import com.fiz.wisecrypto.util.showError
 
 @Composable
 fun MarketMainScreen(

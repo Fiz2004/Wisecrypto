@@ -21,16 +21,16 @@ import com.fiz.wisecrypto.R
 fun PortfolioInfoWithTotalReturn(
     balancePortfolio: String,
     totalReturn: String,
-    pricePortfolioIncreased: Boolean,
-    changePercentageBalance: String,
+    isPricePortfolioIncreased: Boolean,
+    percentageChangedBalance: String,
 ) {
 
-    val icon = if (pricePortfolioIncreased)
+    val icon = if (isPricePortfolioIncreased)
         R.drawable.home_ic_up_right
     else
         R.drawable.home_ic_down_left
 
-    val color = if (pricePortfolioIncreased)
+    val color = if (isPricePortfolioIncreased)
         MaterialTheme.colorScheme.primary
     else
         MaterialTheme.colorScheme.secondary
@@ -79,27 +79,28 @@ fun PortfolioInfoWithTotalReturn(
                 )
             }
             Spacer(modifier = Modifier.weight(1f))
-            Row(
-                modifier = Modifier
-                    .background(
-                        color = MaterialTheme.colorScheme.onPrimary,
-                        shape = RoundedCornerShape(8.dp)
+            if (percentageChangedBalance != "0.0%")
+                Row(
+                    modifier = Modifier
+                        .background(
+                            color = MaterialTheme.colorScheme.onPrimary,
+                            shape = RoundedCornerShape(8.dp)
+                        )
+                        .padding(8.dp)
+                ) {
+                    Icon(
+                        modifier = Modifier.size(16.dp),
+                        painter = painterResource(id = icon),
+                        tint = color,
+                        contentDescription = null
                     )
-                    .padding(8.dp)
-            ) {
-                Icon(
-                    modifier = Modifier.size(16.dp),
-                    painter = painterResource(id = icon),
-                    tint = color,
-                    contentDescription = null
-                )
-                Spacer(modifier = Modifier.width(4.dp))
-                Text(
-                    text = changePercentageBalance,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = color
-                )
-            }
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(
+                        text = percentageChangedBalance,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = color
+                    )
+                }
         }
     }
 }

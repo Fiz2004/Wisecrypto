@@ -10,17 +10,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.fiz.wisecrypto.R
 import com.fiz.wisecrypto.domain.models.Coin
 import com.fiz.wisecrypto.ui.components.IconCoin
 import com.fiz.wisecrypto.ui.screens.main.home.main.components.RelativeLabel
 import com.fiz.wisecrypto.ui.screens.main.models.toCoinUi
 import com.fiz.wisecrypto.ui.theme.MulishBold
 import com.fiz.wisecrypto.ui.theme.MulishRegular
-import com.skydoves.landscapist.glide.GlideImage
 
 @Composable
 fun CoinColumn(
@@ -41,12 +37,10 @@ fun CoinItem(coin: Coin, moveHomeDetailScreen: (String) -> Unit) {
     Row(
         modifier = Modifier
             .height(88.dp)
-            .background(
-                color = MaterialTheme.colorScheme.onPrimary,
-                shape = RoundedCornerShape(10.dp)
-            )
-            .padding(horizontal = 16.dp, vertical = 12.dp)
-            .clickable { moveHomeDetailScreen(coin.id) },
+            .clip(shape = RoundedCornerShape(10.dp))
+            .background(color = MaterialTheme.colorScheme.onPrimary)
+            .clickable { moveHomeDetailScreen(coin.id) }
+            .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         IconCoin(iconUrl = coinUi.icon)

@@ -1,7 +1,6 @@
 package com.fiz.wisecrypto.data.repositories
 
 import com.fiz.wisecrypto.data.data_source.UserLocalDataSourceImpl
-import com.fiz.wisecrypto.data.entity.ActiveEntity
 import com.fiz.wisecrypto.data.entity.TransactionEntity
 import com.fiz.wisecrypto.data.entity.UserEntity
 import com.fiz.wisecrypto.data.entity.toActiveEntity
@@ -40,12 +39,12 @@ class UserRepositoryImpl @Inject constructor(
             "ripple"
         ),
         portfolio: List<Active> = listOf(
-            Active(
+            Active.create(
                 "bitcoin",
                 0.0012,
                 20000.0
             ),
-            Active(
+            Active.create(
                 "ethereum",
                 0.009,
                 1000.0
@@ -140,12 +139,11 @@ class UserRepositoryImpl @Inject constructor(
         return withContext(dispatcher) {
             val checkEmail = email.trim().lowercase()
             val user = userLocalDataSource.getUser(checkEmail) ?: return@withContext false
-            val newActives = user.actives.toMutableList()
+            val newActives = user.actives.map { it.toActive() }.toMutableList()
             val active = newActives.find { it.id == idCoin } ?: return@withContext false
-            val newValue = active.count - count
+            active.sell(count)
             val newBalance = user.balance + price
-            active.count = newValue
-            if (active.count == 0.0)
+            if (active.isEmpty)
                 newActives.remove(active)
             val transactionEntity = TransactionEntity(
                 status = StatusTransaction.Process,
@@ -157,7 +155,7 @@ class UserRepositoryImpl @Inject constructor(
             )
             userLocalDataSource.saveActivesAndBalance(
                 checkEmail,
-                newActives,
+                newActives.map { it.toActiveEntity(checkEmail) },
                 newBalance,
                 transactionEntity
             )
@@ -173,22 +171,16 @@ class UserRepositoryImpl @Inject constructor(
         return withContext(dispatcher) {
             val checkEmail = email.trim().lowercase()
             val user = userLocalDataSource.getUser(checkEmail) ?: return@withContext false
-            val newActives = user.actives.toMutableList()
+            val newActives = user.actives.map { it.toActive() }.toMutableList()
             val active = newActives.find { it.id == idCoin }
             val newBalance = user.balance - currency
+            val priceForBuy = currency / valueCoin
             if (active == null) {
-                val newValue = valueCoin
                 newActives.add(
-                    ActiveEntity(
-                        id = idCoin,
-                        count = newValue,
-                        emailId = email,
-                        priceForBuy = currency / valueCoin
-                    )
+                    Active.create(id = idCoin, count = valueCoin, priceForBuy = priceForBuy)
                 )
             } else {
-                val newValue = active.count + valueCoin
-                active.count = newValue
+                active.buy(valueCoin, priceForBuy)
             }
             val transactionEntity = TransactionEntity(
                 status = StatusTransaction.Process,
@@ -200,7 +192,7 @@ class UserRepositoryImpl @Inject constructor(
             )
             userLocalDataSource.saveActivesAndBalance(
                 checkEmail,
-                newActives,
+                newActives.map { it.toActiveEntity(checkEmail) },
                 newBalance,
                 transactionEntity
             )

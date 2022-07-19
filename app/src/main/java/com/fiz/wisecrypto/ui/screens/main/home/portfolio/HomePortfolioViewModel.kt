@@ -74,9 +74,9 @@ class HomePortfolioViewModel @Inject constructor(
 
                 viewState = viewState.copy(
                     portfolio = portfolioUi.actives,
-                    pricePortfolio = portfolioUi.pricePortfolio,
-                    pricePortfolioIncreased = portfolioUi.pricePortfolioIncreased,
-                    changePercentagePricePortfolio = portfolioUi.changePercentagePricePortfolio,
+                    balancePortfolio = portfolioUi.balancePortfolio,
+                    isPricePortfolioIncreased = portfolioUi.isPricePortfolioIncreased,
+                    percentageChangedBalance = portfolioUi.percentageChangedBalance,
                     totalReturn = portfolioUi.totalReturn,
                 )
             }

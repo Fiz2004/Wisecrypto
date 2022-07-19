@@ -49,7 +49,7 @@ class HomeViewModel @Inject constructor(
 
                     viewState = viewState.copy(
                         fullName = fullName,
-                        balance = formatBalanceUsd
+                        balanceCurrency = formatBalanceUsd
                     )
                 }
         }
@@ -95,9 +95,9 @@ class HomeViewModel @Inject constructor(
                 val coinsWatchList = currentUserUseCase.getCoinsWatchList(watchlist, coins)
                 viewState = viewState.copy(
                     actives = portfolioUI.actives,
-                    pricePortfolio = portfolioUI.pricePortfolio,
-                    pricePortfolioIncreased = portfolioUI.pricePortfolioIncreased,
-                    changePercentageBalance = portfolioUI.changePercentagePricePortfolio,
+                    balancePortfolio = portfolioUI.balancePortfolio,
+                    isPricePortfolioIncreased = portfolioUI.isPricePortfolioIncreased,
+                    percentageChangedBalance = portfolioUI.percentageChangedBalance,
                     watchlist = coinsWatchList
                 )
             }

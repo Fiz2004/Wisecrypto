@@ -9,10 +9,10 @@ import com.fiz.wisecrypto.data.repositories.UserRepositoryImpl
 import com.fiz.wisecrypto.domain.use_case.CurrentUserUseCase
 import com.fiz.wisecrypto.domain.use_case.FormatUseCase
 import com.fiz.wisecrypto.ui.util.BaseViewModel
-import com.fiz.wisecrypto.ui.util.ERROR_SELL
-import com.fiz.wisecrypto.ui.util.ERROR_TEXT_FIELD
-import com.fiz.wisecrypto.ui.util.toDouble2
+import com.fiz.wisecrypto.util.ERROR_SELL
+import com.fiz.wisecrypto.util.ERROR_TEXT_FIELD
 import com.fiz.wisecrypto.util.Resource
+import com.fiz.wisecrypto.util.toDouble2
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -93,10 +93,10 @@ class MarketBuyViewModel @Inject constructor(
                     throw Exception("No money")
 
                 if (userRepository.buyActive(
-                        email ?: return@launch,
-                        idCoin ?: return@launch,
-                        currency.toDouble2(),
-                        viewState.valueCoin.toDouble2()
+                        email = email ?: return@launch,
+                        idCoin = idCoin ?: return@launch,
+                        currency = currency.toDouble2(),
+                        valueCoin = viewState.valueCoin.toDouble2()
                     )
                 )
                     viewEffect.emit(MarketBuyViewEffect.MoveReturn)

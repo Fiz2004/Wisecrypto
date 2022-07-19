@@ -1,4 +1,4 @@
-package com.fiz.wisecrypto.ui.util
+package com.fiz.wisecrypto.util
 
 import android.content.Context
 import android.widget.Toast
