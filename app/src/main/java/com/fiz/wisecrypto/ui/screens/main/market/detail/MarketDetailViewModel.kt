@@ -55,7 +55,7 @@ class MarketDetailViewModel @Inject constructor(
                     viewState = viewState.copy(
                         isWatchList = user.watchList.contains(idCoin)
                     )
-                    started()
+                    refresh()
                 }
         }
     }
@@ -113,111 +113,113 @@ class MarketDetailViewModel @Inject constructor(
     }
 
     override suspend fun refresh() {
-        idCoin?.let {
-            viewState = viewState.copy(isLoading = true)
-            Log.i("REST", "Zapros")
-            val coinHistoryDayResponse =
-                viewModelScope.async { coinRepository.getCoinHistory(it, PeriodFilterChip.Day) }
-            val coinHistoryResponse = viewModelScope.async {
-                coinRepository.getCoinHistory(
-                    it,
-                    viewState.indexPeriodFilterChip
-                )
-            }
-            val coinResponse = viewModelScope.async { coinRepository.getCoin(it) }
-            val coinsResponse = viewModelScope.async { coinRepository.getCoins() }
+        email?.let {
+            idCoin?.let {
+                viewState = viewState.copy(isLoading = true)
+                Log.i("REST", "Zapros")
+                val coinHistoryDayResponse =
+                    viewModelScope.async { coinRepository.getCoinHistory(it, PeriodFilterChip.Day) }
+                val coinHistoryResponse = viewModelScope.async {
+                    coinRepository.getCoinHistory(
+                        it,
+                        viewState.indexPeriodFilterChip
+                    )
+                }
+                val coinResponse = viewModelScope.async { coinRepository.getCoin(it) }
+                val coinsResponse = viewModelScope.async { coinRepository.getCoins() }
 
-            var errorMessage: String? = ""
+                var errorMessage: String? = ""
 
-            when (val result = coinHistoryResponse.await()) {
-                is Resource.Success -> {
-                    val coinMarketChartRange = result.data ?: return
+                when (val result = coinHistoryResponse.await()) {
+                    is Resource.Success -> {
+                        val coinMarketChartRange = result.data ?: return
 
-                    val currentPriceHistoryLabel =
-                        getLabelForChart(
-                            coinMarketChartRange.prices,
-                            viewState.indexPeriodFilterChip,
-                            monthNames?: emptyList(),
-                            daysNames?: emptyList()
+                        val currentPriceHistoryLabel =
+                            getLabelForChart(
+                                coinMarketChartRange.prices,
+                                viewState.indexPeriodFilterChip,
+                                monthNames ?: emptyList(),
+                                daysNames ?: emptyList()
+                            )
+
+                        viewState = viewState.copy(
+                            currentPriceHistoryValue = coinMarketChartRange.prices,
+                            currentPriceHistoryLabel = currentPriceHistoryLabel
                         )
+                    }
+                    is Resource.Error -> {
+                        errorMessage = result.message
+                    }
+                }
 
-                    viewState = viewState.copy(
-                        currentPriceHistoryValue = coinMarketChartRange.prices,
-                        currentPriceHistoryLabel = currentPriceHistoryLabel
+                var totalVolume24h = 0.0
+                when (val result = coinHistoryDayResponse.await()) {
+                    is Resource.Success -> {
+                        val coinMarketChartRange = result.data ?: return
+                        totalVolume24h = coinMarketChartRange.totalVolumes.first().value
+                    }
+                    is Resource.Error -> {
+                        errorMessage = result.message
+                    }
+                }
+
+                when (val result = coinResponse.await()) {
+                    is Resource.Success -> {
+                        val coin = result.data ?: return
+                        viewState = viewState.copy(
+                            name = coin.name,
+                            priceOne = formatUseCase.getFormatPricePortfolio(coin.currentPrice),
+                            abbreviated = coin.symbol,
+                            allTimeHigh = formatUseCase.getFormatOverview(coin.ath),
+                            allTimeLow = formatUseCase.getFormatOverview(coin.atl),
+                            marketCap = formatUseCase.getFormatOverview(coin.marketCap),
+                            totalVolume = formatUseCase.getFormatOverview(coin.totalVolume),
+                            totalSupply = formatUseCase.getFormatOverview(coin.totalSupply),
+                            maxSupply = formatUseCase.getFormatOverview(coin.maxSupply),
+                            marketCapChange24h = formatUseCase.getFormatOverview(coin.marketCapChange24h),
+                            totalVolumeChange24h = formatUseCase.getFormatOverview(coin.totalVolume - totalVolume24h),
+                        )
+                    }
+                    is Resource.Error -> {
+                        errorMessage = result.message
+                    }
+                }
+
+
+                when (val result = coinsResponse.await()) {
+                    is Resource.Success -> {
+                        val coins = result.data ?: listOf()
+                        val coin = coins.find { idCoin == it.id } ?: return
+                        val yourActive = active?.toActiveUi(coins)
+
+                        val pricePortfolioIncreased = coin.priceChangePercentage > 0
+                        val changePercentagePricePortfolio =
+                            formatUseCase.getFormatChangePercentagePricePortfolio(coin.priceChangePercentage)
+
+                        viewState = viewState.copy(
+                            yourActive = yourActive,
+                            pricePortfolioIncreased = pricePortfolioIncreased,
+                            changePercentagePricePortfolio = changePercentagePricePortfolio,
+                        )
+                    }
+                    is Resource.Error -> {
+                        errorMessage = result.message
+                    }
+                }
+
+                viewState = viewState.copy(isLoading = false)
+
+                if (errorMessage != "")
+                    viewEffect.emit(
+                        MarketDetailViewEffect.ShowError(
+                            errorMessage
+                        )
                     )
-                }
-                is Resource.Error -> {
-                    errorMessage = result.message
-                }
             }
-
-            var totalVolume24h = 0.0
-            when (val result = coinHistoryDayResponse.await()) {
-                is Resource.Success -> {
-                    val coinMarketChartRange = result.data ?: return
-                    totalVolume24h = coinMarketChartRange.totalVolumes.first().value
-                }
-                is Resource.Error -> {
-                    errorMessage = result.message
-                }
-            }
-
-            when (val result = coinResponse.await()) {
-                is Resource.Success -> {
-                    val coin = result.data ?: return
-                    viewState = viewState.copy(
-                        name = coin.name,
-                        priceOne = formatUseCase.getFormatPricePortfolio(coin.currentPrice),
-                        abbreviated = coin.symbol,
-                        allTimeHigh = formatUseCase.getFormatOverview(coin.ath),
-                        allTimeLow = formatUseCase.getFormatOverview(coin.atl),
-                        marketCap = formatUseCase.getFormatOverview(coin.marketCap),
-                        totalVolume = formatUseCase.getFormatOverview(coin.totalVolume),
-                        totalSupply = formatUseCase.getFormatOverview(coin.totalSupply),
-                        maxSupply = formatUseCase.getFormatOverview(coin.maxSupply),
-                        marketCapChange24h = formatUseCase.getFormatOverview(coin.marketCapChange24h),
-                        totalVolumeChange24h = formatUseCase.getFormatOverview(coin.totalVolume - totalVolume24h),
-                    )
-                }
-                is Resource.Error -> {
-                    errorMessage = result.message
-                }
-            }
-
-
-            when (val result = coinsResponse.await()) {
-                is Resource.Success -> {
-                    val coins = result.data ?: listOf()
-                    val coin = coins.find { idCoin == it.id } ?: return
-                    val yourActive = active?.toActiveUi(coins)
-
-                    val pricePortfolioIncreased = coin.priceChangePercentage > 0
-                    val changePercentagePricePortfolio =
-                        formatUseCase.getFormatChangePercentagePricePortfolio(coin.priceChangePercentage)
-
-                    viewState = viewState.copy(
-                        yourActive = yourActive,
-                        pricePortfolioIncreased = pricePortfolioIncreased,
-                        changePercentagePricePortfolio = changePercentagePricePortfolio,
-                    )
-                }
-                is Resource.Error -> {
-                    errorMessage = result.message
-                }
-            }
-
-            viewState = viewState.copy(isLoading = false)
-
-            if (errorMessage!="")
-                viewEffect.emit(
-                    MarketDetailViewEffect.ShowError(
-                        errorMessage
-                    )
-                )
         }
     }
 
-    fun getUpperValue(upperValue:Double):String{
+    fun getUpperValue(upperValue: Double): String {
         return formatUseCase.getFormatBalance(upperValue)
     }
 }

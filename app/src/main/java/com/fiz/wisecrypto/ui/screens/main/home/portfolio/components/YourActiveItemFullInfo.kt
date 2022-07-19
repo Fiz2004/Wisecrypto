@@ -10,6 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.fiz.wisecrypto.ui.components.IconCoin
 import com.fiz.wisecrypto.ui.screens.main.home.main.components.RelativeLabel
@@ -27,12 +28,12 @@ fun YourActiveItemFullInfo(active: ActiveUi, activeClicked: (String) -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            .clip(shape = RoundedCornerShape(10.dp))
             .background(
                 color = MaterialTheme.colorScheme.onPrimary,
-                shape = RoundedCornerShape(10.dp)
             )
-            .padding(16.dp)
             .clickable { activeClicked(active.id) }
+            .padding(16.dp)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically

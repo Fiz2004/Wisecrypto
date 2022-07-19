@@ -48,7 +48,6 @@ fun MarketDetailScreen(
             ) {
                 LazyColumn {
                     item {
-                        Spacer(modifier = Modifier.height(16.dp))
                         Statistics(
                             viewModel = viewModel,
                             priceForOne = viewState.priceOne ?: "",

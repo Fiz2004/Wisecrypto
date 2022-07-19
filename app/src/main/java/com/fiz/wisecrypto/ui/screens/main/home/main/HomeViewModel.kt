@@ -24,15 +24,15 @@ class HomeViewModel @Inject constructor(
     private val portfolioUseCase: PortfolioUseCase,
     private val coinRepository: CoinRepositoryImpl,
 
-    ) : BaseViewModel(){
+    ) : BaseViewModel() {
     var viewState by mutableStateOf(HomeViewState(isLoading = true))
         private set
 
     var viewEffect = MutableSharedFlow<HomeViewEffect>()
         private set
 
-    var actives: List<Active> = listOf()
-    var watchlist: List<String> = listOf()
+    var actives: List<Active>? = null
+    var watchlist: List<String>? = null
 
     init {
         viewModelScope.launch {
@@ -51,6 +51,7 @@ class HomeViewModel @Inject constructor(
                         fullName = fullName,
                         balanceCurrency = formatBalanceUsd
                     )
+                    refresh()
                 }
         }
     }
@@ -63,18 +64,7 @@ class HomeViewModel @Inject constructor(
             HomeEvent.NotificationClicked -> notificationClicked()
             HomeEvent.YourActiveAllClicked -> yourActiveAllClicked()
             is HomeEvent.YourActiveClicked -> yourActiveClicked(event.id)
-        }
-    }
-
-    private fun yourActiveClicked(id: String) {
-        viewModelScope.launch {
-            viewEffect.emit(HomeViewEffect.MoveHomeDetailScreen(id))
-        }
-    }
-
-    private fun yourActiveAllClicked() {
-        viewModelScope.launch {
-            viewEffect.emit(HomeViewEffect.MoveHomePortfolioScreen)
+            HomeEvent.AddBalanceClicked -> addBalanceClicked()
         }
     }
 
@@ -84,33 +74,55 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    private fun yourActiveAllClicked() {
+        viewModelScope.launch {
+            viewEffect.emit(HomeViewEffect.MoveHomePortfolioScreen)
+        }
+    }
+
+    private fun yourActiveClicked(id: String) {
+        viewModelScope.launch {
+            viewEffect.emit(HomeViewEffect.MoveHomeDetailScreen(id))
+        }
+    }
+
+    private fun addBalanceClicked() {
+        viewModelScope.launch {
+            viewEffect.emit(HomeViewEffect.MoveMarketAddBalance)
+        }
+    }
+
     override suspend fun refresh() {
-        viewState = viewState.copy(isLoading = true)
+        actives?.let { actives ->
+            watchlist?.let { watchlist ->
+                viewState = viewState.copy(isLoading = true)
 
-        when (val result = coinRepository.getCoins()) {
-            is Resource.Success -> {
-                val coins = result.data ?: listOf()
+                when (val result = coinRepository.getCoins()) {
+                    is Resource.Success -> {
+                        val coins = result.data ?: listOf()
 
-                val portfolioUI = portfolioUseCase.getPortfolioUi(actives, coins)
-                val coinsWatchList = currentUserUseCase.getCoinsWatchList(watchlist, coins)
-                viewState = viewState.copy(
-                    actives = portfolioUI.actives,
-                    balancePortfolio = portfolioUI.balancePortfolio,
-                    isPricePortfolioIncreased = portfolioUI.isPricePortfolioIncreased,
-                    percentageChangedBalance = portfolioUI.percentageChangedBalance,
-                    watchlist = coinsWatchList
-                )
-            }
-            is Resource.Error -> {
-                viewEffect.emit(
-                    HomeViewEffect.ShowError(
-                        result.message
-                    )
-                )
+                        val portfolioUI = portfolioUseCase.getPortfolioUi(actives, coins)
+                        val coinsWatchList = currentUserUseCase.getCoinsWatchList(watchlist, coins)
+                        viewState = viewState.copy(
+                            actives = portfolioUI.actives,
+                            balancePortfolio = portfolioUI.balancePortfolio,
+                            isPricePortfolioIncreased = portfolioUI.isPricePortfolioIncreased,
+                            percentageChangedBalance = portfolioUI.percentageChangedBalance,
+                            watchlist = coinsWatchList
+                        )
+                    }
+                    is Resource.Error -> {
+                        viewEffect.emit(
+                            HomeViewEffect.ShowError(
+                                result.message
+                            )
+                        )
+                    }
+                }
+
+                viewState = viewState.copy(isLoading = false)
             }
         }
-
-        viewState = viewState.copy(isLoading = false)
     }
 }
 

@@ -2,6 +2,7 @@ package com.fiz.wisecrypto.ui.screens.main.models
 
 import com.fiz.wisecrypto.domain.models.Active
 import com.fiz.wisecrypto.domain.models.Coin
+import kotlin.math.abs
 
 data class ActiveUi(
     val id: String = "",
@@ -22,9 +23,9 @@ fun Active.toActiveUi(coins: List<Coin>): ActiveUi {
     val percent = if (divided > 0) divided - 100 else 100 - divided
     val portfolio = countUi * (current.currentPrice)
     val changeValue = if (changed > 0)
-        "+ $${"%.1f".format(changed)}"
+        "+ $${"%.1f".format(abs(changed))}"
     else
-        "- $${"%.1f".format(changed)}"
+        "- $${"%.1f".format(abs(changed))}"
     return ActiveUi(
         id = current.id,
         abbreviated = current.symbol.uppercase(),

@@ -4,6 +4,7 @@ import androidx.room.*
 import com.fiz.wisecrypto.data.entity.ActiveEntity
 import com.fiz.wisecrypto.data.entity.TransactionEntity
 import com.fiz.wisecrypto.data.entity.UserEntity
+import com.fiz.wisecrypto.domain.models.StatusTransaction
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -75,13 +76,23 @@ interface UserDao {
     suspend fun saveActivesAndSaveBalance(
         email: String,
         actives: List<ActiveEntity>,
-        balance: Double,
+        newBalance: Double,
         transactionEntity: TransactionEntity
     ) {
         deleteActives()
         insertActives(actives)
+        saveBalance(email, newBalance, transactionEntity)
+    }
+
+    @Transaction
+    suspend fun saveBalance(
+        email: String,
+        newBalance: Double,
+        transactionEntity: TransactionEntity
+    ) {
         insertTransactions(listOf(transactionEntity))
-        saveBalance(email, balance)
+        saveBalance(email, newBalance)
+        update(transactionEntity.copy(status = StatusTransaction.Success))
     }
 
     @Query("DELETE FROM ActiveEntity")

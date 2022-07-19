@@ -12,7 +12,7 @@ import com.fiz.wisecrypto.ui.util.BaseViewModel
 import com.fiz.wisecrypto.util.ERROR_SELL
 import com.fiz.wisecrypto.util.ERROR_TEXT_FIELD
 import com.fiz.wisecrypto.util.Resource
-import com.fiz.wisecrypto.util.toDouble2
+import com.fiz.wisecrypto.util.toDoubleOrNull
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -88,16 +88,19 @@ class MarketSellViewModel @Inject constructor(
 
     private fun sellButtonClicked() {
         viewModelScope.launch {
+            viewState = viewState.copy(isLoading = true)
             try {
-                val coin = viewState.coinForSell
-                if (coin.toDouble2() > viewState.valueActiveCoin.toDouble2())
+                val coin = viewState.coinForSell.toDoubleOrNull() ?: return@launch
+                val valueActiveCoin = viewState.valueActiveCoin.toDoubleOrNull() ?: return@launch
+                val valueCurrency = viewState.valueCurrency.toDoubleOrNull() ?: return@launch
+                if (coin > valueActiveCoin)
                     throw Exception("No money")
 
                 if (userRepository.sellActive(
                         email ?: return@launch,
                         idCoin ?: return@launch,
-                        coin.toDouble2(),
-                        viewState.valueCurrency.toDouble2()
+                        coin,
+                        valueCurrency
                     )
                 )
                     viewEffect.emit(MarketSellViewEffect.MoveReturn)
@@ -116,6 +119,7 @@ class MarketSellViewModel @Inject constructor(
                     )
                 )
             }
+            viewState = viewState.copy(isLoading = false)
         }
     }
 
@@ -127,27 +131,32 @@ class MarketSellViewModel @Inject constructor(
     }
 
     override suspend fun refresh() {
-        idCoin?.let {
-            viewState = viewState.copy(isLoading = true)
-            val result = coinRepository.getCoin(it)
-            if (result is Resource.Success) {
-                val coin = result.data ?: return
-                viewState = viewState.copy(
-                    icon = coin.image,
-                    valueCurrency = formatUseCase.getFormatBalance(
-                        coin.currentPrice * viewState.coinForSell.toDouble2()
-                    ),
-                    nameCoin = coin.name,
-                    symbolCoin = coin.symbol.uppercase()
-                )
-            } else {
-                viewEffect.emit(
-                    MarketSellViewEffect.ShowError(
-                        result.message
+        email?.let {
+            idCoin?.let {
+                viewState = viewState.copy(isLoading = true)
+                val result = coinRepository.getCoin(it)
+                if (result is Resource.Success) {
+                    val coin = result.data ?: return
+
+                    val currency = viewState.coinForSell.toDoubleOrNull() ?: return
+
+                    viewState = viewState.copy(
+                        icon = coin.image,
+                        valueCurrency = formatUseCase.getFormatBalance(
+                            coin.currentPrice * currency
+                        ),
+                        nameCoin = coin.name,
+                        symbolCoin = coin.symbol.uppercase()
                     )
-                )
+                } else {
+                    viewEffect.emit(
+                        MarketSellViewEffect.ShowError(
+                            result.message
+                        )
+                    )
+                }
+                viewState = viewState.copy(isLoading = false)
             }
-            viewState = viewState.copy(isLoading = false)
         }
     }
 

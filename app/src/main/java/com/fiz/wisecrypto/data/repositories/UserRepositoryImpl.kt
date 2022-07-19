@@ -198,4 +198,26 @@ class UserRepositoryImpl @Inject constructor(
             )
         }
     }
+
+    suspend fun addBalance(email: String, currency: Double): Boolean {
+        return withContext(dispatcher) {
+            val checkEmail = email.trim().lowercase()
+            val user = userLocalDataSource.getUser(checkEmail) ?: return@withContext false
+            val balance = user.balance
+            val newBalance = balance + currency
+            val transactionEntity = TransactionEntity(
+                status = StatusTransaction.Process,
+                type = TypeTransaction.Balance(currency),
+                textDescription = "$${currency}",
+                id = "TS-" + Random.nextInt(10000).toString(),
+                emailId = checkEmail,
+                data = LocalDateTime.now()
+            )
+            userLocalDataSource.saveBalance(
+                checkEmail,
+                newBalance,
+                transactionEntity
+            )
+        }
+    }
 }

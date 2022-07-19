@@ -16,6 +16,8 @@ import com.fiz.wisecrypto.ui.screens.main.home.notification.HomeNotificationScre
 import com.fiz.wisecrypto.ui.screens.main.home.notification.HomeNotificationViewModel
 import com.fiz.wisecrypto.ui.screens.main.home.portfolio.HomePortfolioScreen
 import com.fiz.wisecrypto.ui.screens.main.home.portfolio.HomePortfolioViewModel
+import com.fiz.wisecrypto.ui.screens.main.market.add_balance.MarketAddBalanceScreen
+import com.fiz.wisecrypto.ui.screens.main.market.add_balance.MarketAddBalanceViewModel
 import com.fiz.wisecrypto.ui.screens.main.market.buy.MarketBuyScreen
 import com.fiz.wisecrypto.ui.screens.main.market.buy.MarketBuyViewModel
 import com.fiz.wisecrypto.ui.screens.main.market.detail.MarketDetailScreen
@@ -55,7 +57,8 @@ fun MainNavHost(
                 viewModel,
                 moveNotificationScreen = { navController.navigate(NamesHomeScreen.Notification.name) },
                 moveHomePortfolioScreen = { navController.navigate(NamesHomeScreen.Portfolio.name) },
-                moveMarketDetailScreen = { id -> navController.navigate(NamesMarketScreen.Detail.name + "/$id") }
+                moveMarketDetailScreen = { id -> navController.navigate(NamesMarketScreen.Detail.name + "/$id") },
+                moveMarketAddBalanceScreen = { navController.navigate(NamesMarketScreen.AddBalance.name) }
             )
         }
 
@@ -110,6 +113,16 @@ fun MainNavHost(
             viewModel.idCoin = id
 
             MarketBuyScreen(
+                viewModel,
+                moveReturn = { navController.popBackStack() },
+                moveMarketAddBalanceScreen = { navController.navigate(NamesMarketScreen.AddBalance.name) }
+            )
+        }
+
+        composable(NamesMarketScreen.AddBalance.name) {
+            val viewModel = hiltViewModel<MarketAddBalanceViewModel>()
+
+            MarketAddBalanceScreen(
                 viewModel,
                 moveReturn = { navController.popBackStack() },
             )
@@ -188,7 +201,8 @@ enum class NamesHomeScreen {
 enum class NamesMarketScreen {
     Detail,
     Sell,
-    Buy
+    Buy,
+    AddBalance
 }
 
 enum class NamesProfileScreen {

@@ -204,10 +204,19 @@
     <string name="buy_toolbar">Купить</string>
     <string name="buy_buy">Купить</string>
     <string name="buy_alert">Покупки уменьшат баланс в этом приложении убедитесь, что ваш баланс достаточен</string>
-    <string name="buy_add">Пополнить</string>
+    <string name="buy_add_balance">Пополнить</string>
     <string name="buy_one_currency_title">Стоимость %1$s</string>
     <string name="buy_one_currency">%1$s%2$s</string>
     <string name="buy_one_coin_title">Количество %1$s</string>
     <string name="buy_one_coin">%1$s %2$s</string>
+    <string name="add_balance_toolbar">Пополнить баланс</string>
+    <string name="add_balance_title_nominal">Номинал покупки</string>
+    <string name="add_balance_pay">Оплатить</string>
+    <string name="add_balance_payments">Способ оплаты</string>
+    <string name="add_balance_detail_transaction_title">Детали транзакции</string>
+    <string name="add_balance_price">Цена</string>
+    <string name="add_balance_price_value">$%1$s</string>
+    <string name="add_balance_сommission">Комиссия</string>
+    <string name="add_balance_total">Всего</string>
 
 </resources>

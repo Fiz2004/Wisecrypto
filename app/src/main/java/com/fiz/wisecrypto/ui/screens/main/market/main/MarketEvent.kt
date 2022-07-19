@@ -4,5 +4,7 @@ sealed class MarketEvent {
     data class SearchTextChanged(val value: String) : MarketEvent()
     data class MarketChipClicked(val index: Int) : MarketEvent()
     data class YourActiveClicked(val id: String) : MarketEvent()
-    object OnRefresh: MarketEvent()
+    object Started : MarketEvent()
+    object Stopped : MarketEvent()
+    object OnRefresh : MarketEvent()
 }

@@ -1,17 +1,15 @@
-package com.fiz.wisecrypto.ui.screens.main.market.buy
+package com.fiz.wisecrypto.ui.screens.main.market.add_balance
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
-import com.fiz.wisecrypto.data.repositories.CoinRepositoryImpl
 import com.fiz.wisecrypto.data.repositories.UserRepositoryImpl
 import com.fiz.wisecrypto.domain.use_case.CurrentUserUseCase
 import com.fiz.wisecrypto.domain.use_case.FormatUseCase
 import com.fiz.wisecrypto.ui.util.BaseViewModel
 import com.fiz.wisecrypto.util.ERROR_SELL
 import com.fiz.wisecrypto.util.ERROR_TEXT_FIELD
-import com.fiz.wisecrypto.util.Resource
 import com.fiz.wisecrypto.util.toDoubleOrNull
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -20,19 +18,17 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MarketBuyViewModel @Inject constructor(
+class MarketAddBalanceViewModel @Inject constructor(
     private val currentUserUseCase: CurrentUserUseCase,
     private val formatUseCase: FormatUseCase,
-    private val userRepository: UserRepositoryImpl,
-    private val coinRepository: CoinRepositoryImpl
+    private val userRepository: UserRepositoryImpl
 ) : BaseViewModel() {
-    var viewState by mutableStateOf(MarketBuyViewState())
+    var viewState by mutableStateOf(MarketAddBalanceViewState())
         private set
 
-    var viewEffect = MutableSharedFlow<MarketBuyViewEffect>()
+    var viewEffect = MutableSharedFlow<MarketAddBalanceViewEffect>()
         private set
 
-    var idCoin: String? = null
     var email: String? = null
 
     init {
@@ -43,28 +39,28 @@ class MarketBuyViewModel @Inject constructor(
                     email = user.email
                     viewState = viewState.copy(
                         valueBalance = formatUseCase.getFormatBalance(user.balance),
-                        currencyForBuy = formatUseCase.getFormatBalance(user.balance)
+                        currencyForBuy = formatUseCase.getFormatBalance(10.0)
                     )
                     refresh()
                 }
         }
     }
 
-    fun onEvent(event: MarketBuyEvent) {
+    fun onEvent(event: MarketAddBalanceEvent) {
         when (event) {
-            MarketBuyEvent.OnRefresh -> onRefresh()
-            MarketBuyEvent.Started -> started()
-            MarketBuyEvent.Stopped -> stopped()
-            MarketBuyEvent.BackButtonClicked -> backButtonClicked()
-            MarketBuyEvent.AddBalanceClicked -> addBalanceClicked()
-            MarketBuyEvent.BuyButtonClicked -> buyButtonClicked()
-            is MarketBuyEvent.ValueCurrencyChanged -> valueCurrencyChanged(event.value)
+            MarketAddBalanceEvent.OnRefresh -> onRefresh()
+            MarketAddBalanceEvent.Started -> started()
+            MarketAddBalanceEvent.Stopped -> stopped()
+            MarketAddBalanceEvent.BackButtonClicked -> backButtonClicked()
+            MarketAddBalanceEvent.PayButtonClicked -> buyButtonClicked()
+            is MarketAddBalanceEvent.ValueCurrencyChanged -> valueCurrencyChanged(event.value)
+            MarketAddBalanceEvent.PaymentClicked -> {}
         }
     }
 
     private fun backButtonClicked() {
         viewModelScope.launch {
-            viewEffect.emit(MarketBuyViewEffect.MoveReturn)
+            viewEffect.emit(MarketAddBalanceViewEffect.MoveReturn)
         }
     }
 
@@ -77,7 +73,7 @@ class MarketBuyViewModel @Inject constructor(
 
             } catch (e: Exception) {
                 viewEffect.emit(
-                    MarketBuyViewEffect.ShowError(
+                    MarketAddBalanceViewEffect.ShowError(
                         ERROR_TEXT_FIELD
                     )
                 )
@@ -87,25 +83,20 @@ class MarketBuyViewModel @Inject constructor(
 
     private fun buyButtonClicked() {
         viewModelScope.launch {
-            viewState = viewState.copy(isLoading = true)
-            try {
-                val currency = viewState.currencyForBuy.toDoubleOrNull() ?: return@launch
-                val balance = viewState.valueBalance.toDoubleOrNull() ?: return@launch
-                val valueCoin = viewState.valueCoin.toDoubleOrNull() ?: return@launch
-                if (currency > balance)
-                    throw Exception("No money")
 
-                if (userRepository.buyActive(
+            try {
+                val currency =
+                    viewState.currencyForBuy.toDoubleOrNull() ?: throw Exception("value no correct")
+
+                if (userRepository.addBalance(
                         email = email ?: return@launch,
-                        idCoin = idCoin ?: return@launch,
                         currency = currency,
-                        valueCoin = valueCoin
                     )
                 )
-                    viewEffect.emit(MarketBuyViewEffect.MoveReturn)
+                    viewEffect.emit(MarketAddBalanceViewEffect.MoveReturn)
                 else {
                     viewEffect.emit(
-                        MarketBuyViewEffect.ShowError(
+                        MarketAddBalanceViewEffect.ShowError(
                             ERROR_SELL
                         )
                     )
@@ -113,40 +104,24 @@ class MarketBuyViewModel @Inject constructor(
 
             } catch (e: Exception) {
                 viewEffect.emit(
-                    MarketBuyViewEffect.ShowError(
+                    MarketAddBalanceViewEffect.ShowError(
                         ERROR_TEXT_FIELD
                     )
                 )
             }
-            viewState = viewState.copy(isLoading = false)
-        }
-    }
-
-    private fun addBalanceClicked() {
-        viewModelScope.launch {
-            viewEffect.emit(MarketBuyViewEffect.AddBalanceClicked)
         }
     }
 
     override suspend fun refresh() {
-        idCoin?.let {
+        email?.let {
             val currency = viewState.currencyForBuy.toDoubleOrNull() ?: return
+            val commission = currency / 50.0
+            val total = currency + commission
             viewState = viewState.copy(isLoading = true)
-            val result = coinRepository.getCoin(it)
-            if (result is Resource.Success) {
-                val coin = result.data ?: return
-                viewState = viewState.copy(
-                    valueCoin = formatUseCase.getFormatCoin(currency / coin.currentPrice),
-                    nameCoin = coin.name,
-                    symbolCoin = coin.symbol.uppercase()
-                )
-            } else {
-                viewEffect.emit(
-                    MarketBuyViewEffect.ShowError(
-                        result.message
-                    )
-                )
-            }
+            viewState = viewState.copy(
+                commission = formatUseCase.getFormatBalance(commission),
+                total = formatUseCase.getFormatBalance(total),
+            )
             viewState = viewState.copy(isLoading = false)
         }
     }

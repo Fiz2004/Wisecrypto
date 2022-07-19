@@ -21,10 +21,17 @@ fun HomeScreen(
     viewModel: HomeViewModel = viewModel(),
     moveNotificationScreen: () -> Unit,
     moveHomePortfolioScreen: () -> Unit,
-    moveMarketDetailScreen: (String) -> Unit
+    moveMarketDetailScreen: (String) -> Unit,
+    moveMarketAddBalanceScreen: () -> Unit
 ) {
     LifeCycleEffect(viewModel)
-    ReactEffect(viewModel, moveNotificationScreen, moveHomePortfolioScreen, moveMarketDetailScreen)
+    ReactEffect(
+        viewModel,
+        moveNotificationScreen,
+        moveHomePortfolioScreen,
+        moveMarketDetailScreen,
+        moveMarketAddBalanceScreen
+    )
 
     val viewState = viewModel.viewState
     LoadingContent(
@@ -43,7 +50,8 @@ fun HomeScreen(
                 balancePortfolio = viewState.balancePortfolio,
                 isPricePortfolioIncreased = viewState.isPricePortfolioIncreased,
                 percentageChangedBalance = viewState.percentageChangedBalance,
-                balanceCurrency = viewState.balanceCurrency
+                balanceCurrency = viewState.balanceCurrency,
+                actionButtonOnClick = { viewModel.onEvent(HomeEvent.AddBalanceClicked) }
             )
             LazyColumn {
                 item {
@@ -70,7 +78,8 @@ private fun ReactEffect(
     viewModel: HomeViewModel,
     moveNotificationScreen: () -> Unit,
     moveHomePortfolioScreen: () -> Unit,
-    moveHomeDetailScreen: (String) -> Unit
+    moveHomeDetailScreen: (String) -> Unit,
+    moveMarketAddBalanceScreen: () -> Unit
 ) {
     val context = LocalContext.current
     val viewEffect = viewModel.viewEffect
@@ -81,6 +90,7 @@ private fun ReactEffect(
                 HomeViewEffect.MoveHomePortfolioScreen -> moveHomePortfolioScreen()
                 is HomeViewEffect.MoveHomeDetailScreen -> moveHomeDetailScreen(effect.id)
                 is HomeViewEffect.ShowError -> showError(context, effect.message)
+                HomeViewEffect.MoveMarketAddBalance -> moveMarketAddBalanceScreen()
             }
         }
     }

@@ -19,8 +19,9 @@ class Active private constructor(
     }
 
     fun buy(count: Double, price: Double) {
+        val predAllPrice = countUi * priceForBuy
         this.count += (count * COIN_ACCURACY).toLong()
-        priceForBuy = (priceForBuy + count * price) / countUi
+        priceForBuy = (predAllPrice + count * price) / countUi
     }
 
     companion object {

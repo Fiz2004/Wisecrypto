@@ -16,6 +16,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fiz.wisecrypto.R
+import com.fiz.wisecrypto.ui.screens.main.components.BalanceInfo
 import com.fiz.wisecrypto.ui.screens.main.home.components.BigRelativeLabel
 
 @Composable
@@ -23,7 +24,8 @@ fun PortfolioInfo(
     balancePortfolio: String,
     isPricePortfolioIncreased: Boolean,
     percentageChangedBalance: String,
-    balanceCurrency: String
+    balanceCurrency: String,
+    actionButtonOnClick: () -> Unit
 ) {
     LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         item {
@@ -76,51 +78,12 @@ fun PortfolioInfo(
         }
 
         item {
-            Box(
-                modifier = Modifier
-                    .width(345.dp)
-                    .clip(shape = RoundedCornerShape(10.dp))
-                    .background(
-                        color = MaterialTheme.colorScheme.onPrimary,
-                    ),
-                contentAlignment = Alignment.TopStart
-            ) {
-                Row(
-                    modifier = Modifier.padding(
-                        vertical = 26.dp,
-                        horizontal = 24.dp
-                    ),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Column {
-                        Text(
-                            text = stringResource(R.string.home_your_balance),
-                            style = MaterialTheme.typography.displayMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                        Text(
-                            text = "$$balanceCurrency",
-                            style = MaterialTheme.typography.displayLarge,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                    Spacer(modifier = Modifier.weight(1f))
-                    Row(
-                        modifier = Modifier
-                            .background(
-                                color = MaterialTheme.colorScheme.primary,
-                                shape = RoundedCornerShape(8.dp)
-                            )
-                            .padding(8.dp)
-                    ) {
-                        Text(
-                            text = stringResource(R.string.home_add_balance),
-                            style = MaterialTheme.typography.titleSmall,
-                            color = MaterialTheme.colorScheme.onPrimary
-                        )
-                    }
-                }
-            }
+            BalanceInfo(
+                valueBalance = balanceCurrency,
+                modifier = Modifier.width(345.dp),
+                textIdActionButton = R.string.home_add_balance,
+                actionButtonOnClick = actionButtonOnClick
+            )
         }
     }
     Spacer(modifier = Modifier.height(24.dp))

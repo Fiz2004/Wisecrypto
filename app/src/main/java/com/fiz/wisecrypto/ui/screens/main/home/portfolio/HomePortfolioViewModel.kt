@@ -29,7 +29,7 @@ class HomePortfolioViewModel @Inject constructor(
     var viewEffect = MutableSharedFlow<HomePortfolioViewEffect>()
         private set
 
-    var actives: List<Active> = listOf()
+    var actives: List<Active>? = null
 
     init {
         viewModelScope.launch {
@@ -38,6 +38,7 @@ class HomePortfolioViewModel @Inject constructor(
                     user ?: return@collectLatest
 
                     actives = user.actives
+                    refresh()
                 }
         }
     }
@@ -65,30 +66,32 @@ class HomePortfolioViewModel @Inject constructor(
     }
 
     override suspend fun refresh() {
-        viewState = viewState.copy(isLoading = true)
+        actives?.let { actives ->
+            viewState = viewState.copy(isLoading = true)
 
-        when (val result = coinRepository.getCoins()) {
-            is Resource.Success -> {
-                val coins = result.data ?: listOf()
-                val portfolioUi = portfolioUseCase.getPortfolioUi(actives, coins)
+            when (val result = coinRepository.getCoins()) {
+                is Resource.Success -> {
+                    val coins = result.data ?: listOf()
+                    val portfolioUi = portfolioUseCase.getPortfolioUi(actives, coins)
 
-                viewState = viewState.copy(
-                    portfolio = portfolioUi.actives,
-                    balancePortfolio = portfolioUi.balancePortfolio,
-                    isPricePortfolioIncreased = portfolioUi.isPricePortfolioIncreased,
-                    percentageChangedBalance = portfolioUi.percentageChangedBalance,
-                    totalReturn = portfolioUi.totalReturn,
-                )
-            }
-            is Resource.Error -> {
-                viewEffect.emit(
-                    HomePortfolioViewEffect.ShowError(
-                        result.message
+                    viewState = viewState.copy(
+                        portfolio = portfolioUi.actives,
+                        balancePortfolio = portfolioUi.balancePortfolio,
+                        isPricePortfolioIncreased = portfolioUi.isPricePortfolioIncreased,
+                        percentageChangedBalance = portfolioUi.percentageChangedBalance,
+                        totalReturn = portfolioUi.totalReturn,
                     )
-                )
+                }
+                is Resource.Error -> {
+                    viewEffect.emit(
+                        HomePortfolioViewEffect.ShowError(
+                            result.message
+                        )
+                    )
+                }
             }
-        }
 
-        viewState = viewState.copy(isLoading = false)
+            viewState = viewState.copy(isLoading = false)
+        }
     }
 }

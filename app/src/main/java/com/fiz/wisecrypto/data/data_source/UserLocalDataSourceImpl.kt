@@ -113,6 +113,22 @@ class UserLocalDataSourceImpl @Inject constructor(
         return withContext(dispatcher) {
             try {
                 userDao.saveActivesAndSaveBalance(email, actives, balance, transactionEntity)
+                true
+            } catch (e: Exception) {
+                userDao.update(transactionEntity.copy(status = StatusTransaction.Fail))
+                false
+            }
+        }
+    }
+
+    suspend fun saveBalance(
+        email: String,
+        newBalance: Double,
+        transactionEntity: TransactionEntity
+    ): Boolean {
+        return withContext(dispatcher) {
+            try {
+                userDao.saveBalance(email, newBalance, transactionEntity)
                 userDao.update(transactionEntity.copy(status = StatusTransaction.Success))
                 true
             } catch (e: Exception) {

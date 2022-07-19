@@ -1,6 +1,5 @@
 package com.fiz.wisecrypto.ui.screens.main.market.buy
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -23,8 +22,8 @@ import com.fiz.wisecrypto.R
 import com.fiz.wisecrypto.ui.components.TextFieldWithHeader
 import com.fiz.wisecrypto.ui.components.Title
 import com.fiz.wisecrypto.ui.components.WiseCryptoButton
+import com.fiz.wisecrypto.ui.screens.main.components.BalanceInfo
 import com.fiz.wisecrypto.ui.screens.main.components.MainColumn
-import com.fiz.wisecrypto.ui.screens.main.market.components.ActionButton
 import com.fiz.wisecrypto.ui.theme.Gray3
 import com.fiz.wisecrypto.ui.theme.Gray4
 import com.fiz.wisecrypto.ui.theme.bodyMedium2
@@ -36,10 +35,10 @@ fun MarketBuyScreen(
     viewModel: MarketBuyViewModel = viewModel(),
     state: LazyListState = rememberLazyListState(),
     moveReturn: () -> Unit,
-    moveAddBalanceScreen: () -> Unit = {}
+    moveMarketAddBalanceScreen: () -> Unit = {}
 ) {
     LifeCycleEffect(viewModel)
-    ReactEffect(viewModel, moveReturn, moveAddBalanceScreen)
+    ReactEffect(viewModel, moveReturn, moveMarketAddBalanceScreen)
 
     val viewState = viewModel.viewState
 
@@ -48,49 +47,12 @@ fun MarketBuyScreen(
             textToolbar = stringResource(R.string.buy_toolbar),
             onClickBackButton = { viewModel.onEvent(MarketBuyEvent.BackButtonClicked) }
         ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(112.dp)
-                    .background(color = MaterialTheme.colorScheme.onPrimary)
-            ) {
-                Image(
-                    modifier = Modifier.fillMaxSize(),
-                    painter = painterResource(id = R.drawable.background_balance),
-                    contentDescription = null
-                )
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(
-                            color = MaterialTheme.colorScheme.onPrimary,
-                            shape = RoundedCornerShape(10.dp)
-                        )
-                        .padding(
-                            vertical = 26.dp,
-                            horizontal = 24.dp
-                        ),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Column {
-                        Text(
-                            text = stringResource(R.string.home_your_balance),
-                            style = MaterialTheme.typography.displayMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                        Text(
-                            text = "$${viewState.valueBalance}",
-                            style = MaterialTheme.typography.displayLarge,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                    Spacer(modifier = Modifier.weight(1f))
-                    ActionButton(
-                        text = R.string.buy_add,
-                        onClick = { viewModel.onEvent(MarketBuyEvent.AddBalanceClicked) }
-                    )
-                }
-            }
+            BalanceInfo(
+                valueBalance = viewState.valueBalance,
+                modifier = Modifier.fillMaxWidth(),
+                textIdActionButton = R.string.buy_add_balance,
+                actionButtonOnClick = { viewModel.onEvent(MarketBuyEvent.AddBalanceClicked) }
+            )
 
             LazyColumn(state = state) {
                 item {
@@ -198,7 +160,7 @@ fun MarketBuyScreen(
 private fun ReactEffect(
     viewModel: MarketBuyViewModel,
     moveReturn: () -> Unit,
-    moveAddBalanceScreen: () -> Unit
+    moveMarketAddBalanceScreen: () -> Unit
 ) {
     val viewEffect = viewModel.viewEffect
     val context = LocalContext.current
@@ -208,7 +170,7 @@ private fun ReactEffect(
             when (effect) {
                 MarketBuyViewEffect.MoveReturn -> moveReturn()
                 is MarketBuyViewEffect.ShowError -> showError(context, effect.message)
-                MarketBuyViewEffect.AddBalanceClicked -> moveAddBalanceScreen()
+                MarketBuyViewEffect.AddBalanceClicked -> moveMarketAddBalanceScreen()
             }
         }
     }
