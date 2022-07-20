@@ -1,4 +1,4 @@
-package com.fiz.wisecrypto.ui.screens.main.market.add_balance
+package com.fiz.wisecrypto.ui.screens.main.market.cash_balance
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -24,9 +24,9 @@ import com.fiz.wisecrypto.ui.util.LifeCycleEffect
 import com.fiz.wisecrypto.util.showError
 
 @Composable
-fun MarketAddBalanceScreen(
-    viewModel: MarketAddBalanceViewModel = viewModel(),
-    moveReturn: () -> Unit
+fun MarketCashBalanceScreen(
+    viewModel: MarketCashBalanceViewModel = viewModel(),
+    moveReturn: () -> Unit,
 ) {
     LifeCycleEffect(viewModel)
     ReactEffect(viewModel, moveReturn)
@@ -35,12 +35,14 @@ fun MarketAddBalanceScreen(
 
     Box {
         MainColumn(
-            textToolbar = stringResource(R.string.add_balance_toolbar),
-            onClickBackButton = { viewModel.onEvent(MarketAddBalanceEvent.BackButtonClicked) }
+            textToolbar = stringResource(R.string.cash_balance_toolbar),
+            onClickBackButton = { viewModel.onEvent(MarketCashBalanceEvent.BackButtonClicked) }
         ) {
             BalanceInfo(
                 valueBalance = viewState.valueBalance,
                 modifier = Modifier.fillMaxWidth(),
+                textIdActionButton = R.string.cash_balance_all,
+                actionButtonOnClick = { viewModel.onEvent(MarketCashBalanceEvent.CashAll) }
             )
 
             LazyColumn {
@@ -51,26 +53,28 @@ fun MarketAddBalanceScreen(
                         currencyForBuy = viewState.currencyForBuy,
                         onValueChange = {
                             viewModel.onEvent(
-                                MarketAddBalanceEvent.ValueCurrencyChanged(it)
+                                MarketCashBalanceEvent.ValueCurrencyChanged(it)
                             )
                         })
                 }
+
                 item {
                     Column {
                         Spacer(modifier = Modifier.height(16.dp))
-                        Title(text = R.string.add_balance_payments)
+                        Title(text = R.string.cash_balance_payments)
                         PaymentItem(
                             payment = viewState.payment,
                             iconId = R.drawable.profile_ic_arrow_right,
                             colorIcon = MaterialTheme.colorScheme.onSurfaceVariant,
                             actionOnClick = {
                                 viewModel.onEvent(
-                                    MarketAddBalanceEvent.PaymentClicked
+                                    MarketCashBalanceEvent.PaymentClicked
                                 )
                             }
                         )
                     }
                 }
+
                 item {
                     Spacer(modifier = Modifier.height(24.dp))
                     DetailTransaction(
@@ -91,9 +95,9 @@ fun MarketAddBalanceScreen(
         ) {
             WiseCryptoButton(
                 modifier = Modifier.fillMaxWidth(),
-                text = R.string.add_balance_pay,
+                text = R.string.cash_balance_pay,
                 color = MaterialTheme.colorScheme.primary,
-                onClick = { viewModel.onEvent(MarketAddBalanceEvent.PayButtonClicked) }
+                onClick = { viewModel.onEvent(MarketCashBalanceEvent.CashButtonClicked) }
             )
         }
     }
@@ -102,7 +106,7 @@ fun MarketAddBalanceScreen(
 
 @Composable
 private fun ReactEffect(
-    viewModel: MarketAddBalanceViewModel,
+    viewModel: MarketCashBalanceViewModel,
     moveReturn: () -> Unit,
 ) {
     val viewEffect = viewModel.viewEffect
@@ -111,8 +115,8 @@ private fun ReactEffect(
     LaunchedEffect(Unit) {
         viewEffect.collect { effect ->
             when (effect) {
-                MarketAddBalanceViewEffect.MoveReturn -> moveReturn()
-                is MarketAddBalanceViewEffect.ShowError -> showError(context, effect.message)
+                MarketCashBalanceViewEffect.MoveReturn -> moveReturn()
+                is MarketCashBalanceViewEffect.ShowError -> showError(context, effect.message)
             }
         }
     }

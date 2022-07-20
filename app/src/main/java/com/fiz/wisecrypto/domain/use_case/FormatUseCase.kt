@@ -18,8 +18,10 @@ class FormatUseCase @Inject constructor() {
         return "${"%.1f".format(abs(changePercentagePricePortfolio))}%"
     }
 
-    fun getFormatBalanceUsd(balanceUsd: Double): String {
-        return "%.0f".format(balanceUsd)
+    fun getFormatBalanceUsd(balanceUsd: Double?): String {
+        return balanceUsd?.let {
+            "%.0f".format(it)
+        } ?: ""
     }
 
     fun getFormatBalance(balance: Double): String {

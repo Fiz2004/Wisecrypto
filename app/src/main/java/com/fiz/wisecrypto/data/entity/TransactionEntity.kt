@@ -4,9 +4,9 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.fiz.wisecrypto.domain.models.StatusTransaction
-import com.fiz.wisecrypto.domain.models.Transaction
-import com.fiz.wisecrypto.domain.models.TypeTransaction
+import com.fiz.wisecrypto.domain.models.transaction.StatusTransaction
+import com.fiz.wisecrypto.domain.models.transaction.Transaction
+import com.fiz.wisecrypto.domain.models.transaction.TypeTransaction
 import org.threeten.bp.LocalDateTime
 
 @Entity(

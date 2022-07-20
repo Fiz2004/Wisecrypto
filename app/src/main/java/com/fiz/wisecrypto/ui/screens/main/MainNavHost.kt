@@ -20,6 +20,8 @@ import com.fiz.wisecrypto.ui.screens.main.market.add_balance.MarketAddBalanceScr
 import com.fiz.wisecrypto.ui.screens.main.market.add_balance.MarketAddBalanceViewModel
 import com.fiz.wisecrypto.ui.screens.main.market.buy.MarketBuyScreen
 import com.fiz.wisecrypto.ui.screens.main.market.buy.MarketBuyViewModel
+import com.fiz.wisecrypto.ui.screens.main.market.cash_balance.MarketCashBalanceScreen
+import com.fiz.wisecrypto.ui.screens.main.market.cash_balance.MarketCashBalanceViewModel
 import com.fiz.wisecrypto.ui.screens.main.market.detail.MarketDetailScreen
 import com.fiz.wisecrypto.ui.screens.main.market.detail.MarketDetailViewModel
 import com.fiz.wisecrypto.ui.screens.main.market.main.MarketMainScreen
@@ -67,7 +69,7 @@ fun MainNavHost(
 
             HomeNotificationScreen(
                 viewModel,
-                moveHomeMain = { navController.popBackStack() }
+                moveReturn = { navController.popBackStack() }
             )
         }
 
@@ -76,7 +78,7 @@ fun MainNavHost(
 
             HomePortfolioScreen(
                 viewModel,
-                moveHomeMainScreen = { navController.popBackStack() },
+                moveReturn = { navController.popBackStack() },
                 moveMarketDetailScreen = { id -> navController.navigate(NamesMarketScreen.Detail.name + "/$id") }
             )
         }
@@ -128,6 +130,15 @@ fun MainNavHost(
             )
         }
 
+        composable(NamesMarketScreen.CashBalance.name) {
+            val viewModel = hiltViewModel<MarketCashBalanceViewModel>()
+
+            MarketCashBalanceScreen(
+                viewModel,
+                moveReturn = { navController.popBackStack() },
+            )
+        }
+
         composable(NamesMainScreen.Market.name) {
             val viewModel = hiltViewModel<MarketViewModel>()
 
@@ -140,11 +151,10 @@ fun MainNavHost(
 
         composable(NamesMainScreen.Profile.name) {
             val viewModel = hiltViewModel<ProfileViewModel>()
-
             ProfileScreen(
                 viewModel,
-                movePullScreen = {},
-                moveAddScreen = {},
+                moveMarketCashBalanceScreen = { navController.navigate(NamesMarketScreen.CashBalance.name) },
+                moveMarketAddBalanceScreen = { navController.navigate(NamesMarketScreen.AddBalance.name) },
                 moveListTransactionsScreen = { navController.navigate(NamesProfileScreen.ListTransactions.name) },
                 movePrivacyScreen = { navController.navigate(NamesProfileScreen.Privacy.name) },
                 movePaymentScreen = { navController.navigate(NamesProfileScreen.Payment.name) },
@@ -202,7 +212,8 @@ enum class NamesMarketScreen {
     Detail,
     Sell,
     Buy,
-    AddBalance
+    AddBalance,
+    CashBalance
 }
 
 enum class NamesProfileScreen {

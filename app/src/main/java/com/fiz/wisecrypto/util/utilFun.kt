@@ -22,6 +22,7 @@ fun showError(
     val text = context.getString(
         when (message) {
             null -> R.string.error_network_default
+            "HTTP 429 " -> R.string.error_many_query
             ERROR_TEXT_FIELD -> R.string.error_edit_value_coin
             ERROR_SELL -> R.string.error_sell
             else -> R.string.error_network

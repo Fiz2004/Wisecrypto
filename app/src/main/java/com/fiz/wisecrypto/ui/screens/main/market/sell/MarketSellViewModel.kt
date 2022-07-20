@@ -46,7 +46,7 @@ class MarketSellViewModel @Inject constructor(
                         valueActiveCoin = formatUseCase.getFormatCoin(active.countUi),
                         coinForSell = formatUseCase.getFormatCoin(active.countUi)
                     )
-                    refresh()
+                    request()
                 }
         }
     }
@@ -74,7 +74,7 @@ class MarketSellViewModel @Inject constructor(
             try {
                 val coin = value.split(" ")[0]
                 viewState = viewState.copy(coinForSell = coin)
-                refresh()
+                request()
 
             } catch (e: Exception) {
                 viewEffect.emit(
@@ -126,11 +126,11 @@ class MarketSellViewModel @Inject constructor(
     private fun sellAllButtonClicked() {
         viewModelScope.launch {
             viewState = viewState.copy(coinForSell = viewState.valueActiveCoin)
-            refresh()
+            request()
         }
     }
 
-    override suspend fun refresh() {
+    override suspend fun request() {
         email?.let {
             idCoin?.let {
                 viewState = viewState.copy(isLoading = true)

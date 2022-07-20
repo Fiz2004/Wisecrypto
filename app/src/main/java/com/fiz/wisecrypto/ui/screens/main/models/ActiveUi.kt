@@ -17,11 +17,12 @@ data class ActiveUi(
 )
 
 fun Active.toActiveUi(coins: List<Coin>): ActiveUi {
-    val current = coins.first { it.id == id }
-    val divided = current.currentPrice / priceForBuy * 100
+    val current = coins.find { it.id == id } ?: return ActiveUi()
+
+    val divided = (current.currentPrice / priceForBuy) * 100
     val changed = countUi * (current.currentPrice - priceForBuy)
     val percent = if (divided > 0) divided - 100 else 100 - divided
-    val portfolio = countUi * (current.currentPrice)
+    val portfolio = countUi * current.currentPrice
     val changeValue = if (changed > 0)
         "+ $${"%.1f".format(abs(changed))}"
     else

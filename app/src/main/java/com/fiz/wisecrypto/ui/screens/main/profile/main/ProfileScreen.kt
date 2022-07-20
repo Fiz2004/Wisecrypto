@@ -26,8 +26,8 @@ import com.fiz.wisecrypto.ui.theme.*
 @Composable
 fun ProfileScreen(
     viewModel: ProfileViewModel = viewModel(),
-    movePullScreen: () -> Unit,
-    moveAddScreen: () -> Unit,
+    moveMarketCashBalanceScreen: () -> Unit,
+    moveMarketAddBalanceScreen: () -> Unit,
     moveListTransactionsScreen: () -> Unit,
     movePrivacyScreen: () -> Unit,
     movePaymentScreen: () -> Unit,
@@ -46,7 +46,7 @@ fun ProfileScreen(
         viewEffect.collect { effect ->
             when (effect) {
                 ProfileViewEffect.MoveAddScreen -> {
-                    moveAddScreen()
+                    moveMarketAddBalanceScreen()
                 }
                 ProfileViewEffect.MoveListTransactionsScreen -> {
                     moveListTransactionsScreen()
@@ -61,7 +61,7 @@ fun ProfileScreen(
                     movePrivacyScreen()
                 }
                 ProfileViewEffect.MovePullScreen -> {
-                    movePullScreen()
+                    moveMarketCashBalanceScreen()
                 }
                 ProfileViewEffect.MoveSignInScreen -> {
                     moveSignInScreen()

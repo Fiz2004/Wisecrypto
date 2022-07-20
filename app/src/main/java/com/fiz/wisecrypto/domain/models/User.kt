@@ -1,5 +1,7 @@
 package com.fiz.wisecrypto.domain.models
 
+import com.fiz.wisecrypto.domain.models.transaction.Transaction
+
 data class User(
     val fullName: String = "",
     val numberPhone: String = "",

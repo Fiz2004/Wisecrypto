@@ -1,17 +1,19 @@
 package com.fiz.wisecrypto.ui.screens.main.home.main
 
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fiz.wisecrypto.R
+import com.fiz.wisecrypto.ui.components.Title
+import com.fiz.wisecrypto.ui.screens.main.components.CoinItem
 import com.fiz.wisecrypto.ui.screens.main.components.FullScreenLoading
 import com.fiz.wisecrypto.ui.screens.main.components.LoadingContent
 import com.fiz.wisecrypto.ui.screens.main.components.MainColumn
 import com.fiz.wisecrypto.ui.screens.main.home.main.components.PortfolioInfo
 import com.fiz.wisecrypto.ui.screens.main.home.main.components.UserInfo
-import com.fiz.wisecrypto.ui.screens.main.home.main.components.WatchList
 import com.fiz.wisecrypto.ui.screens.main.home.main.components.YourActive
 import com.fiz.wisecrypto.ui.util.LifeCycleEffect
 import com.fiz.wisecrypto.util.showError
@@ -35,10 +37,10 @@ fun HomeScreen(
 
     val viewState = viewModel.viewState
     LoadingContent(
-        empty = viewState.watchlist == null,
+        empty = viewState.isFirstLoading,
         emptyContent = { FullScreenLoading() },
         loading = viewState.isLoading,
-        onRefresh = { viewModel.onEvent(HomeEvent.OnRefresh) }
+        onRefresh = { viewModel.onRefresh() }
     ) {
         MainColumn {
             UserInfo(
@@ -56,16 +58,21 @@ fun HomeScreen(
             LazyColumn {
                 item {
                     YourActive(
-                        viewState.actives ?: emptyList(),
+                        viewState.actives,
                         { viewModel.onEvent(HomeEvent.YourActiveAllClicked) },
                         { id -> viewModel.onEvent(HomeEvent.YourActiveClicked(id)) })
                 }
                 item {
-                    WatchList(viewState.watchlist ?: emptyList()) { id ->
-                        viewModel.onEvent(
-                            HomeEvent.YourActiveClicked(id)
-                        )
-                    }
+                    Title(R.string.home_watchlist)
+                }
+                items(
+                    items = viewState.watchlist,
+                    key = { coin -> coin.id }
+                ) { coin ->
+                    CoinItem(coin,
+                        moveHomeDetailScreen = { id ->
+                            viewModel.onEvent(HomeEvent.YourActiveClicked(id))
+                        })
                 }
 
             }

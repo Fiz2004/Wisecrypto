@@ -1,16 +1,22 @@
 package com.fiz.wisecrypto.ui.screens.main.market.main
 
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
+import androidx.lifecycle.viewmodel.compose.saveable
 import com.fiz.wisecrypto.data.repositories.CoinRepositoryImpl
 import com.fiz.wisecrypto.domain.models.Coin
 import com.fiz.wisecrypto.domain.models.User
 import com.fiz.wisecrypto.domain.use_case.CurrentUserUseCase
+import com.fiz.wisecrypto.ui.screens.main.models.CoinUi
+import com.fiz.wisecrypto.ui.screens.main.models.toCoinUi
 import com.fiz.wisecrypto.ui.util.BaseViewModel
 import com.fiz.wisecrypto.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -18,10 +24,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MarketViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val currentUserUseCase: CurrentUserUseCase,
     private val coinRepository: CoinRepositoryImpl
 ) : BaseViewModel() {
-    var viewState by mutableStateOf(MarketViewState())
+    @OptIn(SavedStateHandleSaveableApi::class)
+    var viewState by savedStateHandle.saveable {
+        mutableStateOf(MarketViewState())
+    }
         private set
 
     var viewEffect = MutableSharedFlow<MarketViewEffect>()
@@ -30,12 +40,14 @@ class MarketViewModel @Inject constructor(
     private var user: User? = null
     private var coins: List<Coin>? = null
 
+    private var searchJob: Job? = null
+
     init {
         viewModelScope.launch {
             currentUserUseCase.getCurrentUser()
                 .collectLatest {
                     user = it
-                    refresh()
+                    request()
                 }
         }
     }
@@ -57,7 +69,7 @@ class MarketViewModel @Inject constructor(
         }
     }
 
-    override suspend fun refresh() {
+    override suspend fun request() {
         user?.let {
             viewState = viewState.copy(isLoading = true)
             when (val result = coinRepository.getCoins()) {
@@ -71,7 +83,7 @@ class MarketViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getNewFilterCoins(): List<Coin> {
+    private fun getNewFilterCoins(): List<CoinUi> {
         val watchlist = user?.watchList ?: listOf()
         val checkValue = viewState.searchText.lowercase()
 
@@ -85,14 +97,14 @@ class MarketViewModel @Inject constructor(
             0 -> currentUserUseCase.getCoinsWatchList(watchlist, newCoins)
             else -> newCoins
         }
-        return result
+        return result.map { it.toCoinUi() }
     }
 
     private fun marketChipClicked(index: Int) {
-        viewModelScope.launch {
-            viewState = viewState.copy(isLoading = true)
-            viewState = viewState
-                .copy(selectedChipNumber = index)
+        viewState = viewState
+            .copy(selectedChipNumber = index)
+        viewState = viewState.copy(isLoading = true)
+        viewModelScope.launch(Dispatchers.Default) {
             val newCoins = getNewFilterCoins()
             viewState = viewState
                 .copy(coins = newCoins)
@@ -101,10 +113,11 @@ class MarketViewModel @Inject constructor(
     }
 
     private fun searchTextChanged(value: String) {
-        viewModelScope.launch {
+        viewState = viewState.copy(searchText = value)
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch(Dispatchers.Default) {
+            delay(500L)
             viewState = viewState.copy(isLoading = true)
-            viewState = viewState
-                .copy(searchText = value)
             val newCoins = getNewFilterCoins()
             viewState = viewState
                 .copy(coins = newCoins)

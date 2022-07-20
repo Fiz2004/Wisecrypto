@@ -1,4 +1,4 @@
-package com.fiz.wisecrypto.ui.screens.main.home.notification.models
+package com.fiz.wisecrypto.domain.models.notification
 
 sealed class TypeNotification {
     data class Portfolio(val status: StatusPortfolio, val percent: Double, val coin: String) :

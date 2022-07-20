@@ -16,13 +16,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fiz.wisecrypto.R
-import com.fiz.wisecrypto.ui.screens.main.home.notification.models.Notification
-import com.fiz.wisecrypto.ui.screens.main.home.notification.models.StatusOperation
-import com.fiz.wisecrypto.ui.screens.main.home.notification.models.StatusPortfolio
-import com.fiz.wisecrypto.ui.screens.main.home.notification.models.TypeNotification
+import com.fiz.wisecrypto.domain.models.notification.Notification
+import com.fiz.wisecrypto.domain.models.notification.StatusOperation
+import com.fiz.wisecrypto.domain.models.notification.StatusPortfolio
+import com.fiz.wisecrypto.domain.models.notification.TypeNotification
 import com.fiz.wisecrypto.ui.theme.*
 import org.threeten.bp.format.DateTimeFormatter
-import kotlin.math.min
 
 @Composable
 fun NotificationsList(notifications: List<Notification>) {

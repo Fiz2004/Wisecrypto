@@ -2,6 +2,7 @@ package com.fiz.wisecrypto.ui.screens.main.market.main
 
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -10,7 +11,7 @@ import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fiz.wisecrypto.R
-import com.fiz.wisecrypto.ui.screens.main.components.CoinColumn
+import com.fiz.wisecrypto.ui.screens.main.components.CoinItem
 import com.fiz.wisecrypto.ui.screens.main.components.FullScreenLoading
 import com.fiz.wisecrypto.ui.screens.main.components.LoadingContent
 import com.fiz.wisecrypto.ui.screens.main.components.MainColumn
@@ -49,12 +50,13 @@ fun MarketMainScreen(
                 onClick = { number -> viewModel.onEvent(MarketEvent.MarketChipClicked(number)) }
             )
             LazyColumn(state = state) {
-                item {
-                    CoinColumn(viewState.coins ?: emptyList()) { id ->
+                items(
+                    items = viewState.coins ?: listOf(),
+                    key = { coin -> coin.id }
+                ) { coin ->
+                    CoinItem(coin) {
                         viewModel.onEvent(
-                            MarketEvent.YourActiveClicked(
-                                id
-                            )
+                            MarketEvent.YourActiveClicked(it)
                         )
                     }
                 }

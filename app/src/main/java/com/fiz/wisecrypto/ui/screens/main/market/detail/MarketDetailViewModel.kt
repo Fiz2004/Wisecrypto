@@ -55,7 +55,7 @@ class MarketDetailViewModel @Inject constructor(
                     viewState = viewState.copy(
                         isWatchList = user.watchList.contains(idCoin)
                     )
-                    refresh()
+                    request()
                 }
         }
     }
@@ -108,11 +108,11 @@ class MarketDetailViewModel @Inject constructor(
             viewState = viewState.copy(
                 indexPeriodFilterChip = PeriodFilterChip.values()[index]
             )
-            refresh()
+            request()
         }
     }
 
-    override suspend fun refresh() {
+    override suspend fun request() {
         email?.let {
             idCoin?.let {
                 viewState = viewState.copy(isLoading = true)

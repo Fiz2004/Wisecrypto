@@ -1,9 +1,9 @@
 package com.fiz.wisecrypto.ui.screens.main.home.notification
 
-import com.fiz.wisecrypto.ui.screens.main.home.notification.models.Notification
-import com.fiz.wisecrypto.ui.screens.main.home.notification.models.StatusOperation
-import com.fiz.wisecrypto.ui.screens.main.home.notification.models.StatusPortfolio
-import com.fiz.wisecrypto.ui.screens.main.home.notification.models.TypeNotification
+import com.fiz.wisecrypto.domain.models.notification.Notification
+import com.fiz.wisecrypto.domain.models.notification.StatusOperation
+import com.fiz.wisecrypto.domain.models.notification.StatusPortfolio
+import com.fiz.wisecrypto.domain.models.notification.TypeNotification
 import org.threeten.bp.LocalDateTime
 
 data class HomeNotificationViewState(

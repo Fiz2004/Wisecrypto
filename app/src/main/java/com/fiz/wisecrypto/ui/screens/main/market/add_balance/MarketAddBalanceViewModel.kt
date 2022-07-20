@@ -5,6 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.fiz.wisecrypto.data.repositories.UserRepositoryImpl
+import com.fiz.wisecrypto.domain.models.Coin
+import com.fiz.wisecrypto.domain.models.User
 import com.fiz.wisecrypto.domain.use_case.CurrentUserUseCase
 import com.fiz.wisecrypto.domain.use_case.FormatUseCase
 import com.fiz.wisecrypto.ui.util.BaseViewModel
@@ -29,18 +31,14 @@ class MarketAddBalanceViewModel @Inject constructor(
     var viewEffect = MutableSharedFlow<MarketAddBalanceViewEffect>()
         private set
 
-    var email: String? = null
+    var user: User? = null
+    var coins: List<Coin>? = null
 
     init {
         viewModelScope.launch {
             currentUserUseCase.getCurrentUser()
                 .collectLatest { user ->
-                    user ?: return@collectLatest
-                    email = user.email
-                    viewState = viewState.copy(
-                        valueBalance = formatUseCase.getFormatBalance(user.balance),
-                        currencyForBuy = formatUseCase.getFormatBalance(10.0)
-                    )
+                    this@MarketAddBalanceViewModel.user = user
                     refresh()
                 }
         }
@@ -48,14 +46,15 @@ class MarketAddBalanceViewModel @Inject constructor(
 
     fun onEvent(event: MarketAddBalanceEvent) {
         when (event) {
-            MarketAddBalanceEvent.OnRefresh -> onRefresh()
-            MarketAddBalanceEvent.Started -> started()
-            MarketAddBalanceEvent.Stopped -> stopped()
             MarketAddBalanceEvent.BackButtonClicked -> backButtonClicked()
             MarketAddBalanceEvent.PayButtonClicked -> buyButtonClicked()
             is MarketAddBalanceEvent.ValueCurrencyChanged -> valueCurrencyChanged(event.value)
-            MarketAddBalanceEvent.PaymentClicked -> {}
+            MarketAddBalanceEvent.PaymentClicked -> paymentClicked()
         }
+    }
+
+    private fun paymentClicked() {
+
     }
 
     private fun backButtonClicked() {
@@ -69,7 +68,7 @@ class MarketAddBalanceViewModel @Inject constructor(
             try {
                 val currency = value.substringAfter("$")
                 viewState = viewState.copy(currencyForBuy = currency)
-                refresh()
+                request()
 
             } catch (e: Exception) {
                 viewEffect.emit(
@@ -83,13 +82,12 @@ class MarketAddBalanceViewModel @Inject constructor(
 
     private fun buyButtonClicked() {
         viewModelScope.launch {
-
             try {
                 val currency =
                     viewState.currencyForBuy.toDoubleOrNull() ?: throw Exception("value no correct")
 
                 if (userRepository.addBalance(
-                        email = email ?: return@launch,
+                        email = user?.email ?: return@launch,
                         currency = currency,
                     )
                 )
@@ -112,13 +110,19 @@ class MarketAddBalanceViewModel @Inject constructor(
         }
     }
 
-    override suspend fun refresh() {
-        email?.let {
+    override suspend fun request() {
+        refresh()
+    }
+
+    private fun refresh() {
+        user?.let { user ->
+            viewState = viewState.copy(isLoading = true)
             val currency = viewState.currencyForBuy.toDoubleOrNull() ?: return
             val commission = currency / 50.0
             val total = currency + commission
-            viewState = viewState.copy(isLoading = true)
             viewState = viewState.copy(
+                valueBalance = formatUseCase.getFormatBalance(user.balance),
+                currencyForBuy = formatUseCase.getFormatBalance(10.0),
                 commission = formatUseCase.getFormatBalance(commission),
                 total = formatUseCase.getFormatBalance(total),
             )

@@ -38,7 +38,7 @@ class PortfolioUseCase @Inject constructor(
 
     private fun getPricePortfolio(actives: List<Active>, coins: List<Coin>): Double {
         return actives.fold(0.0) { acc, active ->
-            acc + (active.countUi) * (coins.first { it.id == active.id }.currentPrice)
+            acc + (active.countUi) * (coins.find { it.id == active.id }?.currentPrice ?: 0.0)
         }
     }
 

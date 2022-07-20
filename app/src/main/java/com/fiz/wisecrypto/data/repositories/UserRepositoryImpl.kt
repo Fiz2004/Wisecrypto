@@ -5,9 +5,9 @@ import com.fiz.wisecrypto.data.entity.TransactionEntity
 import com.fiz.wisecrypto.data.entity.UserEntity
 import com.fiz.wisecrypto.data.entity.toActiveEntity
 import com.fiz.wisecrypto.domain.models.Active
-import com.fiz.wisecrypto.domain.models.StatusTransaction
-import com.fiz.wisecrypto.domain.models.TypeTransaction
 import com.fiz.wisecrypto.domain.models.User
+import com.fiz.wisecrypto.domain.models.transaction.StatusTransaction
+import com.fiz.wisecrypto.domain.models.transaction.TypeTransaction
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -205,6 +205,28 @@ class UserRepositoryImpl @Inject constructor(
             val user = userLocalDataSource.getUser(checkEmail) ?: return@withContext false
             val balance = user.balance
             val newBalance = balance + currency
+            val transactionEntity = TransactionEntity(
+                status = StatusTransaction.Process,
+                type = TypeTransaction.Balance(currency),
+                textDescription = "$${currency}",
+                id = "TS-" + Random.nextInt(10000).toString(),
+                emailId = checkEmail,
+                data = LocalDateTime.now()
+            )
+            userLocalDataSource.saveBalance(
+                checkEmail,
+                newBalance,
+                transactionEntity
+            )
+        }
+    }
+
+    suspend fun cashBalance(email: String, currency: Double): Boolean {
+        return withContext(dispatcher) {
+            val checkEmail = email.trim().lowercase()
+            val user = userLocalDataSource.getUser(checkEmail) ?: return@withContext false
+            val balance = user.balance
+            val newBalance = balance - currency
             val transactionEntity = TransactionEntity(
                 status = StatusTransaction.Process,
                 type = TypeTransaction.Balance(currency),

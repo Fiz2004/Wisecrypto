@@ -1,4 +1,4 @@
-package com.fiz.wisecrypto.ui.screens.main.home.notification.models
+package com.fiz.wisecrypto.domain.models.notification
 
 import org.threeten.bp.LocalDateTime
 

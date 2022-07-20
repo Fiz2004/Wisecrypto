@@ -21,18 +21,18 @@ import com.fiz.wisecrypto.util.showError
 @Composable
 fun HomePortfolioScreen(
     viewModel: HomePortfolioViewModel = viewModel(),
-    moveHomeMainScreen: () -> Unit,
+    moveReturn: () -> Unit,
     moveMarketDetailScreen: (String) -> Unit
 ) {
     LifeCycleEffect(viewModel)
-    ReactEffect(viewModel, moveHomeMainScreen, moveMarketDetailScreen)
+    ReactEffect(viewModel, moveReturn, moveMarketDetailScreen)
 
     val viewState = viewModel.viewState
     LoadingContent(
         empty = viewState.portfolio == null,
         emptyContent = { FullScreenLoading() },
         loading = viewState.isLoading,
-        onRefresh = { viewModel.onEvent(HomePortfolioEvent.OnRefresh) }
+        onRefresh = { viewModel.onRefresh() }
     ) {
         MainColumn(
             textToolbar = stringResource(R.string.portfolio_portfolio),
@@ -56,16 +56,16 @@ fun HomePortfolioScreen(
 @Composable
 private fun ReactEffect(
     viewModel: HomePortfolioViewModel,
-    moveHomeMainScreen: () -> Unit,
-    moveHomeDetailScreen: (String) -> Unit
+    moveReturn: () -> Unit,
+    moveMarketDetailScreen: (String) -> Unit
 ) {
     val context = LocalContext.current
     val viewEffect = viewModel.viewEffect
     LaunchedEffect(Unit) {
         viewEffect.collect { effect ->
             when (effect) {
-                HomePortfolioViewEffect.MoveReturn -> moveHomeMainScreen()
-                is HomePortfolioViewEffect.MoveHomeDetailScreen -> moveHomeDetailScreen(effect.id)
+                HomePortfolioViewEffect.MoveReturn -> moveReturn()
+                is HomePortfolioViewEffect.MoveHomeDetailScreen -> moveMarketDetailScreen(effect.id)
                 is HomePortfolioViewEffect.ShowError -> showError(context, effect.message)
             }
         }

@@ -11,35 +11,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import com.fiz.wisecrypto.domain.models.Coin
 import com.fiz.wisecrypto.ui.components.IconCoin
 import com.fiz.wisecrypto.ui.screens.main.home.main.components.RelativeLabel
-import com.fiz.wisecrypto.ui.screens.main.models.toCoinUi
+import com.fiz.wisecrypto.ui.screens.main.models.CoinUi
 import com.fiz.wisecrypto.ui.theme.MulishBold
 import com.fiz.wisecrypto.ui.theme.MulishRegular
 
 @Composable
-fun CoinColumn(
-    coins: List<Coin>,
-    moveHomeDetailScreen: (String) -> Unit
-) {
-    coins.forEach {
-        CoinItem(it, moveHomeDetailScreen)
-    }
-}
-
-
-@Composable
-fun CoinItem(coin: Coin, moveHomeDetailScreen: (String) -> Unit) {
-
-    val coinUi = coin.toCoinUi()
+fun CoinItem(coinUi: CoinUi, moveHomeDetailScreen: (String) -> Unit) {
 
     Row(
         modifier = Modifier
             .height(88.dp)
             .clip(shape = RoundedCornerShape(10.dp))
             .background(color = MaterialTheme.colorScheme.onPrimary)
-            .clickable { moveHomeDetailScreen(coin.id) }
+            .clickable { moveHomeDetailScreen(coinUi.id) }
             .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {

@@ -8,8 +8,8 @@ import com.fiz.wisecrypto.data.database.dao.UserDao
 import com.fiz.wisecrypto.data.entity.ActiveEntity
 import com.fiz.wisecrypto.data.entity.TransactionEntity
 import com.fiz.wisecrypto.data.entity.UserEntity
-import com.fiz.wisecrypto.domain.models.StatusTransaction
-import com.fiz.wisecrypto.domain.models.TypeTransaction
+import com.fiz.wisecrypto.domain.models.transaction.StatusTransaction
+import com.fiz.wisecrypto.domain.models.transaction.TypeTransaction
 import org.threeten.bp.LocalDateTime
 
 @Database(

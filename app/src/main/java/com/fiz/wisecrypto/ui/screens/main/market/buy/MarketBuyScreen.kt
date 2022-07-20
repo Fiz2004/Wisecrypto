@@ -64,7 +64,7 @@ fun MarketBuyScreen(
                                 viewState.nameCurrency
                             ),
                             text = stringResource(
-                                id = R.string.buy_one_currency,
+                                id = R.string.one_currency,
                                 viewState.symbolCurrency,
                                 viewState.currencyForBuy
                             ),
@@ -76,7 +76,7 @@ fun MarketBuyScreen(
                                 )
                             },
                             textHint = stringResource(
-                                id = R.string.buy_one_currency,
+                                id = R.string.one_currency,
                                 viewState.symbolCurrency,
                                 viewState.currencyForBuy
                             )

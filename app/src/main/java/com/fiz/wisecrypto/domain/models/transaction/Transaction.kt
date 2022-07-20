@@ -1,4 +1,4 @@
-package com.fiz.wisecrypto.domain.models
+package com.fiz.wisecrypto.domain.models.transaction
 
 import org.threeten.bp.LocalDateTime
 

@@ -5,7 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.fiz.wisecrypto.data.repositories.CoinRepositoryImpl
-import com.fiz.wisecrypto.domain.models.Active
+import com.fiz.wisecrypto.domain.models.Coin
+import com.fiz.wisecrypto.domain.models.User
 import com.fiz.wisecrypto.domain.use_case.CurrentUserUseCase
 import com.fiz.wisecrypto.domain.use_case.PortfolioUseCase
 import com.fiz.wisecrypto.ui.util.BaseViewModel
@@ -29,15 +30,14 @@ class HomePortfolioViewModel @Inject constructor(
     var viewEffect = MutableSharedFlow<HomePortfolioViewEffect>()
         private set
 
-    var actives: List<Active>? = null
+    var user: User? = null
+    var coins: List<Coin>? = null
 
     init {
         viewModelScope.launch {
             currentUserUseCase.getCurrentUser()
                 .collectLatest { user ->
-                    user ?: return@collectLatest
-
-                    actives = user.actives
+                    this@HomePortfolioViewModel.user = user
                     refresh()
                 }
         }
@@ -45,9 +45,6 @@ class HomePortfolioViewModel @Inject constructor(
 
     fun onEvent(event: HomePortfolioEvent) {
         when (event) {
-            HomePortfolioEvent.OnRefresh -> onRefresh()
-            HomePortfolioEvent.Started -> started()
-            HomePortfolioEvent.Stopped -> stopped()
             HomePortfolioEvent.BackButtonClicked -> backButtonClicked()
             is HomePortfolioEvent.YourActiveClicked -> yourActiveClicked(event.id)
         }
@@ -65,33 +62,40 @@ class HomePortfolioViewModel @Inject constructor(
         }
     }
 
-    override suspend fun refresh() {
-        actives?.let { actives ->
-            viewState = viewState.copy(isLoading = true)
+    override suspend fun request() {
+        viewState = viewState.copy(isLoading = true)
 
-            when (val result = coinRepository.getCoins()) {
-                is Resource.Success -> {
-                    val coins = result.data ?: listOf()
-                    val portfolioUi = portfolioUseCase.getPortfolioUi(actives, coins)
-
-                    viewState = viewState.copy(
-                        portfolio = portfolioUi.actives,
-                        balancePortfolio = portfolioUi.balancePortfolio,
-                        isPricePortfolioIncreased = portfolioUi.isPricePortfolioIncreased,
-                        percentageChangedBalance = portfolioUi.percentageChangedBalance,
-                        totalReturn = portfolioUi.totalReturn,
-                    )
-                }
-                is Resource.Error -> {
-                    viewEffect.emit(
-                        HomePortfolioViewEffect.ShowError(
-                            result.message
-                        )
-                    )
-                }
+        when (val result = coinRepository.getCoins()) {
+            is Resource.Success -> {
+                coins = result.data ?: listOf()
+                refresh()
             }
+            is Resource.Error -> {
+                viewEffect.emit(
+                    HomePortfolioViewEffect.ShowError(
+                        result.message
+                    )
+                )
+            }
+        }
 
-            viewState = viewState.copy(isLoading = false)
+        viewState = viewState.copy(isLoading = false)
+    }
+
+
+    private fun refresh() {
+        user?.let { user ->
+            coins?.let { coins ->
+                val portfolioUi = portfolioUseCase.getPortfolioUi(user.actives, coins)
+
+                viewState = viewState.copy(
+                    portfolio = portfolioUi.actives,
+                    balancePortfolio = portfolioUi.balancePortfolio,
+                    isPricePortfolioIncreased = portfolioUi.isPricePortfolioIncreased,
+                    percentageChangedBalance = portfolioUi.percentageChangedBalance,
+                    totalReturn = portfolioUi.totalReturn,
+                )
+            }
         }
     }
 }

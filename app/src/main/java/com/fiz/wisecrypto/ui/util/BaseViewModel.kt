@@ -11,7 +11,7 @@ abstract class BaseViewModel: ViewModel(), LifeCycleEventable {
         if (jobRefresh == null)
             jobRefresh = viewModelScope.launch(Dispatchers.Default) {
                 while (isActive) {
-                    refresh()
+                    request()
                     delay(Consts.TIME_REFRESH_NETWORK_MS.toLong())
                 }
             }
@@ -32,5 +32,5 @@ abstract class BaseViewModel: ViewModel(), LifeCycleEventable {
         }
     }
 
-    abstract suspend fun refresh()
+    abstract suspend fun request()
 }

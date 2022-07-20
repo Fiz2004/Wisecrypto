@@ -1,4 +1,4 @@
-package com.fiz.wisecrypto.domain.models
+package com.fiz.wisecrypto.domain.models.transaction
 
 sealed class TypeTransaction {
     data class Balance(val value: Double) : TypeTransaction()

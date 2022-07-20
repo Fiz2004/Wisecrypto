@@ -4,7 +4,7 @@ import androidx.room.*
 import com.fiz.wisecrypto.data.entity.ActiveEntity
 import com.fiz.wisecrypto.data.entity.TransactionEntity
 import com.fiz.wisecrypto.data.entity.UserEntity
-import com.fiz.wisecrypto.domain.models.StatusTransaction
+import com.fiz.wisecrypto.domain.models.transaction.StatusTransaction
 import kotlinx.coroutines.flow.Flow
 
 @Dao

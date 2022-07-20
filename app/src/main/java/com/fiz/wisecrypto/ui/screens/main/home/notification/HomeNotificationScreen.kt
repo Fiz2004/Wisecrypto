@@ -2,7 +2,6 @@ package com.fiz.wisecrypto.ui.screens.main.home.notification
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fiz.wisecrypto.R
@@ -12,9 +11,9 @@ import com.fiz.wisecrypto.ui.screens.main.home.notification.components.Notificat
 @Composable
 fun HomeNotificationScreen(
     viewModel: HomeNotificationViewModel = viewModel(),
-    moveHomeMain: () -> Unit
+    moveReturn: () -> Unit
 ) {
-    ReactEffect(viewModel, moveHomeMain)
+    ReactEffect(viewModel, moveReturn)
 
     val viewState = viewModel.viewState
     MainColumn(
@@ -28,14 +27,14 @@ fun HomeNotificationScreen(
 @Composable
 private fun ReactEffect(
     viewModel: HomeNotificationViewModel,
-    moveHomeMain: () -> Unit
+    moveReturn: () -> Unit
 ) {
     val viewEffect = viewModel.viewEffect
     LaunchedEffect(Unit) {
         viewEffect.collect { effect ->
             when (effect) {
                 HomeNotificationViewEffect.MoveReturn -> {
-                    moveHomeMain()
+                    moveReturn()
                 }
             }
         }
