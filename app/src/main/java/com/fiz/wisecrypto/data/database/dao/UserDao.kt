@@ -13,22 +13,23 @@ interface UserDao {
     fun getAll(): List<UserEntity>
 
     @Query("SELECT * FROM UserEntity WHERE email =:email")
-    fun observeUserByEmail(email: String): Flow<UserEntity>
-
-    @Query("SELECT * FROM UserEntity WHERE email =:email")
     suspend fun getUserByEmail(email: String): UserEntity
-
-    @Transaction
-    suspend fun saveUser(userEntity: UserEntity) {
-        insert(userEntity)
-        insertActives(userEntity.actives)
-    }
 
     @Query("SELECT * FROM ActiveEntity WHERE emailId =:emailId")
     suspend fun getActives(emailId: String): List<ActiveEntity>
 
     @Query("SELECT * FROM TransactionEntity WHERE emailId =:emailId")
     suspend fun getTransactions(emailId: String): List<TransactionEntity>
+
+    @Query("SELECT * FROM UserEntity WHERE email =:email")
+    fun observeUserByEmail(email: String): Flow<UserEntity>
+
+    @Transaction
+    suspend fun saveUser(userEntity: UserEntity) {
+        insert(userEntity)
+        insertActives(userEntity.actives)
+        insertTransactions(userEntity.transactions)
+    }
 
     @Query("SELECT EXISTS (SELECT* FROM UserEntity WHERE (email =:email AND password =:password))")
     suspend fun isValidateEmailPassword(email: String, password: String): Boolean
@@ -37,7 +38,7 @@ interface UserDao {
     suspend fun isValidatePhone(numberPhone: String): Boolean
 
     @Query("UPDATE UserEntity SET password=:password WHERE email =:email")
-    suspend fun changePassword(email: String, password: String)
+    suspend fun savePassword(email: String, password: String)
 
     @Query("UPDATE ActiveEntity SET count=:count WHERE id =:id")
     suspend fun saveActives(id: String, count: Double)
@@ -46,7 +47,30 @@ interface UserDao {
     suspend fun saveBalance(email: String, balance: Double)
 
     @Query("UPDATE UserEntity SET watchList=:watchList WHERE email =:email")
-    suspend fun changeWatchList(email: String, watchList: List<String>)
+    suspend fun saveWatchList(email: String, watchList: List<String>)
+
+    @Transaction
+    suspend fun saveActivesAndSaveBalance(
+        email: String,
+        actives: List<ActiveEntity>,
+        newBalance: Double,
+        transactionEntity: TransactionEntity
+    ) {
+        deleteActives()
+        insertActives(actives)
+        saveBalance(email, newBalance, transactionEntity)
+    }
+
+    @Transaction
+    suspend fun saveBalance(
+        email: String,
+        newBalance: Double,
+        transactionEntity: TransactionEntity
+    ) {
+        insertTransactions(listOf(transactionEntity))
+        saveBalance(email, newBalance)
+        update(transactionEntity.copy(status = StatusTransaction.Success))
+    }
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(userEntity: UserEntity)
@@ -71,29 +95,6 @@ interface UserDao {
 
     @Delete
     suspend fun delete(userEntity: UserEntity)
-
-    @Transaction
-    suspend fun saveActivesAndSaveBalance(
-        email: String,
-        actives: List<ActiveEntity>,
-        newBalance: Double,
-        transactionEntity: TransactionEntity
-    ) {
-        deleteActives()
-        insertActives(actives)
-        saveBalance(email, newBalance, transactionEntity)
-    }
-
-    @Transaction
-    suspend fun saveBalance(
-        email: String,
-        newBalance: Double,
-        transactionEntity: TransactionEntity
-    ) {
-        insertTransactions(listOf(transactionEntity))
-        saveBalance(email, newBalance)
-        update(transactionEntity.copy(status = StatusTransaction.Success))
-    }
 
     @Query("DELETE FROM ActiveEntity")
     suspend fun deleteActives()

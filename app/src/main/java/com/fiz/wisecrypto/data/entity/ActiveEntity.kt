@@ -26,7 +26,7 @@ data class ActiveEntity(
 ) {
     fun toActive(): Active {
         return Active.create(
-            id = id,
+            idCoin = id,
             count = count,
             priceForBuy = priceForBuy
         )

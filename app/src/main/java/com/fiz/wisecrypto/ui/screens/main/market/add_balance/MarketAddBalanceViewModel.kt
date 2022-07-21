@@ -31,7 +31,7 @@ class MarketAddBalanceViewModel @Inject constructor(
     var viewEffect = MutableSharedFlow<MarketAddBalanceViewEffect>()
         private set
 
-    var user: User? = null
+    private var user: User? = null
 
     init {
         viewModelScope.launch {
@@ -59,35 +59,38 @@ class MarketAddBalanceViewModel @Inject constructor(
     }
 
     private fun buyButtonClicked() {
-        viewModelScope.launch {
-            try {
-                val currency =
-                    viewState.currencyForBuy.toDoubleOrNull() ?: throw Exception("value no correct")
+        user?.let { user ->
+            viewModelScope.launch {
+                try {
+                    val currency =
+                        viewState.currencyForBuy.toDoubleOrNull()
+                            ?: throw Exception("value no correct")
 
-                val commission = currency * COMMISSION
-                val total = currency + commission
+                    val commission = currency * COMMISSION
+                    val total = currency + commission
 
-                if (userRepository.addBalance(
-                        email = user?.email ?: return@launch,
-                        currency = currency,
-                        comission = commission
+                    if (userRepository.addBalance(
+                            user = user,
+                            currency = currency,
+                            comission = commission
+                        )
                     )
-                )
-                    viewEffect.emit(MarketAddBalanceViewEffect.MoveReturn)
-                else {
+                        viewEffect.emit(MarketAddBalanceViewEffect.MoveReturn)
+                    else {
+                        viewEffect.emit(
+                            MarketAddBalanceViewEffect.ShowError(
+                                ERROR_SELL
+                            )
+                        )
+                    }
+
+                } catch (e: Exception) {
                     viewEffect.emit(
                         MarketAddBalanceViewEffect.ShowError(
-                            ERROR_SELL
+                            ERROR_TEXT_FIELD
                         )
                     )
                 }
-
-            } catch (e: Exception) {
-                viewEffect.emit(
-                    MarketAddBalanceViewEffect.ShowError(
-                        ERROR_TEXT_FIELD
-                    )
-                )
             }
         }
     }

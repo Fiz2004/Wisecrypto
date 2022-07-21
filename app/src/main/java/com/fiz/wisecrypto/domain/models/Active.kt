@@ -27,17 +27,17 @@ class Active private constructor(
     companion object {
         private const val COIN_ACCURACY = 1E6
 
-        fun create(id: String, count: Double, priceForBuy: Double): Active {
+        fun create(idCoin: String, count: Double, priceForBuy: Double): Active {
             return Active(
-                id = id,
+                id = idCoin,
                 count = (count * COIN_ACCURACY).toLong(),
                 priceForBuy = priceForBuy
             )
         }
 
-        fun create(id: String, count: Long, priceForBuy: Double): Active {
+        fun create(idCoin: String, count: Long, priceForBuy: Double): Active {
             return Active(
-                id = id,
+                id = idCoin,
                 count = count,
                 priceForBuy = priceForBuy
             )

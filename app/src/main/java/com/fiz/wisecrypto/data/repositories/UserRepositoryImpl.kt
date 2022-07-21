@@ -109,26 +109,30 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
-    suspend fun sellActive(email: String, idCoin: String, count: Double, price: Double): Boolean {
+    suspend fun sellActive(
+        user: User,
+        idCoin: String,
+        userCoinForSell: Double,
+        priceCurrency: Double
+    ): Boolean {
         return withContext(dispatcher) {
-            val checkEmail = email.trim().lowercase()
-            val user = userLocalDataSource.getUser(checkEmail)?.toUser() ?: return@withContext false
-            val newActives = user.actives.toMutableList()
-            val active = newActives.find { it.id == idCoin } ?: return@withContext false
-            active.sell(count)
-            val newBalance = user.plus(price)
+            val userActives = user.actives.toMutableList()
+            val active = userActives.find { it.id == idCoin } ?: return@withContext false
+            active.sell(userCoinForSell)
+            val newBalance = user.plus(priceCurrency)
             if (active.isEmpty)
-                newActives.remove(active)
+                userActives.remove(active)
+            val activesEntity = userActives.map { it.toActiveEntity(user.email) }
             val transactionEntity = TransactionEntity(
                 status = StatusTransaction.Process,
-                type = TypeTransaction.Sell(count, price, idCoin),
+                type = TypeTransaction.Sell(userCoinForSell, priceCurrency, idCoin),
                 id = "TP-" + Random.nextInt(10000).toString(),
-                emailId = checkEmail,
+                emailId = user.email,
                 data = LocalDateTime.now()
             )
             userLocalDataSource.saveActivesAndBalance(
-                checkEmail,
-                newActives.map { it.toActiveEntity(checkEmail) },
+                user.email,
+                activesEntity,
                 newBalance,
                 transactionEntity
             )
@@ -136,21 +140,19 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     suspend fun buyActive(
-        email: String,
+        user: User,
         idCoin: String,
         currency: Double,
         valueCoin: Double
     ): Boolean {
         return withContext(dispatcher) {
-            val checkEmail = email.trim().lowercase()
-            val user = userLocalDataSource.getUser(checkEmail)?.toUser() ?: return@withContext false
             val newActives = user.actives.toMutableList()
             val active = newActives.find { it.id == idCoin }
             val newBalance = user.minus(currency)
             val priceForBuy = currency / valueCoin
             if (active == null) {
                 newActives.add(
-                    Active.create(id = idCoin, count = valueCoin, priceForBuy = priceForBuy)
+                    Active.create(idCoin = idCoin, count = valueCoin, priceForBuy = priceForBuy)
                 )
             } else {
                 active.buy(valueCoin, priceForBuy)
@@ -159,12 +161,12 @@ class UserRepositoryImpl @Inject constructor(
                 status = StatusTransaction.Process,
                 type = TypeTransaction.Buy(currency, valueCoin, idCoin),
                 id = "TP-" + Random.nextInt(10000).toString(),
-                emailId = checkEmail,
+                emailId = user.email,
                 data = LocalDateTime.now()
             )
             userLocalDataSource.saveActivesAndBalance(
-                checkEmail,
-                newActives.map { it.toActiveEntity(checkEmail) },
+                user.email,
+                newActives.map { it.toActiveEntity(user.email) },
                 newBalance,
                 transactionEntity
             )
@@ -172,40 +174,36 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     // comission добавлено на будущее, когда подключим API для ввода денег
-    suspend fun addBalance(email: String, currency: Double, comission: Double): Boolean {
+    suspend fun addBalance(user: User, currency: Double, comission: Double): Boolean {
         return withContext(dispatcher) {
-            val checkEmail = email.trim().lowercase()
-            val user = userLocalDataSource.getUser(checkEmail)?.toUser() ?: return@withContext false
             val newBalance = user.plus(currency)
             val transactionEntity = TransactionEntity(
                 status = StatusTransaction.Process,
                 type = TypeTransaction.AddBalance(currency),
                 id = "TS-" + Random.nextInt(10000).toString(),
-                emailId = checkEmail,
+                emailId = user.email,
                 data = LocalDateTime.now()
             )
             userLocalDataSource.saveBalance(
-                checkEmail,
+                user.email,
                 newBalance,
                 transactionEntity
             )
         }
     }
 
-    suspend fun cashBalance(email: String, currency: Double): Boolean {
+    suspend fun cashBalance(user: User, currency: Double): Boolean {
         return withContext(dispatcher) {
-            val checkEmail = email.trim().lowercase()
-            val user = userLocalDataSource.getUser(checkEmail)?.toUser() ?: return@withContext false
             val newBalance = user.minus(currency)
             val transactionEntity = TransactionEntity(
                 status = StatusTransaction.Process,
                 type = TypeTransaction.CashBalance(currency),
                 id = "TS-" + Random.nextInt(10000).toString(),
-                emailId = checkEmail,
+                emailId = user.email,
                 data = LocalDateTime.now()
             )
             userLocalDataSource.saveBalance(
-                checkEmail,
+                user.email,
                 newBalance,
                 transactionEntity
             )

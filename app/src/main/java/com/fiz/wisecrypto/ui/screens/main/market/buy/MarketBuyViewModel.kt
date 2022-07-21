@@ -87,39 +87,41 @@ class MarketBuyViewModel @Inject constructor(
     }
 
     private fun buyButtonClicked() {
-        viewModelScope.launch {
-            viewState = viewState.copy(isLoading = true)
-            try {
-                val currency = viewState.currencyForBuy.toDoubleOrNull() ?: return@launch
-                val balance = viewState.valueBalance.toDoubleOrNull() ?: return@launch
-                val valueCoin = viewState.valueCoin.toDoubleOrNull() ?: return@launch
-                if (currency > balance)
-                    throw Exception("No money")
+        user?.let { user ->
+            viewModelScope.launch {
+                viewState = viewState.copy(isLoading = true)
+                try {
+                    val currency = viewState.currencyForBuy.toDoubleOrNull() ?: return@launch
+                    val balance = viewState.valueBalance.toDoubleOrNull() ?: return@launch
+                    val valueCoin = viewState.valueCoin.toDoubleOrNull() ?: return@launch
+                    if (currency > balance)
+                        throw Exception("No money")
 
-                if (userRepository.buyActive(
-                        email = user?.email ?: return@launch,
-                        idCoin = idCoin ?: return@launch,
-                        currency = currency,
-                        valueCoin = valueCoin
+                    if (userRepository.buyActive(
+                            user,
+                            idCoin = idCoin ?: return@launch,
+                            currency = currency,
+                            valueCoin = valueCoin
+                        )
                     )
-                )
-                    viewEffect.emit(MarketBuyViewEffect.MoveReturn)
-                else {
+                        viewEffect.emit(MarketBuyViewEffect.MoveReturn)
+                    else {
+                        viewEffect.emit(
+                            MarketBuyViewEffect.ShowError(
+                                ERROR_SELL
+                            )
+                        )
+                    }
+
+                } catch (e: Exception) {
                     viewEffect.emit(
                         MarketBuyViewEffect.ShowError(
-                            ERROR_SELL
+                            ERROR_TEXT_FIELD
                         )
                     )
                 }
-
-            } catch (e: Exception) {
-                viewEffect.emit(
-                    MarketBuyViewEffect.ShowError(
-                        ERROR_TEXT_FIELD
-                    )
-                )
+                viewState = viewState.copy(isLoading = false)
             }
-            viewState = viewState.copy(isLoading = false)
         }
     }
 

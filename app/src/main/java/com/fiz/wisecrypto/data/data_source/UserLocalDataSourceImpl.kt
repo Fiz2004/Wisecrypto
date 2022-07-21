@@ -72,7 +72,7 @@ class UserLocalDataSourceImpl @Inject constructor(
     suspend fun changePassword(checkEmail: String, checkNewPassword: String): Boolean {
         return withContext(dispatcher) {
             try {
-                userDao.changePassword(checkEmail, checkNewPassword)
+                userDao.savePassword(checkEmail, checkNewPassword)
                 true
             } catch (e: Exception) {
                 false
@@ -96,7 +96,7 @@ class UserLocalDataSourceImpl @Inject constructor(
     suspend fun changeWatchList(email: String, watchList: List<String>): Boolean {
         return withContext(dispatcher) {
             try {
-                userDao.changeWatchList(email, watchList)
+                userDao.saveWatchList(email, watchList)
                 true
             } catch (e: Exception) {
                 false

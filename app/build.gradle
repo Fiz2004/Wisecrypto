@@ -42,6 +42,9 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion "1.2.0"
     }
+    testOptions {
+        unitTests.includeAndroidResources = true
+    }
     packagingOptions {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -80,6 +83,10 @@ dependencies {
     // Gson
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 
+    // Coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
+
     // Room
     implementation("androidx.room:room-ktx:2.5.0-alpha02")
     implementation("androidx.room:room-runtime:2.5.0-alpha02")
@@ -87,9 +94,21 @@ dependencies {
 
     // Date
     implementation("com.jakewharton.threetenabp:threetenabp:1.4.0")
+    testImplementation("com.jakewharton.threetenabp:threetenabp:1.4.0")
 
     // Base Test
     testImplementation("junit:junit:4.13.2")
+    testImplementation 'androidx.arch.core:core-testing:2.1.0'
+
+    // Robolectric
+    testImplementation 'org.robolectric:robolectric:4.5.1'
+    testImplementation 'androidx.test.ext:junit:1.1.3'
+
+    // Mockito
+    testImplementation("org.mockito:mockito-core:4.6.1")
+    testImplementation("org.mockito.kotlin:mockito-kotlin:4.0.0")
+    testImplementation('org.mockito:mockito-inline:4.6.1')
+    testImplementation("io.mockk:mockk:1.12.4")
 
     // Glide
     implementation("com.github.skydoves:landscapist-glide:1.5.3")

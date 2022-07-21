@@ -82,13 +82,13 @@ fun MarketSellScreen(
                             ),
                             text = stringResource(
                                 id = R.string.sell_one_coin,
-                                viewState.coinForSell,
+                                viewState.userCoinForSell,
                                 viewState.symbolCoin
                             ),
                             onValueChange = { viewModel.onEvent(MarketSellEvent.ValueCoinChanged(it)) },
                             textHint = stringResource(
                                 id = R.string.sell_one_coin,
-                                viewState.coinForSell,
+                                viewState.userCoinForSell,
                                 viewState.symbolCoin
                             )
                         )
@@ -110,7 +110,7 @@ fun MarketSellScreen(
                             text = stringResource(
                                 id = R.string.sell_one_coin,
                                 viewState.symbolCurrency,
-                                viewState.valueCurrency
+                                viewState.priceCurrency
                             ),
                             style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.onSurfaceVariant

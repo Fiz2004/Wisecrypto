@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.fiz.wisecrypto.data.repositories.UserRepositoryImpl
+import com.fiz.wisecrypto.domain.models.User
 import com.fiz.wisecrypto.domain.use_case.CurrentUserUseCase
 import com.fiz.wisecrypto.domain.use_case.FormatUseCase
 import com.fiz.wisecrypto.ui.util.BaseViewModel
@@ -31,19 +32,14 @@ class MarketCashBalanceViewModel @Inject constructor(
     var viewEffect = MutableSharedFlow<MarketCashBalanceViewEffect>()
         private set
 
-    var email: String? = null
+    private var user: User? = null
 
     init {
         viewModelScope.launch {
             currentUserUseCase.getCurrentUser()
                 .collectLatest { user ->
-                    user ?: return@collectLatest
-                    email = user.email
-                    viewState = viewState.copy(
-                        valueBalance = formatUseCase.getFormatBalance(user.balanceUi),
-                        currencyForBuy = formatUseCase.getFormatBalance(10.0)
-                    )
-                    request()
+                    this@MarketCashBalanceViewModel.user = user
+                    refresh()
                 }
         }
     }
@@ -95,52 +91,61 @@ class MarketCashBalanceViewModel @Inject constructor(
     }
 
     private fun cashButtonClicked() {
-        viewModelScope.launch {
+        user?.let { user ->
+            viewModelScope.launch {
 
-            try {
-                val currency =
-                    viewState.currencyForBuy.toDoubleOrNull() ?: throw Exception("value no correct")
+                try {
+                    val currency =
+                        viewState.currencyForBuy.toDoubleOrNull()
+                            ?: throw Exception("value no correct")
 
-                val valueBalance =
-                    viewState.valueBalance.toDoubleOrNull() ?: throw Exception("value no correct")
+                    val valueBalance =
+                        viewState.valueBalance.toDoubleOrNull()
+                            ?: throw Exception("value no correct")
 
-                if (currency > valueBalance)
-                    throw Exception("value no correct")
+                    if (currency > valueBalance)
+                        throw Exception("value no correct")
 
-                val commission = currency * COMMISSION
-                val total = currency + commission
+                    val commission = currency * COMMISSION
+                    val total = currency + commission
 
-                if (userRepository.cashBalance(
-                        email = email ?: return@launch,
-                        currency = total,
+                    if (userRepository.cashBalance(
+                            user = user,
+                            currency = total,
+                        )
                     )
-                )
-                    viewEffect.emit(MarketCashBalanceViewEffect.MoveReturn)
-                else {
+                        viewEffect.emit(MarketCashBalanceViewEffect.MoveReturn)
+                    else {
+                        viewEffect.emit(
+                            MarketCashBalanceViewEffect.ShowError(
+                                ERROR_SELL
+                            )
+                        )
+                    }
+
+                } catch (e: Exception) {
                     viewEffect.emit(
                         MarketCashBalanceViewEffect.ShowError(
-                            ERROR_SELL
+                            ERROR_TEXT_FIELD
                         )
                     )
                 }
-
-            } catch (e: Exception) {
-                viewEffect.emit(
-                    MarketCashBalanceViewEffect.ShowError(
-                        ERROR_TEXT_FIELD
-                    )
-                )
             }
         }
     }
 
     override suspend fun request() {
-        email?.let {
+        refresh()
+    }
+
+    private fun refresh() {
+        user?.let { user ->
             val currency = viewState.currencyForBuy.toDoubleOrNull() ?: return
             val commission = currency * COMMISSION
             val total = currency + commission
             viewState = viewState.copy(isLoading = true)
             viewState = viewState.copy(
+                valueBalance = formatUseCase.getFormatBalance(user.balanceUi),
                 commission = formatUseCase.getFormatBalance(commission),
                 total = formatUseCase.getFormatBalance(total),
             )

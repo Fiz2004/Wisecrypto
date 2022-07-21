@@ -46,7 +46,7 @@ class MarketSellViewModel @Inject constructor(
                     val active = user?.actives?.find { it.id == idCoin } ?: return@collectLatest
                     val initCoinForSell = formatUseCase.getFormatCoin(active.countUi)
                     viewState = viewState.copy(
-                        coinForSell = initCoinForSell,
+                        userCoinForSell = initCoinForSell,
                     )
                     refresh()
                 }
@@ -72,7 +72,7 @@ class MarketSellViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val coin = value.split(" ")[0]
-                viewState = viewState.copy(coinForSell = coin)
+                viewState = viewState.copy(userCoinForSell = coin)
                 request()
 
             } catch (e: Exception) {
@@ -90,18 +90,19 @@ class MarketSellViewModel @Inject constructor(
             viewModelScope.launch {
                 viewState = viewState.copy(isLoading = true)
                 try {
-                    val coin = viewState.coinForSell.toDoubleOrNull() ?: return@launch
+                    val userCoinForSell =
+                        viewState.userCoinForSell.toDoubleOrNull() ?: return@launch
                     val valueActiveCoin =
                         viewState.valueActiveCoin.toDoubleOrNull() ?: return@launch
-                    val valueCurrency = viewState.valueCurrency.toDoubleOrNull() ?: return@launch
-                    if (coin > valueActiveCoin)
+                    val priceCurrency = viewState.priceCurrency.toDoubleOrNull() ?: return@launch
+                    if (userCoinForSell > valueActiveCoin)
                         throw Exception("No money")
 
                     if (userRepository.sellActive(
-                            user.email,
-                            idCoin ?: return@launch,
-                            coin,
-                            valueCurrency
+                            user = user,
+                            idCoin = idCoin ?: return@launch,
+                            userCoinForSell = userCoinForSell,
+                            priceCurrency = priceCurrency
                         )
                     )
                         viewEffect.emit(MarketSellViewEffect.MoveReturn)
@@ -127,7 +128,7 @@ class MarketSellViewModel @Inject constructor(
 
     private fun sellAllButtonClicked() {
         viewModelScope.launch {
-            viewState = viewState.copy(coinForSell = viewState.valueActiveCoin)
+            viewState = viewState.copy(userCoinForSell = viewState.valueActiveCoin)
             request()
         }
     }
@@ -154,12 +155,12 @@ class MarketSellViewModel @Inject constructor(
         user?.let { user ->
             coinFull?.let { coinFull ->
                 val active = user.actives.find { it.id == idCoin } ?: return
-                val currency = viewState.coinForSell.toDoubleOrNull() ?: return
+                val currency = viewState.userCoinForSell.toDoubleOrNull() ?: return
 
                 viewState = viewState.copy(
                     valueActiveCoin = formatUseCase.getFormatCoin(active.countUi),
                     icon = coinFull.image,
-                    valueCurrency = formatUseCase.getFormatBalance(
+                    priceCurrency = formatUseCase.getFormatBalance(
                         coinFull.currentPrice * currency
                     ),
                     nameCoin = coinFull.name,
