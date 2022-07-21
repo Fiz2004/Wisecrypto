@@ -109,7 +109,7 @@
     <string name="profile_exit_title">Выход</string>
     <string name="profile_exit_description">Закройте приложение</string>
     <string name="profile_current_balance">Текущий баланс</string>
-    <string name="profile_pull">Отправить</string>
+    <string name="profile_pull">Вывести</string>
     <string name="profile_add">Пополнить</string>
     <string name="profile_current_balance_value">"= %1$s рублей"</string>
     <string name="profile_confirm_exit">Вы уверены, что хотите выйти?</string>
@@ -124,6 +124,7 @@
     <string name="list_transactions_sell">Продажа</string>
     <string name="list_transactions_transaction_code">Код операции : %1$s</string>
     <string name="list_transactions_add_balance">Пополнение баланса</string>
+    <string name="list_transactions_cash_balance">Снятие средств</string>
     <string name="list_transactions_success">Успешно</string>
     <string name="list_transactions_pending">В процессе</string>
     <string name="list_transactions_fail">Неудачно</string>

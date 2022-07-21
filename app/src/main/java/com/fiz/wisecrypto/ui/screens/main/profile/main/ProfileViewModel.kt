@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fiz.wisecrypto.data.repositories.CoinRepositoryImpl
 import com.fiz.wisecrypto.data.repositories.SettingsRepositoryImpl
+import com.fiz.wisecrypto.domain.models.User
 import com.fiz.wisecrypto.domain.use_case.CurrentUserUseCase
 import com.fiz.wisecrypto.domain.use_case.FormatUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -29,22 +30,14 @@ class ProfileViewModel @Inject constructor(
     var viewEffect = MutableSharedFlow<ProfileViewEffect>()
         private set
 
+    private var user: User? = null
+
     init {
         viewModelScope.launch {
             currentUserUseCase.getCurrentUser()
                 .collectLatest { user ->
-                    user ?: return@collectLatest
-
-                    val balance = user.balance / coinRepository.getCoefCurrentToUsd()
-                    val formatBalance = formatUseCase.getFormatBalance(balance)
-
-                    val balanceUsd = user.balance
-                    val formatBalanceUsd = formatUseCase.getFormatBalanceUsd(balanceUsd)
-                    viewState = viewState.copy(
-                        fullName = user.fullName,
-                        balanceCurrentCurrency = formatBalance,
-                        balanceUsd = formatBalanceUsd
-                    )
+                    this@ProfileViewModel.user = user
+                    refresh()
                 }
         }
     }
@@ -121,6 +114,23 @@ class ProfileViewModel @Inject constructor(
     private fun addClicked() {
         viewModelScope.launch {
             viewEffect.emit(ProfileViewEffect.MoveAddScreen)
+        }
+    }
+
+    private fun refresh() {
+        viewModelScope.launch {
+            user?.let { user ->
+                val balance = user.balance / coinRepository.getCoefCurrentToUsd()
+                val formatBalance = formatUseCase.getFormatBalance(balance)
+
+                val balanceUsd = user.balance
+                val formatBalanceUsd = formatUseCase.getFormatBalanceUsd(balanceUsd)
+                viewState = viewState.copy(
+                    fullName = user.fullName,
+                    balanceCurrentCurrency = formatBalance,
+                    balanceUsd = formatBalanceUsd
+                )
+            }
         }
     }
 

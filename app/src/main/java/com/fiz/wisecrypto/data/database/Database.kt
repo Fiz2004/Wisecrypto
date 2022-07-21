@@ -58,9 +58,10 @@ class Converters {
     @TypeConverter
     fun fromTypeTransaction(value: TypeTransaction): String {
         return when (value) {
-            is TypeTransaction.Balance -> "Balance${SEPARATOR}${value.value}"
-            is TypeTransaction.Buy -> "Buy$SEPARATOR${value.currency}$SEPARATOR${value.coin}"
-            is TypeTransaction.Sell -> "Sell$SEPARATOR${value.coin}$SEPARATOR${value.currency}"
+            is TypeTransaction.AddBalance -> "AddBalance${SEPARATOR}${value.value}"
+            is TypeTransaction.CashBalance -> "CashBalance${SEPARATOR}${value.value}"
+            is TypeTransaction.Buy -> "Buy$SEPARATOR${value.currency}$SEPARATOR${value.coin}$SEPARATOR${value.id}"
+            is TypeTransaction.Sell -> "Sell$SEPARATOR${value.coin}$SEPARATOR${value.currency}$SEPARATOR${value.id}"
         }
     }
 
@@ -68,9 +69,10 @@ class Converters {
     fun toTypeTransaction(type: String): TypeTransaction {
         val t = type.split(SEPARATOR)
         return when (t[0]) {
-            "Balance" -> TypeTransaction.Balance(t[1].toDouble())
-            "Buy" -> TypeTransaction.Buy(t[1].toDouble(), t[2].toDouble())
-            else -> TypeTransaction.Sell(t[1].toDouble(), t[2].toDouble())
+            "AddBalance" -> TypeTransaction.AddBalance(t[1].toDouble())
+            "CashBalance" -> TypeTransaction.CashBalance(t[1].toDouble())
+            "Buy" -> TypeTransaction.Buy(t[1].toDouble(), t[2].toDouble(), t[3])
+            else -> TypeTransaction.Sell(t[1].toDouble(), t[2].toDouble(), t[3])
         }
     }
 

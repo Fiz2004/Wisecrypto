@@ -7,7 +7,7 @@ data class MarketCashBalanceViewState(
     val valueBalance: String = "10",
 
     val symbolCurrency: String = "$",
-    val currencyForBuy: String = "",
+    val currencyForBuy: String = "0",
     val commission: String = "",
     val total: String = "",
 

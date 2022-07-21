@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fiz.wisecrypto.domain.models.User
 import com.fiz.wisecrypto.domain.models.transaction.TypeTransaction
 import com.fiz.wisecrypto.domain.use_case.CurrentUserUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,17 +27,14 @@ class ProfileListTransactionsViewModel @Inject constructor(
     var viewEffect = MutableSharedFlow<ProfileListTransactionsViewEffect>()
         private set
 
+    private var user: User? = null
+
     init {
         viewModelScope.launch {
             currentUserUseCase.getCurrentUser()
                 .collectLatest { user ->
-                    user ?: return@collectLatest
-
-                    val transactions = user.transactions
-
-                    viewState = viewState.copy(
-                        transactions = transactions,
-                    )
+                    this@ProfileListTransactionsViewModel.user = user
+                    refresh()
                 }
         }
     }
@@ -49,21 +47,30 @@ class ProfileListTransactionsViewModel @Inject constructor(
     }
 
     private fun chipClicked(index: Int) {
-        viewModelScope.launch {
-            viewState = viewState.copy(selectedChipNumber = index)
-            val transactions = viewState.transactions.filter {
-                if (index == 0) return@filter true
-                index == 1 && it.type is TypeTransaction.Balance ||
-                        index == 2 && it.type is TypeTransaction.Buy ||
-                        index == 3 && it.type is TypeTransaction.Sell
-            }
-            viewState = viewState.copy(transactions = transactions)
-        }
+        viewState = viewState.copy(selectedChipNumber = index)
+        refresh()
     }
 
     private fun backButtonClicked() {
         viewModelScope.launch {
             viewEffect.emit(ProfileListTransactionsViewEffect.MoveReturn)
+        }
+    }
+
+    private fun refresh() {
+        user?.let { user ->
+            viewModelScope.launch {
+                val index = viewState.selectedChipNumber
+                val transactions = user.transactions.filter {
+                    when (index) {
+                        0 -> true
+                        1 -> it.type is TypeTransaction.AddBalance || it.type is TypeTransaction.CashBalance
+                        2 -> it.type is TypeTransaction.Buy
+                        else -> it.type is TypeTransaction.Sell
+                    }
+                }
+                viewState = viewState.copy(transactions = transactions)
+            }
         }
     }
 }

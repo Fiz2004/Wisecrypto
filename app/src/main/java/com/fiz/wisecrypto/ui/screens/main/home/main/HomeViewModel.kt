@@ -32,8 +32,8 @@ class HomeViewModel @Inject constructor(
     var viewEffect = MutableSharedFlow<HomeViewEffect>()
         private set
 
-    var user: User? = null
-    var coins: List<Coin>? = null
+    private var user: User? = null
+    private var coins: List<Coin>? = null
 
     init {
         viewModelScope.launch {

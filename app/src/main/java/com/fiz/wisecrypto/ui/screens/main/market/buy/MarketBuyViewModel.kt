@@ -6,6 +6,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.fiz.wisecrypto.data.repositories.CoinRepositoryImpl
 import com.fiz.wisecrypto.data.repositories.UserRepositoryImpl
+import com.fiz.wisecrypto.domain.models.CoinFull
+import com.fiz.wisecrypto.domain.models.User
 import com.fiz.wisecrypto.domain.use_case.CurrentUserUseCase
 import com.fiz.wisecrypto.domain.use_case.FormatUseCase
 import com.fiz.wisecrypto.ui.util.BaseViewModel
@@ -33,19 +35,15 @@ class MarketBuyViewModel @Inject constructor(
         private set
 
     var idCoin: String? = null
-    var email: String? = null
+    private var user: User? = null
+    private var coinFull: CoinFull? = null
 
     init {
         viewModelScope.launch {
             currentUserUseCase.getCurrentUser()
                 .collectLatest { user ->
-                    user ?: return@collectLatest
-                    email = user.email
-                    viewState = viewState.copy(
-                        valueBalance = formatUseCase.getFormatBalance(user.balance),
-                        currencyForBuy = formatUseCase.getFormatBalance(user.balance)
-                    )
-                    request()
+                    this@MarketBuyViewModel.user = user
+                    refresh()
                 }
         }
     }
@@ -71,7 +69,7 @@ class MarketBuyViewModel @Inject constructor(
     private fun valueCurrencyChanged(value: String) {
         viewModelScope.launch {
             try {
-                val currency = value.substringAfter("$")
+                val currency = value.substringAfter("$").trim()
                 viewState = viewState.copy(currencyForBuy = currency)
                 request()
 
@@ -96,7 +94,7 @@ class MarketBuyViewModel @Inject constructor(
                     throw Exception("No money")
 
                 if (userRepository.buyActive(
-                        email = email ?: return@launch,
+                        email = user?.email ?: return@launch,
                         idCoin = idCoin ?: return@launch,
                         currency = currency,
                         valueCoin = valueCoin
@@ -130,24 +128,34 @@ class MarketBuyViewModel @Inject constructor(
 
     override suspend fun request() {
         idCoin?.let {
-            val currency = viewState.currencyForBuy.toDoubleOrNull() ?: return
             viewState = viewState.copy(isLoading = true)
             val result = coinRepository.getCoin(it)
             if (result is Resource.Success) {
-                val coin = result.data ?: return
-                viewState = viewState.copy(
-                    valueCoin = formatUseCase.getFormatCoin(currency / coin.currentPrice),
-                    nameCoin = coin.name,
-                    symbolCoin = coin.symbol.uppercase()
-                )
+                coinFull = result.data ?: CoinFull()
+                refresh()
             } else {
                 viewEffect.emit(
-                    MarketBuyViewEffect.ShowError(
-                        result.message
-                    )
+                    MarketBuyViewEffect.ShowError(result.message)
                 )
             }
             viewState = viewState.copy(isLoading = false)
+        }
+    }
+
+    private fun refresh() {
+        user?.let { user ->
+            coinFull?.let { coinFull ->
+                val currency = viewState.currencyForBuy.toDoubleOrNull() ?: return
+                viewState = viewState.copy(
+                    valueBalance = formatUseCase.getFormatBalance(user.balance),
+                    currencyForBuy = formatUseCase.getFormatBalance(user.balance)
+                )
+                viewState = viewState.copy(
+                    valueCoin = formatUseCase.getFormatCoin(currency / coinFull.currentPrice),
+                    nameCoin = coinFull.name,
+                    symbolCoin = coinFull.symbol.uppercase()
+                )
+            }
         }
     }
 

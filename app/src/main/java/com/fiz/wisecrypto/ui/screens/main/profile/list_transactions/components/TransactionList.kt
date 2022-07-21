@@ -67,11 +67,18 @@ private fun TransactionItem(
     }
 
     val title = when (transaction.type) {
-        is TypeTransaction.Balance -> stringResource(R.string.list_transactions_add_balance)
-        is TypeTransaction.Buy -> stringResource(R.string.list_transactions_sell)
-        is TypeTransaction.Sell -> stringResource(R.string.list_transactions_buy)
+        is TypeTransaction.AddBalance -> stringResource(R.string.list_transactions_add_balance)
+        is TypeTransaction.CashBalance -> stringResource(R.string.list_transactions_cash_balance)
+        is TypeTransaction.Buy -> stringResource(R.string.list_transactions_buy)
+        is TypeTransaction.Sell -> stringResource(R.string.list_transactions_sell)
     }
-    val description = transaction.textDescription
+
+    val description = when (transaction.type) {
+        is TypeTransaction.AddBalance -> "$${transaction.type.value}"
+        is TypeTransaction.CashBalance -> "$${transaction.type.value}"
+        is TypeTransaction.Buy -> "${transaction.type.currency}$ -> ${transaction.type.coin} ${transaction.type.id}"
+        is TypeTransaction.Sell -> "${transaction.type.coin} ${transaction.type.id} -> ${transaction.type.currency}$"
+    }
 
     val data =
         DateTimeFormatter.ofPattern("dd MMM \nHH:mm")

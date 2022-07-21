@@ -23,7 +23,6 @@ import org.threeten.bp.LocalDateTime
 data class TransactionEntity(
     val status: StatusTransaction,
     val type: TypeTransaction,
-    val textDescription: String,
     @PrimaryKey
     val id: String,
     val emailId: String = "",
@@ -33,7 +32,6 @@ data class TransactionEntity(
         return Transaction(
             status = status,
             type = type,
-            textDescription = textDescription,
             id = id,
             data = data
         )

@@ -16,9 +16,6 @@ fun ProfileListTransactionsScreen(
     moveReturn: () -> Unit,
 ) {
 
-    val viewState = viewModel.viewState
-    val viewEffect = viewModel.viewEffect
-
     val transactionsFilters = listOf(
         stringResource(R.string.list_transactions_all),
         stringResource(R.string.list_transactions_balance),
@@ -26,16 +23,12 @@ fun ProfileListTransactionsScreen(
         stringResource(R.string.list_transactions_sell)
     )
 
-    LaunchedEffect(Unit) {
-        viewEffect.collect { effect ->
-            when (effect) {
-                ProfileListTransactionsViewEffect.MoveReturn -> {
-                    moveReturn()
-                }
-            }
-        }
-    }
+    ReactEffect(
+        viewModel,
+        moveReturn
+    )
 
+    val viewState = viewModel.viewState
     MainColumn(
         textToolbar = stringResource(R.string.list_transactions_title),
         onClickBackButton = { viewModel.onEvent(ProfileListTransactionsEvent.BackButtonClicked) }
@@ -48,5 +41,21 @@ fun ProfileListTransactionsScreen(
         TransactionList(viewState.transactions)
     }
 }
+
+@Composable
+private fun ReactEffect(
+    viewModel: ProfileListTransactionsViewModel = viewModel(),
+    moveReturn: () -> Unit,
+) {
+    val viewEffect = viewModel.viewEffect
+    LaunchedEffect(Unit) {
+        viewEffect.collect { effect ->
+            when (effect) {
+                ProfileListTransactionsViewEffect.MoveReturn -> moveReturn()
+            }
+        }
+    }
+}
+
 
 

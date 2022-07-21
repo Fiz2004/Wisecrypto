@@ -147,9 +147,8 @@ class UserRepositoryImpl @Inject constructor(
                 newActives.remove(active)
             val transactionEntity = TransactionEntity(
                 status = StatusTransaction.Process,
-                type = TypeTransaction.Sell(count, price),
-                textDescription = "$count $idCoin -> ${price}$",
-                id = "TS-" + Random.nextInt(10000).toString(),
+                type = TypeTransaction.Sell(count, price, idCoin),
+                id = "TP-" + Random.nextInt(10000).toString(),
                 emailId = checkEmail,
                 data = LocalDateTime.now()
             )
@@ -184,9 +183,8 @@ class UserRepositoryImpl @Inject constructor(
             }
             val transactionEntity = TransactionEntity(
                 status = StatusTransaction.Process,
-                type = TypeTransaction.Buy(currency, valueCoin),
-                textDescription = "${currency}$ -> $valueCoin $idCoin",
-                id = "TS-" + Random.nextInt(10000).toString(),
+                type = TypeTransaction.Buy(currency, valueCoin, idCoin),
+                id = "TP-" + Random.nextInt(10000).toString(),
                 emailId = checkEmail,
                 data = LocalDateTime.now()
             )
@@ -199,7 +197,7 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
-    suspend fun addBalance(email: String, currency: Double): Boolean {
+    suspend fun addBalance(email: String, currency: Double, comission: Double): Boolean {
         return withContext(dispatcher) {
             val checkEmail = email.trim().lowercase()
             val user = userLocalDataSource.getUser(checkEmail) ?: return@withContext false
@@ -207,8 +205,7 @@ class UserRepositoryImpl @Inject constructor(
             val newBalance = balance + currency
             val transactionEntity = TransactionEntity(
                 status = StatusTransaction.Process,
-                type = TypeTransaction.Balance(currency),
-                textDescription = "$${currency}",
+                type = TypeTransaction.AddBalance(currency),
                 id = "TS-" + Random.nextInt(10000).toString(),
                 emailId = checkEmail,
                 data = LocalDateTime.now()
@@ -229,8 +226,7 @@ class UserRepositoryImpl @Inject constructor(
             val newBalance = balance - currency
             val transactionEntity = TransactionEntity(
                 status = StatusTransaction.Process,
-                type = TypeTransaction.Balance(currency),
-                textDescription = "$${currency}",
+                type = TypeTransaction.CashBalance(currency),
                 id = "TS-" + Random.nextInt(10000).toString(),
                 emailId = checkEmail,
                 data = LocalDateTime.now()

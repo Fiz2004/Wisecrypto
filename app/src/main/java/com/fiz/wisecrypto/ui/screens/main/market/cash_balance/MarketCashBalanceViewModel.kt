@@ -8,6 +8,7 @@ import com.fiz.wisecrypto.data.repositories.UserRepositoryImpl
 import com.fiz.wisecrypto.domain.use_case.CurrentUserUseCase
 import com.fiz.wisecrypto.domain.use_case.FormatUseCase
 import com.fiz.wisecrypto.ui.util.BaseViewModel
+import com.fiz.wisecrypto.util.Consts.COMMISSION
 import com.fiz.wisecrypto.util.ERROR_SELL
 import com.fiz.wisecrypto.util.ERROR_TEXT_FIELD
 import com.fiz.wisecrypto.util.toDoubleOrNull
@@ -16,6 +17,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
 
 @HiltViewModel
 class MarketCashBalanceViewModel @Inject constructor(
@@ -79,7 +81,7 @@ class MarketCashBalanceViewModel @Inject constructor(
     private fun valueCurrencyChanged(value: String) {
         viewModelScope.launch {
             try {
-                val currency = value.substringAfter("$")
+                val currency = value.substringAfter("$").trim()
                 viewState = viewState.copy(currencyForBuy = currency)
                 request()
             } catch (e: Exception) {
@@ -105,9 +107,12 @@ class MarketCashBalanceViewModel @Inject constructor(
                 if (currency > valueBalance)
                     throw Exception("value no correct")
 
+                val commission = currency * COMMISSION
+                val total = currency + commission
+
                 if (userRepository.cashBalance(
                         email = email ?: return@launch,
-                        currency = currency,
+                        currency = total,
                     )
                 )
                     viewEffect.emit(MarketCashBalanceViewEffect.MoveReturn)
@@ -132,7 +137,7 @@ class MarketCashBalanceViewModel @Inject constructor(
     override suspend fun request() {
         email?.let {
             val currency = viewState.currencyForBuy.toDoubleOrNull() ?: return
-            val commission = currency / 50.0
+            val commission = currency * COMMISSION
             val total = currency + commission
             viewState = viewState.copy(isLoading = true)
             viewState = viewState.copy(

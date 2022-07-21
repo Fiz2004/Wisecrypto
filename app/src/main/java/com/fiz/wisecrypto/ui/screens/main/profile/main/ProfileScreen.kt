@@ -1,6 +1,5 @@
 package com.fiz.wisecrypto.ui.screens.main.profile.main
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
@@ -22,6 +21,7 @@ import com.fiz.wisecrypto.ui.screens.main.profile.main.components.ExitDialog
 import com.fiz.wisecrypto.ui.screens.main.profile.main.components.ProfileMenuItem
 import com.fiz.wisecrypto.ui.screens.main.profile.main.components.UserInfoLarge
 import com.fiz.wisecrypto.ui.theme.*
+import com.fiz.wisecrypto.util.showError
 
 @Composable
 fun ProfileScreen(
@@ -35,81 +35,59 @@ fun ProfileScreen(
     moveSignInScreen: () -> Unit
 ) {
 
-    val context = LocalContext.current
-
-    val viewState = viewModel.viewState
-    val viewEffect = viewModel.viewEffect
-
     val openDialog = rememberSaveable { mutableStateOf(false) }
 
-    LaunchedEffect(Unit) {
-        viewEffect.collect { effect ->
-            when (effect) {
-                ProfileViewEffect.MoveAddScreen -> {
-                    moveMarketAddBalanceScreen()
-                }
-                ProfileViewEffect.MoveListTransactionsScreen -> {
-                    moveListTransactionsScreen()
-                }
-                ProfileViewEffect.MoveNotificationsScreen -> {
-                    moveNotificationsScreen()
-                }
-                ProfileViewEffect.MovePaymentScreen -> {
-                    movePaymentScreen()
-                }
-                ProfileViewEffect.MovePrivacyScreen -> {
-                    movePrivacyScreen()
-                }
-                ProfileViewEffect.MovePullScreen -> {
-                    moveMarketCashBalanceScreen()
-                }
-                ProfileViewEffect.MoveSignInScreen -> {
-                    moveSignInScreen()
-                }
-                is ProfileViewEffect.ShowError -> {
-                    Toast.makeText(context, effect.message, Toast.LENGTH_LONG).show()
-                }
-                ProfileViewEffect.ShowChangeAvatarScreen -> {
+    ReactEffect(
+        viewModel,
+        moveMarketCashBalanceScreen,
+        moveMarketAddBalanceScreen,
+        moveListTransactionsScreen,
+        movePrivacyScreen,
+        movePaymentScreen,
+        moveNotificationsScreen,
+        moveSignInScreen
+    ) { openDialog.value = true }
 
-                }
-                ProfileViewEffect.ShowAlertDialogConfirmExit -> {
-                    openDialog.value = true
-                }
-            }
-        }
-    }
-
+    val viewState = viewModel.viewState
     MainColumn {
-        UserInfoLarge(
-            fullName = viewState.fullName,
-            onClickChangeAvatar = { viewModel.onEvent(ProfileEvent.ChangeAvatarClicked) }
-        )
-
-        BalanceInfo(
-            currentBalance = viewState.balanceCurrentCurrency,
-            currentBalanceUsd = viewState.balanceUsd,
-            onClickPull = { viewModel.onEvent(ProfileEvent.PullClicked) },
-            onClickAdd = { viewModel.onEvent(ProfileEvent.AddClicked) },
-        )
-
-        ProfileMenuItem(
-            icon = R.drawable.profile_ic_list_transactions,
-            color = LightGreen2,
-            stringResource(R.string.profile_list_transactions_title),
-            stringResource(R.string.profile_list_transactions_description),
-            onClick = { viewModel.onEvent(ProfileEvent.ListTransactionsClicked) }
-        )
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        Text(
-            text = stringResource(R.string.profile_settings),
-            style = MaterialTheme.typography.displayMedium
-        )
-
-        Spacer(modifier = Modifier.height(12.dp))
-
         LazyColumn {
+
+            item {
+                UserInfoLarge(
+                    fullName = viewState.fullName,
+                    onClickChangeAvatar = { viewModel.onEvent(ProfileEvent.ChangeAvatarClicked) }
+                )
+            }
+
+            item {
+                BalanceInfo(
+                    currentBalance = viewState.balanceCurrentCurrency,
+                    currentBalanceUsd = viewState.balanceUsd,
+                    onClickPull = { viewModel.onEvent(ProfileEvent.PullClicked) },
+                    onClickAdd = { viewModel.onEvent(ProfileEvent.AddClicked) },
+                )
+            }
+
+            item {
+                ProfileMenuItem(
+                    icon = R.drawable.profile_ic_list_transactions,
+                    color = LightGreen2,
+                    stringResource(R.string.profile_list_transactions_title),
+                    stringResource(R.string.profile_list_transactions_description),
+                    onClick = { viewModel.onEvent(ProfileEvent.ListTransactionsClicked) }
+                )
+
+                Spacer(modifier = Modifier.height(24.dp))
+            }
+
+            item {
+                Text(
+                    text = stringResource(R.string.profile_settings),
+                    style = MaterialTheme.typography.displayMedium
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+            }
 
             item {
                 ProfileMenuItem(
@@ -173,6 +151,39 @@ fun ProfileScreen(
             viewModel.onEvent(ProfileEvent.CancelExitClicked)
         }
     )
+}
+
+@Composable
+private fun ReactEffect(
+    viewModel: ProfileViewModel = viewModel(),
+    moveMarketCashBalanceScreen: () -> Unit,
+    moveMarketAddBalanceScreen: () -> Unit,
+    moveListTransactionsScreen: () -> Unit,
+    movePrivacyScreen: () -> Unit,
+    movePaymentScreen: () -> Unit,
+    moveNotificationsScreen: () -> Unit,
+    moveSignInScreen: () -> Unit,
+    showAlertDialogConfirmExit: () -> Unit
+) {
+    val context = LocalContext.current
+    val viewEffect = viewModel.viewEffect
+
+    LaunchedEffect(Unit) {
+        viewEffect.collect { effect ->
+            when (effect) {
+                ProfileViewEffect.MoveAddScreen -> moveMarketAddBalanceScreen()
+                ProfileViewEffect.MoveListTransactionsScreen -> moveListTransactionsScreen()
+                ProfileViewEffect.MoveNotificationsScreen -> moveNotificationsScreen()
+                ProfileViewEffect.MovePaymentScreen -> movePaymentScreen()
+                ProfileViewEffect.MovePrivacyScreen -> movePrivacyScreen()
+                ProfileViewEffect.MovePullScreen -> moveMarketCashBalanceScreen()
+                ProfileViewEffect.MoveSignInScreen -> moveSignInScreen()
+                is ProfileViewEffect.ShowError -> showError(context, effect.message)
+                ProfileViewEffect.ShowChangeAvatarScreen -> {}
+                ProfileViewEffect.ShowAlertDialogConfirmExit -> showAlertDialogConfirmExit()
+            }
+        }
+    }
 }
 
 
