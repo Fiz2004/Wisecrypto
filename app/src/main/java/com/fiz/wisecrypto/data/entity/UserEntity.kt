@@ -13,7 +13,7 @@ data class UserEntity(
     var numberPhone: String = "",
     var userName: String = "",
     var password: String = "",
-    var balance: Double = 0.0,
+    var balance: Long = 0,
     var watchList: List<String> = listOf(),
     @Ignore
     var actives: List<ActiveEntity> = listOf(),
@@ -21,7 +21,7 @@ data class UserEntity(
     var transactions: List<TransactionEntity> = listOf()
 ) {
     fun toUser(): User {
-        return User(
+        return User.create(
             userName = userName,
             email = email,
             numberPhone = numberPhone,
@@ -32,4 +32,18 @@ data class UserEntity(
             transactions = transactions.map { it.toTransaction() }
         )
     }
+}
+
+fun User.toUserEntity(password: String): UserEntity {
+    return UserEntity(
+        fullName = this.fullName,
+        numberPhone = this.numberPhone,
+        userName = this.userName,
+        email = this.email,
+        password = password.trim().lowercase(),
+        watchList = this.watchList,
+        balance = this.balanceForSaveEntity,
+        actives = this.actives.map { it.toActiveEntity(email.trim().lowercase()) },
+        transactions = this.transactions.map { it.toTransactionEntity(this.email) }
+    )
 }

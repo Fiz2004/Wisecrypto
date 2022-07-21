@@ -37,3 +37,13 @@ data class TransactionEntity(
         )
     }
 }
+
+fun Transaction.toTransactionEntity(emailId: String): TransactionEntity {
+    return TransactionEntity(
+        status = status,
+        type = type,
+        id = id,
+        emailId = emailId,
+        data = data
+    )
+}

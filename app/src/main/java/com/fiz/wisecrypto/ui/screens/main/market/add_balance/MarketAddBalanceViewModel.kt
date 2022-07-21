@@ -47,35 +47,14 @@ class MarketAddBalanceViewModel @Inject constructor(
         when (event) {
             MarketAddBalanceEvent.BackButtonClicked -> backButtonClicked()
             MarketAddBalanceEvent.PayButtonClicked -> buyButtonClicked()
-            is MarketAddBalanceEvent.ValueCurrencyChanged -> valueCurrencyChanged(event.value)
             MarketAddBalanceEvent.PaymentClicked -> paymentClicked()
+            is MarketAddBalanceEvent.ValueCurrencyChanged -> valueCurrencyChanged(event.value)
         }
-    }
-
-    private fun paymentClicked() {
-
     }
 
     private fun backButtonClicked() {
         viewModelScope.launch {
             viewEffect.emit(MarketAddBalanceViewEffect.MoveReturn)
-        }
-    }
-
-    private fun valueCurrencyChanged(value: String) {
-        viewModelScope.launch {
-            try {
-                val currency = value.substringAfter("$").trim()
-                viewState = viewState.copy(currencyForBuy = currency)
-                request()
-
-            } catch (e: Exception) {
-                viewEffect.emit(
-                    MarketAddBalanceViewEffect.ShowError(
-                        ERROR_TEXT_FIELD
-                    )
-                )
-            }
         }
     }
 
@@ -113,6 +92,27 @@ class MarketAddBalanceViewModel @Inject constructor(
         }
     }
 
+    private fun paymentClicked() {
+
+    }
+
+    private fun valueCurrencyChanged(value: String) {
+        viewModelScope.launch {
+            try {
+                val currency = value.substringAfter("$").trim()
+                viewState = viewState.copy(currencyForBuy = currency)
+                refresh()
+
+            } catch (e: Exception) {
+                viewEffect.emit(
+                    MarketAddBalanceViewEffect.ShowError(
+                        ERROR_TEXT_FIELD
+                    )
+                )
+            }
+        }
+    }
+
     override suspend fun request() {
         refresh()
     }
@@ -124,8 +124,7 @@ class MarketAddBalanceViewModel @Inject constructor(
             val commission = currency * COMMISSION
             val total = currency + commission
             viewState = viewState.copy(
-                valueBalance = formatUseCase.getFormatBalance(user.balance),
-                currencyForBuy = formatUseCase.getFormatBalance(10.0),
+                valueBalance = formatUseCase.getFormatBalance(user.balanceUi),
                 commission = formatUseCase.getFormatBalance(commission),
                 total = formatUseCase.getFormatBalance(total),
             )

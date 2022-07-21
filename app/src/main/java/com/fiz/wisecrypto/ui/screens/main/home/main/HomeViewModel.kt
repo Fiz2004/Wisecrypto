@@ -102,7 +102,7 @@ class HomeViewModel @Inject constructor(
         user?.let { user ->
             coins?.let { coins ->
                 val fullName = user.fullName
-                val balanceUsd = user.balance
+                val balanceUsd = user.balanceUi
                 val formatBalanceUsd = formatUseCase.getFormatBalanceUsd(balanceUsd)
                 val portfolioUI =
                     portfolioUseCase.getPortfolioUi(user.actives, coins)

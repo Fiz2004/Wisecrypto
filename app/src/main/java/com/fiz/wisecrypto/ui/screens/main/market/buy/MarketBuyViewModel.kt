@@ -43,6 +43,12 @@ class MarketBuyViewModel @Inject constructor(
             currentUserUseCase.getCurrentUser()
                 .collectLatest { user ->
                     this@MarketBuyViewModel.user = user
+                    val initCurrencyForBuy = formatUseCase.getFormatBalance(
+                        user?.balanceUi ?: return@collectLatest
+                    )
+                    viewState = viewState.copy(
+                        currencyForBuy = initCurrencyForBuy,
+                    )
                     refresh()
                 }
         }
@@ -50,9 +56,6 @@ class MarketBuyViewModel @Inject constructor(
 
     fun onEvent(event: MarketBuyEvent) {
         when (event) {
-            MarketBuyEvent.OnRefresh -> onRefresh()
-            MarketBuyEvent.Started -> started()
-            MarketBuyEvent.Stopped -> stopped()
             MarketBuyEvent.BackButtonClicked -> backButtonClicked()
             MarketBuyEvent.AddBalanceClicked -> addBalanceClicked()
             MarketBuyEvent.BuyButtonClicked -> buyButtonClicked()
@@ -147,10 +150,7 @@ class MarketBuyViewModel @Inject constructor(
             coinFull?.let { coinFull ->
                 val currency = viewState.currencyForBuy.toDoubleOrNull() ?: return
                 viewState = viewState.copy(
-                    valueBalance = formatUseCase.getFormatBalance(user.balance),
-                    currencyForBuy = formatUseCase.getFormatBalance(user.balance)
-                )
-                viewState = viewState.copy(
+                    valueBalance = formatUseCase.getFormatBalance(user.balanceUi),
                     valueCoin = formatUseCase.getFormatCoin(currency / coinFull.currentPrice),
                     nameCoin = coinFull.name,
                     symbolCoin = coinFull.symbol.uppercase()

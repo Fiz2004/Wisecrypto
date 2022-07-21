@@ -8,7 +8,7 @@ class Active private constructor(
     val countUi
         get() = count / COIN_ACCURACY
 
-    val countEntity
+    val countForSaveEntity
         get() = count
 
     val isEmpty

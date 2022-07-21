@@ -37,7 +37,7 @@ fun Active.toActiveEntity(email: String): ActiveEntity {
     return ActiveEntity(
         id = id,
         emailId = email,
-        count = countEntity,
+        count = countForSaveEntity,
         priceForBuy = priceForBuy
     )
 }

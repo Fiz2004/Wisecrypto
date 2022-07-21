@@ -40,7 +40,7 @@ class MarketCashBalanceViewModel @Inject constructor(
                     user ?: return@collectLatest
                     email = user.email
                     viewState = viewState.copy(
-                        valueBalance = formatUseCase.getFormatBalance(user.balance),
+                        valueBalance = formatUseCase.getFormatBalance(user.balanceUi),
                         currencyForBuy = formatUseCase.getFormatBalance(10.0)
                     )
                     request()

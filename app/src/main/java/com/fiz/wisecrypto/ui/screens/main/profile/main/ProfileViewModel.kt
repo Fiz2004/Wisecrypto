@@ -120,10 +120,10 @@ class ProfileViewModel @Inject constructor(
     private fun refresh() {
         viewModelScope.launch {
             user?.let { user ->
-                val balance = user.balance / coinRepository.getCoefCurrentToUsd()
+                val balance = user.balanceUi / coinRepository.getCoefCurrentToUsd()
                 val formatBalance = formatUseCase.getFormatBalance(balance)
 
-                val balanceUsd = user.balance
+                val balanceUsd = user.balanceUi
                 val formatBalanceUsd = formatUseCase.getFormatBalanceUsd(balanceUsd)
                 viewState = viewState.copy(
                     fullName = user.fullName,

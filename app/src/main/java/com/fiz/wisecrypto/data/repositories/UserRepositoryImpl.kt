@@ -2,8 +2,8 @@ package com.fiz.wisecrypto.data.repositories
 
 import com.fiz.wisecrypto.data.data_source.UserLocalDataSourceImpl
 import com.fiz.wisecrypto.data.entity.TransactionEntity
-import com.fiz.wisecrypto.data.entity.UserEntity
 import com.fiz.wisecrypto.data.entity.toActiveEntity
+import com.fiz.wisecrypto.data.entity.toUserEntity
 import com.fiz.wisecrypto.domain.models.Active
 import com.fiz.wisecrypto.domain.models.User
 import com.fiz.wisecrypto.domain.models.transaction.StatusTransaction
@@ -30,39 +30,13 @@ class UserRepositoryImpl @Inject constructor(
         email: String,
         password: String,
         balance: Double,
-        watchList: List<String> = listOf(
-            "bitcoin",
-            "ethereum",
-            "litecoin",
-            "solana",
-            "binancecoin",
-            "ripple"
-        ),
-        portfolio: List<Active> = listOf(
-            Active.create(
-                "bitcoin",
-                0.0012,
-                20000.0
-            ),
-            Active.create(
-                "ethereum",
-                0.009,
-                1000.0
-            )
-        )
     ): Boolean {
         return withContext(dispatcher) {
             try {
-                val userEntity = UserEntity(
-                    fullName = fullName.trim(),
-                    numberPhone = numberPhone.trim().filter { it.isDigit() },
-                    userName = userName.trim(),
-                    email = email.trim().lowercase(),
-                    password = password.trim().lowercase(),
-                    watchList = watchList,
-                    balance = balance,
-                    actives = portfolio.map { it.toActiveEntity(email.trim().lowercase()) }
+                val user = User.create(
+                    fullName, numberPhone, userName, email, balance
                 )
+                val userEntity = user.toUserEntity(password)
                 userLocalDataSource.saveUser(userEntity)
                 true
             } catch (e: Exception) {
@@ -138,11 +112,11 @@ class UserRepositoryImpl @Inject constructor(
     suspend fun sellActive(email: String, idCoin: String, count: Double, price: Double): Boolean {
         return withContext(dispatcher) {
             val checkEmail = email.trim().lowercase()
-            val user = userLocalDataSource.getUser(checkEmail) ?: return@withContext false
-            val newActives = user.actives.map { it.toActive() }.toMutableList()
+            val user = userLocalDataSource.getUser(checkEmail)?.toUser() ?: return@withContext false
+            val newActives = user.actives.toMutableList()
             val active = newActives.find { it.id == idCoin } ?: return@withContext false
             active.sell(count)
-            val newBalance = user.balance + price
+            val newBalance = user.plus(price)
             if (active.isEmpty)
                 newActives.remove(active)
             val transactionEntity = TransactionEntity(
@@ -169,10 +143,10 @@ class UserRepositoryImpl @Inject constructor(
     ): Boolean {
         return withContext(dispatcher) {
             val checkEmail = email.trim().lowercase()
-            val user = userLocalDataSource.getUser(checkEmail) ?: return@withContext false
-            val newActives = user.actives.map { it.toActive() }.toMutableList()
+            val user = userLocalDataSource.getUser(checkEmail)?.toUser() ?: return@withContext false
+            val newActives = user.actives.toMutableList()
             val active = newActives.find { it.id == idCoin }
-            val newBalance = user.balance - currency
+            val newBalance = user.minus(currency)
             val priceForBuy = currency / valueCoin
             if (active == null) {
                 newActives.add(
@@ -197,12 +171,12 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
+    // comission добавлено на будущее, когда подключим API для ввода денег
     suspend fun addBalance(email: String, currency: Double, comission: Double): Boolean {
         return withContext(dispatcher) {
             val checkEmail = email.trim().lowercase()
-            val user = userLocalDataSource.getUser(checkEmail) ?: return@withContext false
-            val balance = user.balance
-            val newBalance = balance + currency
+            val user = userLocalDataSource.getUser(checkEmail)?.toUser() ?: return@withContext false
+            val newBalance = user.plus(currency)
             val transactionEntity = TransactionEntity(
                 status = StatusTransaction.Process,
                 type = TypeTransaction.AddBalance(currency),
@@ -221,9 +195,8 @@ class UserRepositoryImpl @Inject constructor(
     suspend fun cashBalance(email: String, currency: Double): Boolean {
         return withContext(dispatcher) {
             val checkEmail = email.trim().lowercase()
-            val user = userLocalDataSource.getUser(checkEmail) ?: return@withContext false
-            val balance = user.balance
-            val newBalance = balance - currency
+            val user = userLocalDataSource.getUser(checkEmail)?.toUser() ?: return@withContext false
+            val newBalance = user.minus(currency)
             val transactionEntity = TransactionEntity(
                 status = StatusTransaction.Process,
                 type = TypeTransaction.CashBalance(currency),
