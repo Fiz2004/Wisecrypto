@@ -9,15 +9,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.fiz.wisecrypto.R
 import com.fiz.wisecrypto.ui.components.IconCoin
 import com.fiz.wisecrypto.ui.screens.main.models.ActiveUi
 import com.fiz.wisecrypto.ui.theme.hint
-import com.skydoves.landscapist.glide.GlideImage
 
 @Composable
 fun YourActiveDetail(active: ActiveUi) {
@@ -41,7 +36,7 @@ fun YourActiveItemDetailInfo(active: ActiveUi) {
     val color = if (active.pricePortfolioIncreased)
         MaterialTheme.colorScheme.primary
     else
-        MaterialTheme.colorScheme.secondary
+        MaterialTheme.colorScheme.error
 
     Column(
         modifier = Modifier

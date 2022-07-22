@@ -11,6 +11,8 @@ import com.fiz.wisecrypto.domain.models.transaction.TypeTransaction
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import org.threeten.bp.LocalDateTime
@@ -174,22 +176,32 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     // comission добавлено на будущее, когда подключим API для ввода денег
-    suspend fun addBalance(user: User, currency: Double, comission: Double): Boolean {
-        return withContext(dispatcher) {
+    suspend fun addBalance(
+        user: User,
+        currency: Double,
+        comission: Double
+    ): Flow<StatusProcessTransaction> {
+        return flow {
+            val id = "TS-" + Random.nextInt(10000).toString()
+            emit(StatusProcessTransaction.Init(id))
             val newBalance = user.plus(currency)
             val transactionEntity = TransactionEntity(
                 status = StatusTransaction.Process,
                 type = TypeTransaction.AddBalance(currency),
-                id = "TS-" + Random.nextInt(10000).toString(),
+                id = id,
                 emailId = user.email,
                 data = LocalDateTime.now()
             )
-            userLocalDataSource.saveBalance(
-                user.email,
-                newBalance,
-                transactionEntity
+            if (userLocalDataSource.saveBalance(
+                    user.email,
+                    newBalance,
+                    transactionEntity
+                )
             )
-        }
+                emit(StatusProcessTransaction.Success)
+            else
+                emit(StatusProcessTransaction.Failed)
+        }.flowOn(dispatcher)
     }
 
     suspend fun cashBalance(user: User, currency: Double): Boolean {
@@ -209,4 +221,10 @@ class UserRepositoryImpl @Inject constructor(
             )
         }
     }
+}
+
+sealed class StatusProcessTransaction {
+    object Success : StatusProcessTransaction()
+    object Failed : StatusProcessTransaction()
+    data class Init(val code: String) : StatusProcessTransaction()
 }

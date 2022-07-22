@@ -25,6 +25,7 @@ fun showError(
             "HTTP 429 " -> R.string.error_many_query
             ERROR_TEXT_FIELD -> R.string.error_edit_value_coin
             ERROR_SELL -> R.string.error_sell
+            ERROR_TRANSACTION -> R.string.error_transaction
             else -> R.string.error_network
         }, message
     )
@@ -33,3 +34,4 @@ fun showError(
 
 const val ERROR_TEXT_FIELD = "ERROR_TEXT_FIELD"
 const val ERROR_SELL = "ERROR_SELL"
+const val ERROR_TRANSACTION = "ERROR_SELL"

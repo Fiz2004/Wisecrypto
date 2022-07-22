@@ -70,7 +70,7 @@ fun ProfileMenuItem(
             Icon(
                 modifier = Modifier
                     .size(24.dp),
-                painter = painterResource(id = R.drawable.profile_ic_arrow_right),
+                painter = painterResource(id = R.drawable.ic_arrow_right),
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.hint
             )

@@ -64,7 +64,7 @@ fun MarketCashBalanceScreen(
                         Title(text = R.string.cash_balance_payments)
                         PaymentItem(
                             payment = viewState.payment,
-                            iconId = R.drawable.profile_ic_arrow_right,
+                            iconId = R.drawable.ic_arrow_right,
                             colorIcon = MaterialTheme.colorScheme.onSurfaceVariant,
                             actionOnClick = {
                                 viewModel.onEvent(

@@ -33,7 +33,7 @@ fun BalanceInfo(
     ) {
         Image(
             modifier = Modifier.fillMaxSize(),
-            painter = painterResource(id = R.drawable.background_balance),
+            painter = painterResource(id = R.drawable.pic_background_balance),
             contentScale = ContentScale.Crop,
             contentDescription = null
         )

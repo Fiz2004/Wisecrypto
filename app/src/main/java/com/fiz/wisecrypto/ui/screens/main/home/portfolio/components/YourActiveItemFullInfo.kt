@@ -23,7 +23,7 @@ fun YourActiveItemFullInfo(active: ActiveUi, activeClicked: (String) -> Unit) {
     val color = if (active.pricePortfolioIncreased)
         MaterialTheme.colorScheme.primary
     else
-        MaterialTheme.colorScheme.secondary
+        MaterialTheme.colorScheme.error
 
     Column(
         modifier = Modifier

@@ -159,7 +159,7 @@ fun MarketSellScreen(
             WiseCryptoButton(
                 modifier = Modifier.fillMaxWidth(),
                 text = R.string.sell_sell,
-                color = MaterialTheme.colorScheme.secondary,
+                color = MaterialTheme.colorScheme.error,
                 onClick = { viewModel.onEvent(MarketSellEvent.SellButtonClicked) }
             )
         }

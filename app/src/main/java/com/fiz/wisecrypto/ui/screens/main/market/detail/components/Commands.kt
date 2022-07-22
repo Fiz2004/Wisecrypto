@@ -27,7 +27,7 @@ fun Commands(
             WiseCryptoButton(
                 modifier = Modifier.weight(coefWidth),
                 text = R.string.detail_sell,
-                color = MaterialTheme.colorScheme.secondary,
+                color = MaterialTheme.colorScheme.error,
                 onClick = onClickButtonSell
             )
             Spacer(modifier = Modifier.width(16.dp))

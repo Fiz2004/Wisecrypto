@@ -24,6 +24,8 @@ import com.fiz.wisecrypto.ui.screens.main.market.cash_balance.MarketCashBalanceS
 import com.fiz.wisecrypto.ui.screens.main.market.cash_balance.MarketCashBalanceViewModel
 import com.fiz.wisecrypto.ui.screens.main.market.detail.MarketDetailScreen
 import com.fiz.wisecrypto.ui.screens.main.market.detail.MarketDetailViewModel
+import com.fiz.wisecrypto.ui.screens.main.market.detail_transaction_add.MarketDetailTransactionAddScreen
+import com.fiz.wisecrypto.ui.screens.main.market.detail_transaction_add.MarketDetailTransactionAddViewModel
 import com.fiz.wisecrypto.ui.screens.main.market.main.MarketMainScreen
 import com.fiz.wisecrypto.ui.screens.main.market.main.MarketViewModel
 import com.fiz.wisecrypto.ui.screens.main.market.sell.MarketSellScreen
@@ -127,6 +129,24 @@ fun MainNavHost(
             MarketAddBalanceScreen(
                 viewModel,
                 moveReturn = { navController.popBackStack() },
+                moveMarketDetailTransactionAddScreen = { currency, commission ->
+                    navController.navigate(
+                        NamesMarketScreen.DetailTransactionAdd.name + "/$currency" + "/$commission"
+                    )
+                },
+            )
+        }
+
+        composable(NamesMarketScreen.DetailTransactionAdd.name + "/{currency}" + "/{commission}") {
+            val viewModel = hiltViewModel<MarketDetailTransactionAddViewModel>()
+            val currency = it.arguments?.getString("currency")?.toDouble() ?: return@composable
+            val commission = it.arguments?.getString("commission")?.toDouble() ?: return@composable
+
+            MarketDetailTransactionAddScreen(
+                viewModel,
+                currency,
+                commission,
+                moveReturn = { navController.popBackStack() },
             )
         }
 
@@ -213,7 +233,8 @@ enum class NamesMarketScreen {
     Sell,
     Buy,
     AddBalance,
-    CashBalance
+    CashBalance,
+    DetailTransactionAdd
 }
 
 enum class NamesProfileScreen {

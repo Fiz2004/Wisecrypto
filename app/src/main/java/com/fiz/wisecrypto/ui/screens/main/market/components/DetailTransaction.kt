@@ -77,7 +77,7 @@ fun DetailTransaction(
                 )
                 Icon(
                     modifier = Modifier.size(16.dp),
-                    painter = painterResource(id = R.drawable.add_balance_plus),
+                    painter = painterResource(id = R.drawable.ic_add_balance_plus),
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.hint
                 )

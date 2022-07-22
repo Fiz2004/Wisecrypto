@@ -26,7 +26,7 @@ fun RelativeLabel(
     val colorBackground = if (Increased)
         MaterialTheme.colorScheme.primary
     else
-        MaterialTheme.colorScheme.secondary
+        MaterialTheme.colorScheme.error
 
     Row(
         modifier = Modifier

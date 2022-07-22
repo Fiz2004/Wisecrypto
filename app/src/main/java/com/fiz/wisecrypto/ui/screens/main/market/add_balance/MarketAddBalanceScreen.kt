@@ -26,10 +26,11 @@ import com.fiz.wisecrypto.util.showError
 @Composable
 fun MarketAddBalanceScreen(
     viewModel: MarketAddBalanceViewModel = viewModel(),
-    moveReturn: () -> Unit
+    moveReturn: () -> Unit,
+    moveMarketDetailTransactionAddScreen: (Double, Double) -> Unit
 ) {
     LifeCycleEffect(viewModel)
-    ReactEffect(viewModel, moveReturn)
+    ReactEffect(viewModel, moveReturn, moveMarketDetailTransactionAddScreen)
 
     val viewState = viewModel.viewState
 
@@ -58,10 +59,10 @@ fun MarketAddBalanceScreen(
                 item {
                     Column {
                         Spacer(modifier = Modifier.height(16.dp))
-                        Title(text = R.string.add_balance_payments)
+                        Title(text = R.string.methods_payments)
                         PaymentItem(
                             payment = viewState.payment,
-                            iconId = R.drawable.profile_ic_arrow_right,
+                            iconId = R.drawable.ic_arrow_right,
                             colorIcon = MaterialTheme.colorScheme.onSurfaceVariant,
                             actionOnClick = {
                                 viewModel.onEvent(
@@ -104,6 +105,7 @@ fun MarketAddBalanceScreen(
 private fun ReactEffect(
     viewModel: MarketAddBalanceViewModel,
     moveReturn: () -> Unit,
+    moveMarketDetailTransactionAddScreen: (Double, Double) -> Unit,
 ) {
     val viewEffect = viewModel.viewEffect
     val context = LocalContext.current
@@ -113,6 +115,10 @@ private fun ReactEffect(
             when (effect) {
                 MarketAddBalanceViewEffect.MoveReturn -> moveReturn()
                 is MarketAddBalanceViewEffect.ShowError -> showError(context, effect.message)
+                is MarketAddBalanceViewEffect.MoveMarketDetailTransactionAddScreen -> moveMarketDetailTransactionAddScreen(
+                    effect.currency,
+                    effect.commission
+                )
             }
         }
     }

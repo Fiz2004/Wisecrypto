@@ -2,6 +2,7 @@ package com.fiz.wisecrypto.ui.screens.main.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -15,21 +16,32 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.fiz.wisecrypto.ui.screens.main.profile.payment.models.Payment
+import com.fiz.wisecrypto.ui.theme.hint
 
 @Composable
 fun PaymentItem(
     payment: Payment,
-    iconId: Int,
-    colorIcon: Color,
-    actionOnClick: () -> Unit,
+    border: Boolean = false,
+    iconId: Int = 0,
+    colorIcon: Color = Color.White,
+    actionOnClick: () -> Unit = {},
 ) {
+    var modifier = Modifier
+        .fillMaxWidth()
+        .background(
+            color = MaterialTheme.colorScheme.onPrimary,
+            shape = RoundedCornerShape(10.dp)
+        )
+
+    if (border)
+        modifier = modifier.border(
+            width = 0.5.dp,
+            color = MaterialTheme.colorScheme.hint,
+            shape = RoundedCornerShape(10.dp)
+        )
+
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(
-                color = MaterialTheme.colorScheme.onPrimary,
-                shape = RoundedCornerShape(10.dp)
-            )
+        modifier = modifier
             .padding(vertical = 12.dp)
             .padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -60,13 +72,14 @@ fun PaymentItem(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        Icon(
-            modifier = Modifier
-                .size(24.dp)
-                .clickable { actionOnClick() },
-            painter = painterResource(id = iconId),
-            contentDescription = null,
-            tint = colorIcon
-        )
+        if (iconId != 0)
+            Icon(
+                modifier = Modifier
+                    .size(24.dp)
+                    .clickable { actionOnClick() },
+                painter = painterResource(id = iconId),
+                contentDescription = null,
+                tint = colorIcon
+            )
     }
 }

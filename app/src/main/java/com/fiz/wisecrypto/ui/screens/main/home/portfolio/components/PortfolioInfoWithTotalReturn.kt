@@ -33,7 +33,7 @@ fun PortfolioInfoWithTotalReturn(
     val color = if (isPricePortfolioIncreased)
         MaterialTheme.colorScheme.primary
     else
-        MaterialTheme.colorScheme.secondary
+        MaterialTheme.colorScheme.error
 
     Box(
         modifier = Modifier

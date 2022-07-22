@@ -27,7 +27,7 @@ fun BigRelativeLabel(
     val colorMain = if (increased)
         MaterialTheme.colorScheme.primary
     else
-        MaterialTheme.colorScheme.secondary
+        MaterialTheme.colorScheme.error
 
     val colorOnMain = MaterialTheme.colorScheme.onPrimary
 

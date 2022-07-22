@@ -10,7 +10,6 @@ import com.fiz.wisecrypto.domain.use_case.CurrentUserUseCase
 import com.fiz.wisecrypto.domain.use_case.FormatUseCase
 import com.fiz.wisecrypto.ui.util.BaseViewModel
 import com.fiz.wisecrypto.util.Consts.COMMISSION
-import com.fiz.wisecrypto.util.ERROR_SELL
 import com.fiz.wisecrypto.util.ERROR_TEXT_FIELD
 import com.fiz.wisecrypto.util.toDoubleOrNull
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -67,22 +66,13 @@ class MarketAddBalanceViewModel @Inject constructor(
                             ?: throw Exception("value no correct")
 
                     val commission = currency * COMMISSION
-                    val total = currency + commission
 
-                    if (userRepository.addBalance(
-                            user = user,
-                            currency = currency,
-                            comission = commission
+                    viewEffect.emit(
+                        MarketAddBalanceViewEffect.MoveMarketDetailTransactionAddScreen(
+                            currency,
+                            commission
                         )
                     )
-                        viewEffect.emit(MarketAddBalanceViewEffect.MoveReturn)
-                    else {
-                        viewEffect.emit(
-                            MarketAddBalanceViewEffect.ShowError(
-                                ERROR_SELL
-                            )
-                        )
-                    }
 
                 } catch (e: Exception) {
                     viewEffect.emit(
