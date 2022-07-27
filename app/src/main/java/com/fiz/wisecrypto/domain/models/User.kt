@@ -41,22 +41,22 @@ class User private constructor(
     var transactions: List<Transaction> = listOf()
 ) {
 
-    val balanceUi: Double = (balance / BALANCE_ACCURACY).toDouble()
+    val balanceUi: Double = balance / BALANCE_ACCURACY
 
     val balanceForSaveEntity
         get() = balance
 
 
-    fun plus(price: Double): Double {
-        return balance + price * BALANCE_ACCURACY
+    fun plus(price: Double): Long {
+        return (balance + price * BALANCE_ACCURACY).toLong()
     }
 
-    fun minus(currency: Double): Double {
-        return balance - currency * BALANCE_ACCURACY
+    fun minus(currency: Double): Long {
+        return (balance - currency * BALANCE_ACCURACY).toLong()
     }
 
     companion object {
-        private const val BALANCE_ACCURACY = 100
+        private const val BALANCE_ACCURACY = 100.0
 
         fun create(
             fullName: String,

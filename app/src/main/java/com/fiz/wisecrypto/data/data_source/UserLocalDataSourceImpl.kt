@@ -107,7 +107,7 @@ class UserLocalDataSourceImpl @Inject constructor(
     suspend fun saveActivesAndBalance(
         email: String,
         actives: List<ActiveEntity>,
-        balance: Double,
+        balance: Long,
         transactionEntity: TransactionEntity
     ): Boolean {
         return withContext(dispatcher) {
@@ -123,7 +123,7 @@ class UserLocalDataSourceImpl @Inject constructor(
 
     suspend fun saveBalance(
         email: String,
-        newBalance: Double,
+        newBalance: Long,
         transactionEntity: TransactionEntity
     ): Boolean {
         return withContext(dispatcher) {

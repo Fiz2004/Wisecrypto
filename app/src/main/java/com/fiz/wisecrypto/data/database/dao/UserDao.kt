@@ -44,7 +44,7 @@ interface UserDao {
     suspend fun saveActives(id: String, count: Double)
 
     @Query("UPDATE UserEntity SET balance=:balance WHERE email =:email")
-    suspend fun saveBalance(email: String, balance: Double)
+    suspend fun saveBalance(email: String, balance: Long)
 
     @Query("UPDATE UserEntity SET watchList=:watchList WHERE email =:email")
     suspend fun saveWatchList(email: String, watchList: List<String>)
@@ -53,7 +53,7 @@ interface UserDao {
     suspend fun saveActivesAndSaveBalance(
         email: String,
         actives: List<ActiveEntity>,
-        newBalance: Double,
+        newBalance: Long,
         transactionEntity: TransactionEntity
     ) {
         deleteActives()
@@ -64,7 +64,7 @@ interface UserDao {
     @Transaction
     suspend fun saveBalance(
         email: String,
-        newBalance: Double,
+        newBalance: Long,
         transactionEntity: TransactionEntity
     ) {
         insertTransactions(listOf(transactionEntity))
