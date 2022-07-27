@@ -27,9 +27,11 @@ import com.fiz.wisecrypto.util.showError
 fun MarketCashBalanceScreen(
     viewModel: MarketCashBalanceViewModel = viewModel(),
     moveReturn: () -> Unit,
+    moveMarketDetailTransactionCashScreen: (Double, Double) -> Unit
+
 ) {
     LifeCycleEffect(viewModel)
-    ReactEffect(viewModel, moveReturn)
+    ReactEffect(viewModel, moveReturn, moveMarketDetailTransactionCashScreen)
 
     val viewState = viewModel.viewState
 
@@ -108,6 +110,7 @@ fun MarketCashBalanceScreen(
 private fun ReactEffect(
     viewModel: MarketCashBalanceViewModel,
     moveReturn: () -> Unit,
+    moveMarketDetailTransactionCashScreen: (Double, Double) -> Unit
 ) {
     val viewEffect = viewModel.viewEffect
     val context = LocalContext.current
@@ -117,6 +120,10 @@ private fun ReactEffect(
             when (effect) {
                 MarketCashBalanceViewEffect.MoveReturn -> moveReturn()
                 is MarketCashBalanceViewEffect.ShowError -> showError(context, effect.message)
+                is MarketCashBalanceViewEffect.MoveMarketDetailTransactionCashScreen -> moveMarketDetailTransactionCashScreen(
+                    effect.currency,
+                    effect.commission
+                )
             }
         }
     }

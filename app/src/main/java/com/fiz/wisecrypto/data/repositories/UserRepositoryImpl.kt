@@ -10,6 +10,7 @@ import com.fiz.wisecrypto.domain.models.transaction.StatusTransaction
 import com.fiz.wisecrypto.domain.models.transaction.TypeTransaction
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
@@ -25,6 +26,9 @@ class UserRepositoryImpl @Inject constructor(
     private val userLocalDataSource: UserLocalDataSourceImpl,
     private val dispatcher: CoroutineDispatcher = Dispatchers.Default
 ) {
+
+    private var cancelTransaction: Boolean = false
+
     suspend fun saveUser(
         fullName: String,
         numberPhone: String,
@@ -192,6 +196,12 @@ class UserRepositoryImpl @Inject constructor(
                 emailId = user.email,
                 data = LocalDateTime.now()
             )
+            delay(3000)
+            if (cancelTransaction) {
+                cancelTransaction = false
+                emit(StatusProcessTransaction.Failed)
+                return@flow
+            }
             if (userLocalDataSource.saveBalance(
                     user.email,
                     newBalance,
@@ -204,22 +214,42 @@ class UserRepositoryImpl @Inject constructor(
         }.flowOn(dispatcher)
     }
 
-    suspend fun cashBalance(user: User, currency: Double): Boolean {
-        return withContext(dispatcher) {
-            val newBalance = user.minus(currency)
+    suspend fun cashBalance(
+        user: User,
+        currency: Double,
+        comission: Double
+    ): Flow<StatusProcessTransaction> {
+        return flow {
+            val id = "TS-" + Random.nextInt(10000).toString()
+            emit(StatusProcessTransaction.Init(id))
+            val newBalance = user.minus(currency + comission)
             val transactionEntity = TransactionEntity(
                 status = StatusTransaction.Process,
                 type = TypeTransaction.CashBalance(currency),
-                id = "TS-" + Random.nextInt(10000).toString(),
+                id = id,
                 emailId = user.email,
                 data = LocalDateTime.now()
             )
-            userLocalDataSource.saveBalance(
-                user.email,
-                newBalance,
-                transactionEntity
+            delay(3000)
+            if (cancelTransaction) {
+                cancelTransaction = false
+                emit(StatusProcessTransaction.Failed)
+                return@flow
+            }
+            if (userLocalDataSource.saveBalance(
+                    user.email,
+                    newBalance,
+                    transactionEntity
+                )
             )
-        }
+                emit(StatusProcessTransaction.Success)
+            else
+                emit(StatusProcessTransaction.Failed)
+        }.flowOn(dispatcher)
+    }
+
+    fun cancelAddTransaction() {
+        cancelTransaction = true
     }
 }
 

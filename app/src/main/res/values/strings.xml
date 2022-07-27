@@ -8,6 +8,7 @@
     <string name="one_currency">%1$s%2$s</string>
     <string name="detail_transaction_title">Детали транзакции</string>
     <string name="methods_payments">Способ оплаты</string>
+    <string name="methods_cash">Способ вывода</string>
 
     <!--    Errors-->
     <string name="error_network">Ошибка при загрузке данных из сети. Код ошибки: %1$s</string>
@@ -242,4 +243,7 @@
     <string name="detail_transaction_add_infotext2">1. Войдите в свою учетную запись Mandiri Mbanking\n2. Выберите меню Передача > Учетная запись Mandiri\n3. Введите номер виртуального счета\n4. Нажмите Оплатить и введите свой pin-код</string>
     <string name="detail_transaction_add_titletext3">Инструкции по Переводу Депозита Наличными</string>
     <string name="detail_transaction_add_infotext3">1. Войдите в свою учетную запись Mandiri Mbanking\n2. Выберите меню Передача > Учетная запись Mandiri\n3. Введите номер виртуального счета\n4. Нажмите Оплатить и введите свой pin-код</string>
+
+    <!--    Detail Transaction Cash-->
+
 </resources>

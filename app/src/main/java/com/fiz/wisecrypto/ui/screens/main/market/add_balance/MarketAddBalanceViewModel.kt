@@ -63,7 +63,7 @@ class MarketAddBalanceViewModel @Inject constructor(
                 try {
                     val currency =
                         viewState.currencyForBuy.toDoubleOrNull()
-                            ?: throw Exception("value no correct")
+                            ?: throw Exception(ERROR_TEXT_FIELD)
 
                     val commission = currency * COMMISSION
 

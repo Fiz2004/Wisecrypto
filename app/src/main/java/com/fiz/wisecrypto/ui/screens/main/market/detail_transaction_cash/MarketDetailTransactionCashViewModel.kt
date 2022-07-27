@@ -1,4 +1,4 @@
-package com.fiz.wisecrypto.ui.screens.main.market.detail_transaction_add
+package com.fiz.wisecrypto.ui.screens.main.market.detail_transaction_cash
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -23,15 +23,15 @@ import org.threeten.bp.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
-class MarketDetailTransactionAddViewModel @Inject constructor(
+class MarketDetailTransactionCashViewModel @Inject constructor(
     private val currentUserUseCase: CurrentUserUseCase,
     private val formatUseCase: FormatUseCase,
     private val userRepository: UserRepositoryImpl
 ) : ViewModel() {
-    var viewState by mutableStateOf(MarketDetailTransactionAddViewState())
+    var viewState by mutableStateOf(MarketDetailTransactionCashViewState())
         private set
 
-    var viewEffect = MutableSharedFlow<MarketDetailTransactionAddViewEffect>()
+    var viewEffect = MutableSharedFlow<MarketDetailTransactionCashViewEffect>()
         private set
 
     private var user: User? = null
@@ -42,60 +42,40 @@ class MarketDetailTransactionAddViewModel @Inject constructor(
         viewModelScope.launch {
             currentUserUseCase.getCurrentUser()
                 .collectLatest { user ->
-                    this@MarketDetailTransactionAddViewModel.user = user
+                    this@MarketDetailTransactionCashViewModel.user = user
                     refresh()
                 }
         }
     }
 
-    fun onEvent(event: MarketDetailTransactionAddEvent) {
+    fun onEvent(event: MarketDetailTransactionCashEvent) {
         when (event) {
-            MarketDetailTransactionAddEvent.BackButtonClicked -> backButtonClicked()
-            MarketDetailTransactionAddEvent.CancelButtonClicked -> cancelButtonClicked()
-            MarketDetailTransactionAddEvent.CopyButtonClicked -> copyButtonClicked()
-            is MarketDetailTransactionAddEvent.InitTransaction -> initTransaction(
+            MarketDetailTransactionCashEvent.BackButtonClicked -> backButtonClicked()
+            MarketDetailTransactionCashEvent.CancelButtonClicked -> cancelButtonClicked()
+            is MarketDetailTransactionCashEvent.InitTransaction -> initTransaction(
                 event.currency,
                 event.commission
             )
-            MarketDetailTransactionAddEvent.OpenInfo1Clicked -> openInfo1Clicked()
-            MarketDetailTransactionAddEvent.OpenInfo2Clicked -> openInfo2Clicked()
-            MarketDetailTransactionAddEvent.OpenInfo3Clicked -> openInfo3Clicked()
         }
-    }
-
-    private fun openInfo1Clicked() {
-        viewState = viewState.copy(openInfo1 = !viewState.openInfo1)
-    }
-
-    private fun openInfo2Clicked() {
-        viewState = viewState.copy(openInfo2 = !viewState.openInfo2)
-    }
-
-    private fun openInfo3Clicked() {
-        viewState = viewState.copy(openInfo3 = !viewState.openInfo3)
     }
 
     private fun initTransaction(currency: Double, commission: Double) {
         newMainTransaction = Transaction(
             status = StatusTransaction.Process,
-            type = TypeTransaction.AddBalance(currency),
+            type = TypeTransaction.CashBalance(currency),
             id = "",
             data = LocalDateTime.now()
         )
 
         newCommissionTransaction = Transaction(
             status = StatusTransaction.Process,
-            type = TypeTransaction.AddBalance(commission),
+            type = TypeTransaction.CashBalance(commission),
             id = "",
             data = LocalDateTime.now()
         )
 
         viewState = viewState.copy(transaction = newMainTransaction ?: return)
         refresh()
-    }
-
-    private fun copyButtonClicked() {
-
     }
 
     private fun cancelButtonClicked() {
@@ -106,7 +86,7 @@ class MarketDetailTransactionAddViewModel @Inject constructor(
 
     private fun backButtonClicked() {
         viewModelScope.launch {
-            viewEffect.emit(MarketDetailTransactionAddViewEffect.MoveReturn)
+            viewEffect.emit(MarketDetailTransactionCashViewEffect.MoveReturn)
         }
     }
 
@@ -118,10 +98,10 @@ class MarketDetailTransactionAddViewModel @Inject constructor(
         viewState = viewState.copy(isLoading = true)
 
         viewModelScope.launch {
-            val flowAddBalance = userRepository.addBalance(
+            val flowAddBalance = userRepository.cashBalance(
                 user = user,
-                currency = (mainTransaction.type as TypeTransaction.AddBalance).value,
-                comission = (commissionTransaction.type as TypeTransaction.AddBalance).value
+                currency = (mainTransaction.type as TypeTransaction.CashBalance).value,
+                comission = (commissionTransaction.type as TypeTransaction.CashBalance).value
             )
 
             flowAddBalance.collect { status ->
@@ -139,7 +119,7 @@ class MarketDetailTransactionAddViewModel @Inject constructor(
                         viewState = viewState.copy(transaction = newTransaction)
                         viewState = viewState.copy(isLoading = false)
                         delay(1000)
-                        viewEffect.emit(MarketDetailTransactionAddViewEffect.MoveReturn)
+                        viewEffect.emit(MarketDetailTransactionCashViewEffect.MoveReturn)
                     }
                     StatusProcessTransaction.Failed -> {
                         newMainTransaction = null
@@ -149,12 +129,12 @@ class MarketDetailTransactionAddViewModel @Inject constructor(
                         viewState = viewState.copy(transaction = newTransaction)
                         viewState = viewState.copy(isLoading = false)
                         viewEffect.emit(
-                            MarketDetailTransactionAddViewEffect.ShowError(
+                            MarketDetailTransactionCashViewEffect.ShowError(
                                 ERROR_TRANSACTION
                             )
                         )
                         delay(1000)
-                        viewEffect.emit(MarketDetailTransactionAddViewEffect.MoveReturn)
+                        viewEffect.emit(MarketDetailTransactionCashViewEffect.MoveReturn)
                     }
                 }
             }

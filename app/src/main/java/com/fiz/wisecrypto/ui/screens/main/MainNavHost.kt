@@ -26,6 +26,8 @@ import com.fiz.wisecrypto.ui.screens.main.market.detail.MarketDetailScreen
 import com.fiz.wisecrypto.ui.screens.main.market.detail.MarketDetailViewModel
 import com.fiz.wisecrypto.ui.screens.main.market.detail_transaction_add.MarketDetailTransactionAddScreen
 import com.fiz.wisecrypto.ui.screens.main.market.detail_transaction_add.MarketDetailTransactionAddViewModel
+import com.fiz.wisecrypto.ui.screens.main.market.detail_transaction_cash.MarketDetailTransactionCashScreen
+import com.fiz.wisecrypto.ui.screens.main.market.detail_transaction_cash.MarketDetailTransactionCashViewModel
 import com.fiz.wisecrypto.ui.screens.main.market.main.MarketMainScreen
 import com.fiz.wisecrypto.ui.screens.main.market.main.MarketViewModel
 import com.fiz.wisecrypto.ui.screens.main.market.sell.MarketSellScreen
@@ -150,12 +152,30 @@ fun MainNavHost(
             )
         }
 
+        composable(NamesMarketScreen.DetailTransactionCash.name + "/{currency}" + "/{commission}") {
+            val viewModel = hiltViewModel<MarketDetailTransactionCashViewModel>()
+            val currency = it.arguments?.getString("currency")?.toDouble() ?: return@composable
+            val commission = it.arguments?.getString("commission")?.toDouble() ?: return@composable
+
+            MarketDetailTransactionCashScreen(
+                viewModel,
+                currency,
+                commission,
+                moveReturn = { navController.popBackStack() },
+            )
+        }
+
         composable(NamesMarketScreen.CashBalance.name) {
             val viewModel = hiltViewModel<MarketCashBalanceViewModel>()
 
             MarketCashBalanceScreen(
                 viewModel,
                 moveReturn = { navController.popBackStack() },
+                moveMarketDetailTransactionCashScreen = { currency, commission ->
+                    navController.navigate(
+                        NamesMarketScreen.DetailTransactionCash.name + "/$currency" + "/$commission"
+                    )
+                },
             )
         }
 
@@ -234,7 +254,8 @@ enum class NamesMarketScreen {
     Buy,
     AddBalance,
     CashBalance,
-    DetailTransactionAdd
+    DetailTransactionAdd,
+    DetailTransactionCash
 }
 
 enum class NamesProfileScreen {

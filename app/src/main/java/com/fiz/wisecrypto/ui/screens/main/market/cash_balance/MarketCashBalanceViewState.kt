@@ -4,7 +4,7 @@ import com.fiz.wisecrypto.R
 import com.fiz.wisecrypto.ui.screens.main.profile.payment.models.Payment
 
 data class MarketCashBalanceViewState(
-    val valueBalance: String = "10",
+    val valueBalance: String = "",
 
     val symbolCurrency: String = "$",
     val currencyForBuy: String = "10",

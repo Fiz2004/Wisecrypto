@@ -10,7 +10,6 @@ import com.fiz.wisecrypto.domain.use_case.CurrentUserUseCase
 import com.fiz.wisecrypto.domain.use_case.FormatUseCase
 import com.fiz.wisecrypto.ui.util.BaseViewModel
 import com.fiz.wisecrypto.util.Consts.COMMISSION
-import com.fiz.wisecrypto.util.ERROR_SELL
 import com.fiz.wisecrypto.util.ERROR_TEXT_FIELD
 import com.fiz.wisecrypto.util.toDoubleOrNull
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -97,31 +96,24 @@ class MarketCashBalanceViewModel @Inject constructor(
                 try {
                     val currency =
                         viewState.currencyForBuy.toDoubleOrNull()
-                            ?: throw Exception("value no correct")
+                            ?: throw Exception(ERROR_TEXT_FIELD)
 
                     val valueBalance =
                         viewState.valueBalance.toDoubleOrNull()
-                            ?: throw Exception("value no correct")
+                            ?: throw Exception(ERROR_TEXT_FIELD)
 
                     if (currency > valueBalance)
-                        throw Exception("value no correct")
+                        throw Exception(ERROR_TEXT_FIELD)
 
                     val commission = currency * COMMISSION
-                    val total = currency + commission
 
-                    if (userRepository.cashBalance(
-                            user = user,
-                            currency = total,
+
+                    viewEffect.emit(
+                        MarketCashBalanceViewEffect.MoveMarketDetailTransactionCashScreen(
+                            currency,
+                            commission
                         )
                     )
-                        viewEffect.emit(MarketCashBalanceViewEffect.MoveReturn)
-                    else {
-                        viewEffect.emit(
-                            MarketCashBalanceViewEffect.ShowError(
-                                ERROR_SELL
-                            )
-                        )
-                    }
 
                 } catch (e: Exception) {
                     viewEffect.emit(
