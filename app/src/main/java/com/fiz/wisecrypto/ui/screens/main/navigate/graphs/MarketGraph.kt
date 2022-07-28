@@ -1,21 +1,13 @@
-package com.fiz.wisecrypto.ui.screens.main
+package com.fiz.wisecrypto.ui.screens.main.navigate.graphs
 
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringArrayResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navigation
 import com.fiz.wisecrypto.R
-import com.fiz.wisecrypto.ui.screens.main.home.main.HomeScreen
-import com.fiz.wisecrypto.ui.screens.main.home.main.HomeViewModel
-import com.fiz.wisecrypto.ui.screens.main.home.notification.HomeNotificationScreen
-import com.fiz.wisecrypto.ui.screens.main.home.notification.HomeNotificationViewModel
-import com.fiz.wisecrypto.ui.screens.main.home.portfolio.HomePortfolioScreen
-import com.fiz.wisecrypto.ui.screens.main.home.portfolio.HomePortfolioViewModel
 import com.fiz.wisecrypto.ui.screens.main.market.add_balance.MarketAddBalanceScreen
 import com.fiz.wisecrypto.ui.screens.main.market.add_balance.MarketAddBalanceViewModel
 import com.fiz.wisecrypto.ui.screens.main.market.buy.MarketBuyScreen
@@ -32,57 +24,21 @@ import com.fiz.wisecrypto.ui.screens.main.market.main.MarketMainScreen
 import com.fiz.wisecrypto.ui.screens.main.market.main.MarketViewModel
 import com.fiz.wisecrypto.ui.screens.main.market.sell.MarketSellScreen
 import com.fiz.wisecrypto.ui.screens.main.market.sell.MarketSellViewModel
-import com.fiz.wisecrypto.ui.screens.main.profile.list_transactions.ProfileListTransactionsScreen
-import com.fiz.wisecrypto.ui.screens.main.profile.list_transactions.ProfileListTransactionsViewModel
-import com.fiz.wisecrypto.ui.screens.main.profile.main.ProfileScreen
-import com.fiz.wisecrypto.ui.screens.main.profile.main.ProfileViewModel
-import com.fiz.wisecrypto.ui.screens.main.profile.notifications.ProfileNotificationsScreen
-import com.fiz.wisecrypto.ui.screens.main.profile.notifications.ProfileNotificationsViewModel
-import com.fiz.wisecrypto.ui.screens.main.profile.payment.ProfilePaymentScreen
-import com.fiz.wisecrypto.ui.screens.main.profile.payment.ProfilePaymentViewModel
-import com.fiz.wisecrypto.ui.screens.main.profile.privacy.ProfilePrivacyScreen
-import com.fiz.wisecrypto.ui.screens.main.profile.privacy.ProfilePrivacyViewModel
+import com.fiz.wisecrypto.ui.screens.main.navigate.names.NamesMainScreen
+import com.fiz.wisecrypto.ui.screens.main.navigate.names.NamesMarketScreen
 
-@Composable
-fun MainNavHost(
-    navController: NavHostController,
-    moveReturn: () -> Unit,
-    modifier: Modifier = Modifier,
-    state: LazyListState = rememberLazyListState(),
-) {
-
-    NavHost(
-        navController = navController,
-        startDestination = NamesMainScreen.Home.name,
-        modifier = modifier
+fun NavGraphBuilder.marketGraph(navController: NavHostController, state: LazyListState) {
+    navigation(
+        startDestination = NamesMarketScreen.MarketMain.name,
+        route = NamesMainScreen.Market.name
     ) {
-        composable(NamesMainScreen.Home.name) {
-            val viewModel = hiltViewModel<HomeViewModel>()
 
-            HomeScreen(
+        composable(NamesMarketScreen.MarketMain.name) {
+            val viewModel = hiltViewModel<MarketViewModel>()
+
+            MarketMainScreen(
                 viewModel,
-                moveNotificationScreen = { navController.navigate(NamesHomeScreen.Notification.name) },
-                moveHomePortfolioScreen = { navController.navigate(NamesHomeScreen.Portfolio.name) },
-                moveMarketDetailScreen = { id -> navController.navigate(NamesMarketScreen.Detail.name + "/$id") },
-                moveMarketAddBalanceScreen = { navController.navigate(NamesMarketScreen.AddBalance.name) }
-            )
-        }
-
-        composable(NamesHomeScreen.Notification.name) {
-            val viewModel = hiltViewModel<HomeNotificationViewModel>()
-
-            HomeNotificationScreen(
-                viewModel,
-                moveReturn = { navController.popBackStack() }
-            )
-        }
-
-        composable(NamesHomeScreen.Portfolio.name) {
-            val viewModel = hiltViewModel<HomePortfolioViewModel>()
-
-            HomePortfolioScreen(
-                viewModel,
-                moveReturn = { navController.popBackStack() },
+                state = state,
                 moveMarketDetailScreen = { id -> navController.navigate(NamesMarketScreen.Detail.name + "/$id") }
             )
         }
@@ -179,88 +135,5 @@ fun MainNavHost(
             )
         }
 
-        composable(NamesMainScreen.Market.name) {
-            val viewModel = hiltViewModel<MarketViewModel>()
-
-            MarketMainScreen(
-                viewModel,
-                state = state,
-                moveMarketDetailScreen = { id -> navController.navigate(NamesMarketScreen.Detail.name + "/$id") }
-            )
-        }
-
-        composable(NamesMainScreen.Profile.name) {
-            val viewModel = hiltViewModel<ProfileViewModel>()
-            ProfileScreen(
-                viewModel,
-                moveMarketCashBalanceScreen = { navController.navigate(NamesMarketScreen.CashBalance.name) },
-                moveMarketAddBalanceScreen = { navController.navigate(NamesMarketScreen.AddBalance.name) },
-                moveListTransactionsScreen = { navController.navigate(NamesProfileScreen.ListTransactions.name) },
-                movePrivacyScreen = { navController.navigate(NamesProfileScreen.Privacy.name) },
-                movePaymentScreen = { navController.navigate(NamesProfileScreen.Payment.name) },
-                moveNotificationsScreen = { navController.navigate(NamesProfileScreen.Notifications.name) },
-                moveSignInScreen = {
-                    moveReturn()
-                }
-            )
-        }
-
-        composable(NamesProfileScreen.ListTransactions.name) {
-            val viewModel = hiltViewModel<ProfileListTransactionsViewModel>()
-
-            ProfileListTransactionsScreen(
-                viewModel,
-                moveReturn = { navController.popBackStack() }
-            )
-        }
-
-        composable(NamesProfileScreen.Privacy.name) {
-            val viewModel = hiltViewModel<ProfilePrivacyViewModel>()
-
-            ProfilePrivacyScreen(
-                viewModel,
-                moveReturn = { navController.popBackStack() }
-            )
-        }
-
-        composable(NamesProfileScreen.Payment.name) {
-            val viewModel = hiltViewModel<ProfilePaymentViewModel>()
-
-            ProfilePaymentScreen(
-                viewModel,
-                moveReturn = { navController.popBackStack() }
-            )
-        }
-
-        composable(NamesProfileScreen.Notifications.name) {
-            val viewModel = hiltViewModel<ProfileNotificationsViewModel>()
-
-            ProfileNotificationsScreen(
-                viewModel,
-                moveReturn = { navController.popBackStack() }
-            )
-        }
     }
-}
-
-enum class NamesHomeScreen {
-    Notification,
-    Portfolio,
-}
-
-enum class NamesMarketScreen {
-    Detail,
-    Sell,
-    Buy,
-    AddBalance,
-    CashBalance,
-    DetailTransactionAdd,
-    DetailTransactionCash
-}
-
-enum class NamesProfileScreen {
-    ListTransactions,
-    Privacy,
-    Payment,
-    Notifications,
 }

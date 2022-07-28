@@ -11,7 +11,10 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.fiz.wisecrypto.ui.screens.main.NamesMainScreen
+import com.fiz.wisecrypto.ui.screens.main.navigate.names.NamesHomeScreen
+import com.fiz.wisecrypto.ui.screens.main.navigate.names.NamesMainScreen
+import com.fiz.wisecrypto.ui.screens.main.navigate.names.NamesMarketScreen
+import com.fiz.wisecrypto.ui.screens.main.navigate.names.NamesProfileScreen
 import com.fiz.wisecrypto.ui.theme.hint
 
 @Composable
@@ -25,7 +28,12 @@ fun MainBottomBar(
     val items =
         listOf(NamesMainScreen.Home, NamesMainScreen.Market, NamesMainScreen.Profile)
 
-    val selectedItem = items.indexOfFirst { currentDestination?.route?.contains(it.name) ?: false }
+    val selectedItem = when (currentDestination?.route) {
+        NamesHomeScreen.HomeMain.name -> 0
+        NamesMarketScreen.MarketMain.name -> 1
+        NamesProfileScreen.ProfileMain.name -> 2
+        else -> -1
+    }
 
     NavigationBar(
         modifier = Modifier,
@@ -47,7 +55,7 @@ fun MainBottomBar(
                         style = MaterialTheme.typography.bodyMedium
                     )
                 },
-                selected = currentDestination?.route?.contains(item.name) ?: false,
+                selected = index == selectedItem,
                 onClick = {
                     if (selectedItem != index) {
                         navController.navigate(item.name) {

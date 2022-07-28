@@ -15,6 +15,10 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.fiz.wisecrypto.ui.screens.main.components.MainBottomBar
+import com.fiz.wisecrypto.ui.screens.main.navigate.graphs.MainNavHost
+import com.fiz.wisecrypto.ui.screens.main.navigate.names.NamesHomeScreen
+import com.fiz.wisecrypto.ui.screens.main.navigate.names.NamesMarketScreen
+import com.fiz.wisecrypto.ui.screens.main.navigate.names.NamesProfileScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -26,10 +30,10 @@ fun MainScreen(
     val backstackEntry by navController.currentBackStackEntryAsState()
     val currentScreen = backstackEntry?.destination
 
-    if (currentScreen?.route == NamesMainScreen.Home.name ||
-        currentScreen?.route == NamesMainScreen.Market.name ||
-        currentScreen?.route == NamesMainScreen.Profile.name
-    )
+    if (currentScreen?.route == NamesHomeScreen.HomeMain.name ||
+        currentScreen?.route == NamesMarketScreen.MarketMain.name ||
+        currentScreen?.route == NamesProfileScreen.ProfileMain.name
+    ) {
         Scaffold(
             modifier = Modifier
                 .background(color = MaterialTheme.colorScheme.surface)
@@ -48,7 +52,7 @@ fun MainScreen(
                 state = state
             )
         }
-    else {
+    } else {
         MainNavHost(
             modifier = Modifier
                 .background(color = MaterialTheme.colorScheme.surface)
