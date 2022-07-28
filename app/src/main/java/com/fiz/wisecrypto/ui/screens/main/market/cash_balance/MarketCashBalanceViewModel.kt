@@ -107,7 +107,6 @@ class MarketCashBalanceViewModel @Inject constructor(
 
                     val commission = currency * COMMISSION
 
-
                     viewEffect.emit(
                         MarketCashBalanceViewEffect.MoveMarketDetailTransactionCashScreen(
                             currency,

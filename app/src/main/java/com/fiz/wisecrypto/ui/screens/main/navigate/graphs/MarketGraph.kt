@@ -20,6 +20,8 @@ import com.fiz.wisecrypto.ui.screens.main.market.detail_transaction_add.MarketDe
 import com.fiz.wisecrypto.ui.screens.main.market.detail_transaction_add.MarketDetailTransactionAddViewModel
 import com.fiz.wisecrypto.ui.screens.main.market.detail_transaction_cash.MarketDetailTransactionCashScreen
 import com.fiz.wisecrypto.ui.screens.main.market.detail_transaction_cash.MarketDetailTransactionCashViewModel
+import com.fiz.wisecrypto.ui.screens.main.market.detail_transaction_sell.MarketDetailTransactionSellScreen
+import com.fiz.wisecrypto.ui.screens.main.market.detail_transaction_sell.MarketDetailTransactionSellViewModel
 import com.fiz.wisecrypto.ui.screens.main.market.main.MarketMainScreen
 import com.fiz.wisecrypto.ui.screens.main.market.main.MarketViewModel
 import com.fiz.wisecrypto.ui.screens.main.market.sell.MarketSellScreen
@@ -66,6 +68,28 @@ fun NavGraphBuilder.marketGraph(navController: NavHostController, state: LazyLis
             MarketSellScreen(
                 viewModel,
                 moveReturn = { navController.popBackStack() },
+                moveMarketDetailTransactionSellScreen = { idCoin, userCoinForSell, priceCurrency ->
+                    navController.navigate(
+                        NamesMarketScreen.DetailTransactionSell.name + "/$idCoin" + "/$userCoinForSell" + "/$priceCurrency"
+                    )
+                },
+            )
+        }
+
+        composable(NamesMarketScreen.DetailTransactionSell.name + "/{idCoin}" + "/{userCoinForSell}" + "/{priceCurrency}") {
+            val viewModel = hiltViewModel<MarketDetailTransactionSellViewModel>()
+            val idCoin = it.arguments?.getString("idCoin") ?: return@composable
+            val userCoinForSell =
+                it.arguments?.getString("userCoinForSell")?.toDouble() ?: return@composable
+            val priceCurrency =
+                it.arguments?.getString("priceCurrency")?.toDouble() ?: return@composable
+
+            MarketDetailTransactionSellScreen(
+                viewModel,
+                idCoin,
+                userCoinForSell,
+                priceCurrency,
+                moveReturn = { navController.popBackStack() },
             )
         }
 
@@ -108,19 +132,6 @@ fun NavGraphBuilder.marketGraph(navController: NavHostController, state: LazyLis
             )
         }
 
-        composable(NamesMarketScreen.DetailTransactionCash.name + "/{currency}" + "/{commission}") {
-            val viewModel = hiltViewModel<MarketDetailTransactionCashViewModel>()
-            val currency = it.arguments?.getString("currency")?.toDouble() ?: return@composable
-            val commission = it.arguments?.getString("commission")?.toDouble() ?: return@composable
-
-            MarketDetailTransactionCashScreen(
-                viewModel,
-                currency,
-                commission,
-                moveReturn = { navController.popBackStack() },
-            )
-        }
-
         composable(NamesMarketScreen.CashBalance.name) {
             val viewModel = hiltViewModel<MarketCashBalanceViewModel>()
 
@@ -132,6 +143,19 @@ fun NavGraphBuilder.marketGraph(navController: NavHostController, state: LazyLis
                         NamesMarketScreen.DetailTransactionCash.name + "/$currency" + "/$commission"
                     )
                 },
+            )
+        }
+
+        composable(NamesMarketScreen.DetailTransactionCash.name + "/{currency}" + "/{commission}") {
+            val viewModel = hiltViewModel<MarketDetailTransactionCashViewModel>()
+            val currency = it.arguments?.getString("currency")?.toDouble() ?: return@composable
+            val commission = it.arguments?.getString("commission")?.toDouble() ?: return@composable
+
+            MarketDetailTransactionCashScreen(
+                viewModel,
+                currency,
+                commission,
+                moveReturn = { navController.popBackStack() },
             )
         }
 

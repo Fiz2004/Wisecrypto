@@ -120,10 +120,12 @@ class UserRepositoryImpl @Inject constructor(
         idCoin: String,
         userCoinForSell: Double,
         priceCurrency: Double
-    ): Boolean {
-        return withContext(dispatcher) {
+    ): Flow<StatusProcessTransaction> {
+        return flow {
+            val id = "TS-" + Random.nextInt(10000).toString()
+            emit(StatusProcessTransaction.Init(id))
             val userActives = user.actives.toMutableList()
-            val active = userActives.find { it.id == idCoin } ?: return@withContext false
+            val active = userActives.find { it.id == idCoin } ?: return@flow
             active.sell(userCoinForSell)
             val newBalance = user.plus(priceCurrency)
             if (active.isEmpty)
@@ -132,17 +134,22 @@ class UserRepositoryImpl @Inject constructor(
             val transactionEntity = TransactionEntity(
                 status = StatusTransaction.Process,
                 type = TypeTransaction.Sell(userCoinForSell, priceCurrency, idCoin),
-                id = "TP-" + Random.nextInt(10000).toString(),
+                id = id,
                 emailId = user.email,
                 data = LocalDateTime.now()
             )
-            userLocalDataSource.saveActivesAndBalance(
-                user.email,
-                activesEntity,
-                newBalance,
-                transactionEntity
+            delay(3000)
+            if (userLocalDataSource.saveActivesAndBalance(
+                    user.email,
+                    activesEntity,
+                    newBalance,
+                    transactionEntity
+                )
             )
-        }
+                emit(StatusProcessTransaction.Success)
+            else
+                emit(StatusProcessTransaction.Failed)
+        }.flowOn(dispatcher)
     }
 
     suspend fun buyActive(

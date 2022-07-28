@@ -8,5 +8,7 @@ enum class NamesMarketScreen {
     AddBalance,
     CashBalance,
     DetailTransactionAdd,
-    DetailTransactionCash
+    DetailTransactionCash,
+    DetailTransactionSell,
+    DetailTransactionBuy,
 }

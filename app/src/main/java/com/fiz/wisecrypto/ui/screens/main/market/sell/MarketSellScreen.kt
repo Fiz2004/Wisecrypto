@@ -36,9 +36,10 @@ fun MarketSellScreen(
     viewModel: MarketSellViewModel = viewModel(),
     state: LazyListState = rememberLazyListState(),
     moveReturn: () -> Unit,
+    moveMarketDetailTransactionSellScreen: (String, Double, Double) -> Unit
 ) {
     LifeCycleEffect(viewModel)
-    ReactEffect(viewModel, moveReturn)
+    ReactEffect(viewModel, moveReturn, moveMarketDetailTransactionSellScreen)
 
     val viewState = viewModel.viewState
 
@@ -170,7 +171,8 @@ fun MarketSellScreen(
 @Composable
 private fun ReactEffect(
     viewModel: MarketSellViewModel,
-    moveReturn: () -> Unit
+    moveReturn: () -> Unit,
+    moveMarketDetailTransactionSellScreen: (String, Double, Double) -> Unit
 ) {
     val viewEffect = viewModel.viewEffect
     val context = LocalContext.current
@@ -180,6 +182,11 @@ private fun ReactEffect(
             when (effect) {
                 MarketSellViewEffect.MoveReturn -> moveReturn()
                 is MarketSellViewEffect.ShowError -> showError(context, effect.message)
+                is MarketSellViewEffect.MoveMarketDetailTransactionSellScreen -> moveMarketDetailTransactionSellScreen(
+                    effect.idCoin,
+                    effect.userCoinForSell,
+                    effect.priceCurrency
+                )
             }
         }
     }

@@ -11,7 +11,6 @@ import com.fiz.wisecrypto.domain.models.User
 import com.fiz.wisecrypto.domain.use_case.CurrentUserUseCase
 import com.fiz.wisecrypto.domain.use_case.FormatUseCase
 import com.fiz.wisecrypto.ui.util.BaseViewModel
-import com.fiz.wisecrypto.util.ERROR_SELL
 import com.fiz.wisecrypto.util.ERROR_TEXT_FIELD
 import com.fiz.wisecrypto.util.Resource
 import com.fiz.wisecrypto.util.toDoubleOrNull
@@ -98,21 +97,15 @@ class MarketSellViewModel @Inject constructor(
                     if (userCoinForSell > valueActiveCoin)
                         throw Exception("No money")
 
-                    if (userRepository.sellActive(
-                            user = user,
-                            idCoin = idCoin ?: return@launch,
-                            userCoinForSell = userCoinForSell,
-                            priceCurrency = priceCurrency
+                    val idCoin = idCoin ?: return@launch
+
+                    viewEffect.emit(
+                        MarketSellViewEffect.MoveMarketDetailTransactionSellScreen(
+                            idCoin,
+                            userCoinForSell,
+                            priceCurrency
                         )
                     )
-                        viewEffect.emit(MarketSellViewEffect.MoveReturn)
-                    else {
-                        viewEffect.emit(
-                            MarketSellViewEffect.ShowError(
-                                ERROR_SELL
-                            )
-                        )
-                    }
 
                 } catch (e: Exception) {
                     viewEffect.emit(
@@ -154,18 +147,22 @@ class MarketSellViewModel @Inject constructor(
     private fun refresh() {
         user?.let { user ->
             coinFull?.let { coinFull ->
-                val active = user.actives.find { it.id == idCoin } ?: return
-                val currency = viewState.userCoinForSell.toDoubleOrNull() ?: return
+                val active = user.actives.find { it.id == idCoin }
+                if (active == null)
+                    backButtonClicked()
+                active?.let { activeLocal ->
+                    val currency = viewState.userCoinForSell.toDoubleOrNull() ?: return
 
-                viewState = viewState.copy(
-                    valueActiveCoin = formatUseCase.getFormatCoin(active.countUi),
-                    icon = coinFull.image,
-                    priceCurrency = formatUseCase.getFormatBalance(
-                        coinFull.currentPrice * currency
-                    ),
-                    nameCoin = coinFull.name,
-                    symbolCoin = coinFull.symbol.uppercase()
-                )
+                    viewState = viewState.copy(
+                        valueActiveCoin = formatUseCase.getFormatCoin(activeLocal.countUi),
+                        icon = coinFull.image,
+                        priceCurrency = formatUseCase.getFormatBalance(
+                            coinFull.currentPrice * currency
+                        ),
+                        nameCoin = coinFull.name,
+                        symbolCoin = coinFull.symbol.uppercase()
+                    )
+                }
             }
         }
     }
